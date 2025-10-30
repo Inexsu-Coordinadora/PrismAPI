@@ -19,7 +19,6 @@
     "url": "https://github.com/Inexsu-Coordinadora/PrismAPI/issues"
   },
   "homepage": "https://github.com/Inexsu-Coordinadora/PrismAPI#readme",
-  
   "dependencies": {
     "@types/node": "^24.7.2",
     "dotenv": "^17.2.3",
@@ -30,9 +29,9 @@
     "uuid": "^13.0.0",
     "zod": "^4.1.12"
   },
-  
   "devDependencies": {
     "@types/node": "^24.9.2",
+    "@types/pg": "^8.15.6",
     "typescript": "^5.9.3"
   }
 }
