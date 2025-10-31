@@ -1,11 +1,11 @@
-import { IProyecto } from "../IProyecto";
+import { IProyecto, EstadoProyecto } from "../IProyecto";
 
 export class Proyecto implements IProyecto {
     nombreProyecto: string;
     tipoProyecto?: string | null;
     fechaInicio: Date;
     fechaFin?: Date | null;
-    estadoProyecto:string;
+    estadoProyecto:EstadoProyecto;
 
     constructor (datosProyecto: IProyecto){
         this.nombreProyecto = datosProyecto.nombreProyecto,
