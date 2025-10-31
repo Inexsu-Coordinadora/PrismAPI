@@ -1,9 +1,9 @@
 export type EstadoTarea = "pendiente" | "en-desarrollo" | "finalizada";
 
 export interface ITarea{
-    idTarea?: string;
+    idTarea?: string | undefined;
     tituloTarea: string;
-    descripcionTarea? : string|null;
+    descripcionTarea? : string | null | undefined;
     estadoTarea: EstadoTarea;
 
 }
