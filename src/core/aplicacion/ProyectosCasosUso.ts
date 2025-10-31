@@ -27,7 +27,7 @@ export class ProyectoCasosUso {
         return idNuevoProyecto;
     }
 
-    async actualizarProyecto(idProyecto:string, proyecto: IProyecto):Promise<IProyecto | null>{
+    async actualizarProyecto(idProyecto:string, proyecto:IProyecto):Promise<IProyecto | null>{
         const proyectoActualizado = await this.proyectoRepositorio.actualizarProyecto(idProyecto, proyecto);
         return proyectoActualizado || null;
     }
