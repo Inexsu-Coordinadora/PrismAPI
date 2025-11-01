@@ -29,11 +29,11 @@ async crearTarea(datosTarea: ITarea): Promise<string> {
 }
 
 async listarTareas(limite?: number): Promise<ITarea[]> {
-    let query = "SELECT * FROM tareas ORDER BY id_tareas ASC";
+    let query = "SELECT * FROM tareas ORDER BY id_tarea ASC";
     const valores: number[] = [];
 
     if (limite !== undefined) {
-    query += "LIMIT $1";
+    query += " LIMIT $1";
     valores.push(limite);
     }
 
@@ -80,7 +80,7 @@ async actualizarTarea(
     const query = `
     UPDATE tareas
     SET ${setClause}
-    WHERE id_tarea = ${parametros.length}
+    WHERE id_tarea = $${parametros.length}
     RETURNING *; 
     `;
 

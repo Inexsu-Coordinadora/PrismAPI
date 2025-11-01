@@ -59,11 +59,11 @@ export class TareasControlador {
             }
 
             return reply.code(200).send({
-                mensaje: "Tarea enontrada correctamente",
+                mensaje: "Tarea encontrada correctamente",
                 tarea: tarea,
             });
         } catch (error) {
-            return this.manejarError(reply,error,"Errol al obtener la tarea")
+            return this.manejarError(reply,error,"Erro al obtener la tarea")
         }
     }
 
