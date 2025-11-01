@@ -74,7 +74,7 @@ async actualizarTarea(
 
     const setClause = columnasActualizar.map((col, i) => `${col}=$${i + 1}`).join(", ");
 
-    const parametros = Object.values(datosTarea);
+    const parametros = Object.values(datosTarea).map((val) => val ?? null);
     parametros.push(idTarea);
 
     const query = `
