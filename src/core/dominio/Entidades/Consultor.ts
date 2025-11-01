@@ -1,9 +1,9 @@
-import {IConsultor, disponibilidad_consultor} from "../IConsultor";
+import {IConsultor, DisponibilidadConsultor} from "../IConsultor";
 
 export class Consultor implements IConsultor {
     nombreConsultor: string;
     especialidadConsultor: string;
-    disponibilidadConsultor: disponibilidad_consultor;
+    disponibilidadConsultor: DisponibilidadConsultor;
     emailConsultor: string;
     telefonoConsultor?: string | null;
 
