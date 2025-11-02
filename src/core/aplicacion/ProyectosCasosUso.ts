@@ -2,15 +2,19 @@ import { IProyecto } from "../dominio/IProyecto";
 import { IProyectoRepositorio
 } from "../dominio/repositorio/IProyectoRepositorio";
 import { ProyectoQueryParams } from "../dominio/ProyectoQueryParams";
+import { ResultadoProyectos } from "./ResultadoProyectos";
 
 export class ProyectoCasosUso {
     constructor (private proyectoRepositorio: IProyectoRepositorio){}
 
-    async obtenerProyectos (params:ProyectoQueryParams){
-        if(params.pagina && params.pagina<1){
+    async obtenerProyectos (params:ProyectoQueryParams): Promise<ResultadoProyectos>{
+        const pagina = params.pagina ?? 1;
+        const limite = params.limite ?? 10;
+
+        if(pagina<1){
             throw new Error('La página debe ser >= 1 ');
         }
-        if(params.limite && params.limite >1){
+        if(limite <1){
             throw new Error ('El límite debe ser >= 1');
         }
     return  await this.proyectoRepositorio.obtenerProyectos(params);
@@ -22,7 +26,7 @@ export class ProyectoCasosUso {
         return proyectoObtenido;
     }
 
-    async crearproyecto (datosProyecto: IProyecto): Promise<string>{
+    async crearProyecto (datosProyecto: IProyecto): Promise<string>{
         const idNuevoProyecto = await this.proyectoRepositorio.crearProyecto(datosProyecto);
         return idNuevoProyecto;
     }
@@ -32,7 +36,7 @@ export class ProyectoCasosUso {
         return proyectoActualizado || null;
     }
 
-    async eliminarproyecto(idProyecto:string): Promise<void>{
+    async eliminarProyecto(idProyecto:string): Promise<void>{
         await this.proyectoRepositorio.eliminarProyecto(idProyecto);
     }
 

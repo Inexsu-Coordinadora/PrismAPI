@@ -12,8 +12,8 @@ export class ProyectoRepository implements IProyectoRepositorio {
             idProyecto: fila.id_proyecto,
             nombreProyecto: fila.nombre_proyecto,
             tipoProyecto: fila.tipo_proyecto ,
-            fechaInicio: fila.fecha_inicio,
-            fechaFin: fila.fecha_fin,
+            fechaInicio: fila.fecha_inicio ? new Date (fila.fecha_inicio): null,
+            fechaFin: fila.fecha_fin ? new Date(fila.fecha_fin): null,
             estadoProyecto:fila.estado_proyecto
         }
     }
@@ -45,7 +45,7 @@ export class ProyectoRepository implements IProyectoRepositorio {
 
     async obtenerProyectos(params: ProyectoQueryParams):Promise<{ data: IProyecto[]; total: number; pagina: number; limite: number }>{
         let query = " FROM proyectos WHERE 1=1";        
-        const values: (string | number)[] = [];
+        const values: (string | number | null)[] = [];
         let parametroConsulta = 1;
 
         if(params.nombre){
@@ -75,12 +75,17 @@ export class ProyectoRepository implements IProyectoRepositorio {
             ? params.fechaInicioHasta.toISOString().split('T')[0]
             : params.fechaInicioHasta;
             query += ` AND fechaInicio <= $${parametroConsulta}`;
-            if(fechaHasta !==undefined){
-            values.push(fechaHasta);
-            parametroConsulta++};
+            values.push(fechaHasta ?? null);
+            parametroConsulta++;
         }
 
         const countQuery = "SELECT COUNT(*) as total" + query;
+
+        if (params.ordenarPor) {
+        const orden = params.ordenarOrden === "desc" ? "desc" : "asc";
+        query += ` ORDER BY ${params.ordenarPor} ${orden}`;
+        }
+
         const limite = params.limite ?? 10;
         const pagina = params.pagina && params.pagina > 0 ? params.pagina : 1;
         const offset = (pagina - 1) * limite;
@@ -92,6 +97,7 @@ export class ProyectoRepository implements IProyectoRepositorio {
         const total = parseInt(countResult.rows[0].total, 10);
         const result = await ejecutarConsulta(dataQuery, values);
         const proyectos = result.rows.map(row => this.mapearProyecto(row));
+
         return {
         data: proyectos,
         total,
@@ -99,7 +105,7 @@ export class ProyectoRepository implements IProyectoRepositorio {
         limite,
         };
 
-        }
+    }
         
         
     async actualizarProyecto(idProyecto:string, datosProyecto:IProyecto):Promise<IProyecto | null>{

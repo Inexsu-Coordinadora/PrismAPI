@@ -1,10 +1,12 @@
+import { EstadoProyecto } from "./IProyecto";
+
 export interface ProyectoQueryParams {
     nombre?: string;
-    estado?: string;
-    fechaInicioDesde: Date;
-    fechaInicioHasta: Date;
-    ordenarPor?: 'nombreProyecto' | 'fechaIncio' | 'estadoProyecto';
-    ordenarOrden: 'asc' | 'desc';
+    estado?: EstadoProyecto;
+    fechaInicioDesde?: string | Date;
+    fechaInicioHasta?: string | Date;
+    ordenarPor?: 'nombreProyecto' | 'fechaInicio' | 'estadoProyecto' ;
+    ordenarOrden?: 'asc' | 'desc' ;
     pagina?: number;
     limite?: number; 
 }
