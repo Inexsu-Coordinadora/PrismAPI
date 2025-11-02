@@ -10,11 +10,9 @@ export interface IClienteRepositorio {
   
   actualizar(id: string, datos: ActualizarClienteDto): Promise<ICliente | null>;
   
-  eliminar(id: string): Promise<boolean>;
-  
+  eliminar(id: string): Promise<boolean>; 
   
   existeEmail(email: string, idExcluir?: string): Promise<boolean>;
   
-
   existeDocumento(documento: string, idExcluir?: string): Promise<boolean>;
 }
