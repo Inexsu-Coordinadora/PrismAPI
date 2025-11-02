@@ -11,7 +11,7 @@ password: configuration.baseDatos.contrasena,
 
 export async function ejecutarConsulta(
   consulta: string,
-  parametros?: Array<number | string>
+  parametros?: Array<number | string | null>
 ) {
   return await pool.query(consulta, parametros);
 }
