@@ -6,7 +6,7 @@ import { ProyectoQueryParams } from "../dominio/ProyectoQueryParams";
 export class ProyectoCasosUso {
     constructor (private proyectoRepositorio: IProyectoRepositorio){}
 
-    async obtenerProyecto (params:ProyectoQueryParams){
+    async obtenerProyectos (params:ProyectoQueryParams){
         if(params.pagina && params.pagina<1){
             throw new Error('La página debe ser >= 1 ');
         }
