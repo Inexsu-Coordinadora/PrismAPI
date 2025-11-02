@@ -1,4 +1,4 @@
-export enum DisponibilidadConsultor {'disponible', 'ocupado', 'no disponible'};
+export enum DisponibilidadConsultor {'disponible', 'ocupado', 'en descanso', 'no disponible'};
 
 export interface IConsultor {
     idConsultor?: string;
