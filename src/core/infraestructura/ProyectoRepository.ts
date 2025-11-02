@@ -1,7 +1,7 @@
 import { IProyectoRepositorio } from "../dominio/repositorio/IProyectoRepositorio";
 import { ejecutarConsulta } from "./ClientePostgres";
 import { IProyecto } from "../dominio/IProyecto";
-import { ProyectoQueryParams } from "../dominio/ProyectoQueryParams";
+import { ProyectoQueryParams } from "../aplicacion/Proyecto/ProyectoQueryParams";
 
 export class ProyectoRepository implements IProyectoRepositorio {
 

@@ -2,8 +2,8 @@ import { FastifyInstance } from "fastify";
 import { ProyectosControlador } from "../controladores/ProyectosControlador";
 import { IProyectoRepositorio } from "../../dominio/repositorio/IProyectoRepositorio";
 import { ProyectoRepository } from "../../infraestructura/ProyectoRepository";
-import { ProyectoCasosUso } from "../../aplicacion/ProyectosCasosUso";
-import { IProyectosCasosUso } from "../../aplicacion/IProyectosCasosUso";
+import { ProyectoCasosUso } from "../../aplicacion/Proyecto/ProyectosCasosUso";
+import { IProyectosCasosUso } from "../../aplicacion/Proyecto/IProyectosCasosUso";
 
 function proyectosEnrutador (
     app: FastifyInstance,
