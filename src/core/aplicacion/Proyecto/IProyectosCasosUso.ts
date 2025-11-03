@@ -1,7 +1,7 @@
 import { IProyecto } from "../../dominio/IProyecto";
 import { ProyectoDTO } from "../../presentacion/esquemas/proyectoEsquema";
 import { ProyectoQueryParams } from "./ProyectoQueryParams";
-import { ResultadoProyectos } from "../ResultadoProyectos";
+import { ResultadoProyectos } from "./ResultadoProyectos";
 
 export interface IProyectosCasosUso {
     obtenerProyectos(params:ProyectoQueryParams):Promise<ResultadoProyectos>;

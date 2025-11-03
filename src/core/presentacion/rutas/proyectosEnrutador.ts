@@ -12,7 +12,7 @@ function proyectosEnrutador (
     app.get("/proyectos", 
         proyectosController.obtenerProyectos);
     app.get("/proyectos/:idProyecto", proyectosController.obtenerProyectoPorId);
-    app.post("proyectos",proyectosController.crearProyecto);
+    app.post("/proyectos",proyectosController.crearProyecto);
     app.put("/proyectos/:idProyecto", proyectosController.actualizarProyecto);
     app.delete("/proyectos/:idProyecto", proyectosController.eliminarProyecto);
 }
