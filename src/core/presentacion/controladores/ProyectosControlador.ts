@@ -142,7 +142,7 @@ export class ProyectosControlador {
                 await this.proyectosCasosUso.eliminarProyecto(idProyecto);
 
                 return reply.code(200).send({
-                    mensaje: "Proeycto eliminado correctamente",
+                    mensaje: "Proyecto eliminado correctamente",
                     idProyecto: idProyecto,
                 });
             } catch (err){

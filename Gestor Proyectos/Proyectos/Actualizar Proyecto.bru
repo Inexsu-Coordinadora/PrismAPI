@@ -1,0 +1,15 @@
+meta {
+  name: Actualizar Proyecto
+  type: http
+  seq: 4
+}
+
+put {
+  url: {{base_url}}/proyectos/
+  body: none
+  auth: inherit
+}
+
+settings {
+  encodeUrl: true
+}

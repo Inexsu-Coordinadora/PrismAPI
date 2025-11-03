@@ -34,7 +34,7 @@ export class ProyectoRepository implements IProyectoRepositorio {
     }
 
     async obtenerProyectoPorId (idProyecto:string): Promise<IProyecto | null>{
-        const query = "SELECT * FROM proyectos WHERE idProyecto = $1";
+        const query = "SELECT * FROM proyectos WHERE id_proyecto = $1";
         const result = await ejecutarConsulta(query, [idProyecto]);
 
         if (result.rows.length=== 0){
@@ -152,7 +152,7 @@ export class ProyectoRepository implements IProyectoRepositorio {
         const query=
         `UPDATE proyectos
         SET ${setClause} 
-        WHERE idproyecto =$${parametros.length}
+        WHERE id_proyecto =$${parametros.length}
         RETURNING *`;
 
         const result = await ejecutarConsulta(query, parametros);
@@ -163,6 +163,6 @@ export class ProyectoRepository implements IProyectoRepositorio {
     }
 
     async eliminarProyecto(idproyecto:string):Promise<void>{
-        await ejecutarConsulta("DELETE FROM proyectos WHERE idproyecto = $1", [idproyecto]);
+        await ejecutarConsulta("DELETE FROM proyectos WHERE id_proyecto = $1", [idproyecto]);
     }
 }
