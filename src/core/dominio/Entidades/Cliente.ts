@@ -25,8 +25,8 @@ export interface CrearClienteDto {
 }
 
 export interface ActualizarClienteDto {
-  nombre?: string;
-  email?: string;
-  telefono?: string;
-  documentoIdentidad?: string;
+  nombre?: string | undefined;
+  email?: string | undefined;
+  telefono?: string | undefined;
+  documentoIdentidad?: string | undefined;
 }

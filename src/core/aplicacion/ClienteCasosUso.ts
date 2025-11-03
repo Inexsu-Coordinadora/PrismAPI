@@ -1,9 +1,9 @@
 import { IClienteRepositorio } from '../dominio/repositorio/IClienteRepositorio';
-import { IClientesCasosUso } from './IClienteCasosUso';
+import { IClienteCasosUso } from './IClienteCasosUso';
 import { Cliente, CrearClienteDto, ActualizarClienteDto } from '../dominio/Entidades/Cliente';
 import { crearClienteEsquema, actualizarClienteEsquema } from '../presentacion/esquemas/clienteEsquema';
 
-export class CasosUsoCliente implements IClientesCasosUso {
+export class ClienteCasosUso implements IClienteCasosUso {
   constructor(private repositorio: IClienteRepositorio) {}
 
   // Create
