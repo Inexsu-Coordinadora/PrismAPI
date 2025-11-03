@@ -48,44 +48,63 @@ export class ProyectoRepository implements IProyectoRepositorio {
         const values: (string | number | null)[] = [];
         let parametroConsulta = 1;
 
+        //Buscar por nombre del proyecto
         if(params.nombre){
-        query += ` AND nombreProyecto ILIKE $${parametroConsulta}`;
+        query += ` AND nombre_proyecto ILIKE $${parametroConsulta}`;
         values.push(`%${params.nombre}%`);
         parametroConsulta++;
         }
 
+        //Buscar por estado del proyecto
         if (params.estado) {
-        query += ` AND estadoProyecto = $${parametroConsulta}`;
+        query += ` AND estado_proyecto = $${parametroConsulta}`;
         values.push(params.estado);
         parametroConsulta++;
         }
 
+        //Buscar qué proyectos se inicializaron después de una fecha establecida
         if (params.fechaInicioDesde) {
         const fechaDesde = params.fechaInicioDesde instanceof Date
         ? params.fechaInicioDesde.toISOString().split('T')[0]
         : params.fechaInicioDesde;
-        query += ` AND fechaInicio >= $${parametroConsulta}`;
+        query += ` AND fecha_inicio >= $${parametroConsulta}`;
         if(fechaDesde!== undefined){
         values.push(fechaDesde)};
         parametroConsulta++;
         }
 
+        //Buscar qué proyectos se inicializaron hasta una fecha establecida
         if (params.fechaInicioHasta) {
             const fechaHasta = params.fechaInicioHasta instanceof Date
             ? params.fechaInicioHasta.toISOString().split('T')[0]
             : params.fechaInicioHasta;
-            query += ` AND fechaInicio <= $${parametroConsulta}`;
+            query += ` AND fecha_inicio <= $${parametroConsulta}`;
             values.push(fechaHasta ?? null);
             parametroConsulta++;
         }
 
-        const countQuery = "SELECT COUNT(*) as total" + query;
+        //Consulta de todos los proyectos sin ordenar
+        const countQuery = "SELECT COUNT(*) as total" + query; 
+        const countResult = await ejecutarConsulta(countQuery, values.slice(0, parametroConsulta - 1)); 
+        const total = parseInt(countResult.rows[0].total, 10);
+        
+        //Nombre de los campos que el usuario puede emplear para ordenar
+        const columnasOrdenables: Record<string, string> = {
+        nombreProyecto: "nombre_proyecto",
+        fechaInicio: "fecha_inicio",
+        estadoProyecto: "estado_proyecto",
+        };
 
         if (params.ordenarPor) {
-        const orden = params.ordenarOrden === "desc" ? "desc" : "asc";
-        query += ` ORDER BY ${params.ordenarPor} ${orden}`;
+        const columnaOrden = columnasOrdenables[params.ordenarPor];
+        if (!columnaOrden) {
+            throw new Error("Campo de ordenamiento inválido");
         }
+        const orden = params.ordenarOrden === "desc" ? "DESC" : "ASC";
+        query += ` ORDER BY ${columnaOrden} ${orden}`;
+    }
 
+        
         const limite = params.limite ?? 10;
         const pagina = params.pagina && params.pagina > 0 ? params.pagina : 1;
         const offset = (pagina - 1) * limite;
@@ -93,8 +112,7 @@ export class ProyectoRepository implements IProyectoRepositorio {
         const dataQuery = "SELECT *" + query + ` LIMIT $${parametroConsulta} OFFSET $${parametroConsulta + 1}`;
         values.push(limite, offset);
 
-        const countResult = await ejecutarConsulta(countQuery, values.slice(0, parametroConsulta - 1)); // Solo los filtros, sin paginación
-        const total = parseInt(countResult.rows[0].total, 10);
+    
         const result = await ejecutarConsulta(dataQuery, values);
         const proyectos = result.rows.map(row => this.mapearProyecto(row));
 
