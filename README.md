@@ -2,7 +2,7 @@
 
 PrismAPI es una API RESTful que sirve como núcleo para una aplicación de gestión de proyectos. A diferencia de las listas de tareas planas, el concepto central de PrismAPI es la organización por 'capas', permitiendo al usuario definir y administrar las distintas fases o componentes de un proyecto, desde la idea inicial hasta su finalización.
 
-> ℹ️ **Nota:** Para conocer las decisiones de arquitectura, la metodología de trabajo y la gestión del proyecto, por favor consulta el [Informe de Implementación y Avances](./Informe_Implementacion.md).
+> ℹ️ **Nota:** Para conocer las decisiones de arquitectura, la metodología de trabajo y la gestión del proyecto, por favor consulta el [Informe de Implementación y Avances](./Documentacion/Informe_Implementacion.md).
 
 --
 
