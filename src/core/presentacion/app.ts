@@ -3,7 +3,7 @@ import {FastifyError} from 'fastify';
 
 //* Aqui importamos los enrutadores de todas las entidades
 //import { construirClientesEnrutador } from "./rutas/clientesEnrutador";
-//import { construirProyectosEnrutador } from "./rutas/proyectosEnrutador";
+import { construirProyectosEnrutador } from "./rutas/proyectosEnrutador";
 import { construirConsultorEnrutador } from "./rutas/consultorEnrutador";
 import { construirTareasEnrutador } from "./rutas/tareasEnrutador";
 
@@ -13,7 +13,7 @@ app.register(
 async (appInstance) => {
     //* Aquí  construimos todos los enrutadores
     // construirClientesEnrutador(appInstance);
-    // construirProyectosEnrutador (appInstance);
+    construirProyectosEnrutador (appInstance);
     construirConsultorEnrutador(appInstance);
     construirTareasEnrutador(appInstance);
 },
