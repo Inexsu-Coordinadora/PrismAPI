@@ -1,26 +1,26 @@
-import { Pool } from "pg";
 import { IConsultor } from "../dominio/IConsultor";
 import { IConsultorRepositorio} from "../dominio/repositorio/IConsultorRepositorio";
+import { ConsultorDTO, ActualizarConsultorDTO } from "../presentacion/esquemas/consultorEsquema";
+import { IConsultorCasosUso} from "./IConsultorCasosUso";
 
-export class ConsultorCasosUso {
-    constructor(private consultorRepositorio: IConsultorRepositorio) {}
+export class ConsultorCasosUso implements IConsultorCasosUso {
+    constructor(private consultorRepositorio: IConsultorRepositorio) {}    // Inyección de dependencia
 
     async obtenerConsultores(limite?: number): Promise<IConsultor[]> {
         return await this.consultorRepositorio.listarConsultores(limite);
     }
 
     async obtenerConsultorPorId(idConsultor: string): Promise<IConsultor | null> {
-        const consultorObtenido = await this.consultorRepositorio.obtenerConsultorPorId(idConsultor);
-        return consultorObtenido;
+        return this.consultorRepositorio.obtenerConsultorPorId(idConsultor);
     }
  
-    async crearConsultor(datosConsultor: IConsultor, conexion: Pool): Promise<IConsultor> {
-        const idNuevoConsultor = await this.consultorRepositorio.crearConsultor(datosConsultor, conexion);
+    async crearConsultor(datosConsultor: ConsultorDTO): Promise<IConsultor> {
+        const idNuevoConsultor = await this.consultorRepositorio.crearConsultor(datosConsultor);
         return idNuevoConsultor;
     }
 
-    async actualizarConsultor(idConsultor: string, datosConsultor: Partial<IConsultor>): Promise<IConsultor | null> {
-        const consultorActualizado = await this.consultorRepositorio.actualizarConsultor(idConsultor, datosConsultor);
+    async actualizarConsultor(idConsultor: string, consultor: ActualizarConsultorDTO): Promise<IConsultor | null> {
+        const consultorActualizado = await this.consultorRepositorio.actualizarConsultor(idConsultor, consultor as Partial<IConsultor>);
         return consultorActualizado;
     }
 
