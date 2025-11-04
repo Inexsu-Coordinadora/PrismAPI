@@ -83,52 +83,55 @@ Para ilustrar esta separación de responsabilidades, a continuación se presenta
 ``
 PRISMAPI/ (Carpeta raíz del proyecto)
 ├── bruno/ (Colección de Bruno para probar la API) 🐶
-│   ├── entidad/ 
+│   ├── entidad/ (Endpoints de la entidad genérica)
 │   │   ├── crear_entidad.bru
+│   │   ├── obtener_entidad.bru
 │   │   └── ...
 │   ├── environments/
-│   │   └── Local.bru (Variables de entorno)
-│   └── bruno.json
+│   │   └── Local.bru (Variables de entorno, ej: {{baseUrl}})
+│   └── bruno.json (Configuración de la colección)
 │
 ├── migraciones/ (Scripts SQL para la BD) 📜
-│   ├── 001-tabla-entidad1.sql
-│   └── 002-tabla-entidad2.sql
+│   ├── 001_create_entidad_A.sql
+│   └── 002_create_entidad_B.sql
 │
-├── node_modules/
+├── node_modules/ (Dependencias de npm)
 │
 ├── src/ (El código fuente de la aplicación)
-│   ├── 1° core/ (El "Núcleo" - Lógica pura)
+│   ├── 1° core/ (El "Núcleo" - Lógica pura, no sabe nada del exterior)
 │   │   ├── aplicacion/ (Los "Verbos" - Lógica de negocio) 🧠
-│   │   │   ├── IEntidadCasosUso.ts  (El Contrato de la Lógica) 📝🧠
-│   │   │   └── EntidadCasosUso.ts   (El Cerebro) 🧠
+│   │   │   ├── IEntidadCasosUso.ts  (El Contrato de la Lógica - ¿Qué *hace*?) 📝🧠
+│   │   │   └── EntidadCasosUso.ts   (El Cerebro - ¿Cómo lo *hace*?) 🧠
 │   │   │
 │   │   └── dominio/ (Los "Sustantivos" - Reglas de la entidad) 🏷️
 │   │       ├── Entidades/
-│   │       │   └── IEntidad.ts          (El Contrato del Dato) 📝🏷️
-│   │       └── repositorio/ (Contratos con el exterior)
-│   │           └── IEntidadRepositorio.ts (El Contrato de la BD) 📝💾
+│   │       │   └── IEntidad.ts          (El Contrato del Dato - ¿Qué es una Entidad?) 📝🏷️
+│   │       └── puertos/ (Contratos con el exterior)
+│   │           └── IEntidadRepositorio.ts (El Contrato de la BD - ¿Cómo se guarda?) 📝💾
 │   │
-│   ├── 2° infraestructura/ (El "Mundo Real" - Conexiones)
+│   ├── 2° infraestructura/ (El "Mundo Real" - Conexiones y herramientas)
 │   │   ├── db/
-│   │     ├── postgres.ts            (El Conector `pg`) 🔌 
-│   │     └── EntidadRepository.ts    (La Implementación - Queries SQL) 🛠️💾
+│   │   │   └── postgres.ts            (El Conector a PostgreSQL - ¡Aquí va `pg`!) 🔌
+│   │   └── repositorios/
+│   │       └── EntidadRepositorio.ts    (La Implementación del Contrato - ¡Aquí se hacen las queries!) 🛠️💾
 │   │
-│   ├── 3° presentacion/ (La "Fachada" - HTTP)
+│   ├── 3° presentacion/ (La "Fachada" - Cómo se habla con el mundo)
 │   │   ├── controladores/
-│   │   │   └── EntidadControlador.ts    (El Controlador de Tráfico) 🚦
+│   │   │   └── EntidadControlador.ts    (El Controlador de Tráfico - Maneja HTTP) 🚦
 │   │   ├── esquemas/
-│   │   │   └── entidadEsquema.ts        (El Guardia de Seguridad - `Zod`) 👮🏻‍♂️
+│   │   │   └── entidadEsma.ts        (El Guardia de Seguridad - ¡Aquí va `Zod`!) 👮🏻‍♂️
 │   │   └── rutas/
-│   │       └── entidadEnrutador.ts      (El Mapa de Rutas) 🗺️📍
-│   ├── common/ 
-│   │   └── configuracion.ts (Carga de `.env`) ⚙️
+│   │       └── entidadEnrutador.ts      (El Mapa de Rutas - Endpoints) 🗺️📍
 │   │
-│   ├── app.ts (El "Ensamblaje" - Fastify) ⚡
-│   └── index.ts (La "Llave de Arranque") 🔑
+│   ├── common/ (Archivos compartidos)
+│   │   └── configuracion.ts (Carga las variables de entorno `.env`) ⚙️
+│   │
+│   ├── app.ts (El "Ensamblaje" - Aquí se conecta todo y arranca Fastify) ⚡
+│   └── index.ts (La "Llave de Arranque" - El `npm run dev`) 🔑
 │
-├── .gitignore
-├── package.json (Dependencias) 📦
-├── README.md (Documentación principal) 📄
+├── .gitignore (Archivos a ignorar por Git)
+├── package.json (Dependencias del proyecto) 📦
+├── README.md (La documentación que estamos escribiendo) 📄
 └── tsconfig.json (Configuración de TypeScript) 🔵
 
 ## 5. Gestión de Tareas y Avances (Sprints)
@@ -174,7 +177,9 @@ El equipo de desarrollo estará compuesto por todos los integrantes y será resp
 
 ### Coordinación y Seguimiento
 
+
 > **Herramienta de Gestión:** El equipo utilizará **[Trello]([https://trello.com/invite/b/6807ada313d4b9efcd9b3151/ATTI13d541eda55e25388910c2c828a28b0b239AD1F3/equipo-4-prismapi])** como herramienta central de gestión de proyectos para visualizar y dar seguimiento a las tareas y entregables. El Scrum Master será el responsable de mantener actualizada esta plataforma.
+
 
 Para gestionar nuestro flujo de trabajo, el tablero se organizó en las siguientes columnas clave que representan el ciclo de vida de una tarea:
 
