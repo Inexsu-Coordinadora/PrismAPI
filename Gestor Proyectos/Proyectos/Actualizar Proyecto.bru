@@ -5,11 +5,22 @@ meta {
 }
 
 put {
-  url: {{base_url}}/proyectos/
-  body: none
+  url: {{base_url}}/proyectos/26977571-fc64-40b7-b2b5-f410c89a4d22
+  body: json
   auth: inherit
+}
+
+body:json {
+  {
+    "nombreProyecto": "Limpieza Base de Datos - Actualizado",
+    "tipoProyecto": null,
+    "fechaInicio": "2025-02-01",
+    "estadoProyecto": "finalizado",
+    "fechaFin": "2025-03-01"
+  }
 }
 
 settings {
   encodeUrl: true
+  timeout: 0
 }

@@ -19,7 +19,7 @@ export class ProyectosControlador {
                 nombre, estado, fechaInicioDesde, fechaInicioHasta, pagina, limite, ordenarPor, ordenarOrden
             } = request.query;
 
-            const params ={                 nombre, 
+            const params ={nombre, 
                 estado,
                 fechaInicioDesde: fechaInicioDesde ? new Date(fechaInicioDesde): undefined,
                 fechaInicioHasta : fechaInicioHasta ? new Date(fechaInicioHasta) : undefined,

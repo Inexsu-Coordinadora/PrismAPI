@@ -109,6 +109,15 @@ export class ProyectoRepository implements IProyectoRepositorio {
         const pagina = params.pagina && params.pagina > 0 ? params.pagina : 1;
         const offset = (pagina - 1) * limite;
 
+        if (offset >= total && total > 0) {
+        return {
+            data: [],
+            total,
+            pagina,
+            limite,
+        };
+    }
+
         const dataQuery = "SELECT *" + query + ` LIMIT $${parametroConsulta} OFFSET $${parametroConsulta + 1}`;
         values.push(limite, offset);
 
