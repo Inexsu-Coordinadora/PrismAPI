@@ -1,24 +1,24 @@
 import { z } from "zod";              //Esquema: validan los datos con Zod
 
 export const CrearConsultorEsquema = z.object({                       //Esquema base para crear un consultor
-    nombreConsultor: z
+    nombre_consultor: z
     .string()
     .nonempty("El nombre del consultor es obligatorio")
     .max(100, "El nombre del consulor no puede exceder 100 caracteres"),
 
-    especialidadConsultor: z
+    especialidad_consultor: z
     .string()
     .nonempty("La especialidad del consultor es obligatoria")
     .min(5),
 
-    disponibilidaConsultor: z
+    disponibilidad_consultor: z
     .enum(['disponible', 'ocupado', 'en descanso', 'no disponible']),
 
-    emailConsultor: z
+    email_consultor: z
     .string()
     .nonempty("El email del consultor es obligatorio").email("El email del consultor no es válido"),
 
-    telefonoConsultor: z
+    telefono_consultor: z
     .string()
     .max(15, {message:"El teléfono del consultor no puede tener más de 15 caracteres"})
     .optional()
