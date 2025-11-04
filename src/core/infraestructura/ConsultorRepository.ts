@@ -1,12 +1,14 @@
 import { IConsultorRepositorio } from "../dominio/repositorio/IConsultorRepositorio";
 import { ejecutarConsulta } from "./ClientePostgres";
 import { IConsultor } from "../dominio/IConsultor";
-import { Pool } from "pg";
+import { ConsultorDTO } from "../presentacion/esquemas/consultorEsquema";
 
 export class ConsultorRepositorio implements IConsultorRepositorio {
-    async crearConsultor(datosConsultor: IConsultor, conexion: Pool): Promise<IConsultor> {
-        const columnas = Object.keys(datosConsultor).map((key) => key.replace(/([A-Z])/g, '$1').toLowerCase().replace(/^./, (letra) => letra.toUpperCase()));
-        const parametros: Array<string | number> = Object.values(datosConsultor);
+    async crearConsultor(datosConsultor: ConsultorDTO): Promise<IConsultor> {
+        const columnas = Object.keys(datosConsultor)
+        .map(key => key.replace(/([a-z0-9])([A-Z])/g, '$1_$2').toLowerCase());
+        const entries = Object.entries(datosConsultor);                                                  // Convierte un objeto en arreglo pares clave-valor
+        const parametros: Array<string | number | null> = entries.map(([, v]) => (v as string | number | null) ?? null);  //Recorre el arreglo y tomas solo los valores, dev otro arreglo
         const placeholders = parametros.map((_, index) => `$${index + 1}`).join(", ");
 
         const query = `
@@ -20,9 +22,10 @@ export class ConsultorRepositorio implements IConsultorRepositorio {
     }     
 
     async listarConsultores(limite?: number, pagina?: number): Promise<IConsultor[]> {
+       // BASE DE LA CONSULTA
         let query = 'SELECT * FROM consultores';
         const valores: Array<number> = [];
-
+        // SI VIENE LIMITE LO APLICO
         if (limite !== undefined) {
             query += ' LIMIT $1';
             valores.push(limite);
@@ -33,7 +36,7 @@ export class ConsultorRepositorio implements IConsultorRepositorio {
     }
 
     async obtenerConsultorPorId(idConsultor: string): Promise<IConsultor | null> {
-        const query = 'SELECT * FROM consultores WHERE idConsultor = $1';
+        const query = 'SELECT * FROM consultores WHERE id_consultor = $1';
         const respuesta = await ejecutarConsulta(query, [idConsultor]);
         return respuesta.rows[0] || null;
     }
@@ -47,7 +50,7 @@ export class ConsultorRepositorio implements IConsultorRepositorio {
         const query = `
             UPDATE consultores
             SET ${setClause}
-            WHERE idConsultor = $${parametros.length}
+            WHERE id_consultor = $${parametros.length}
             RETURNING *
         `;
 
@@ -56,6 +59,6 @@ export class ConsultorRepositorio implements IConsultorRepositorio {
     }       
 
     async eliminarConsultor(idConsultor: string): Promise<void> {
-        await ejecutarConsulta('DELETE FROM consultores WHERE idConsultor = $1', [idConsultor]);
+        await ejecutarConsulta('DELETE FROM consultores WHERE id_consultor = $1', [idConsultor]);
     }
 }
