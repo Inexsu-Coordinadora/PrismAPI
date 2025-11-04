@@ -81,6 +81,54 @@ Esta arquitectura se caracteriza por:
 Para ilustrar esta separación de responsabilidades, a continuación se presenta el esquema de directorios del proyecto:
 
 ``
+* **PRISMAPI/ (Carpeta raíz del proyecto)**
+    * **bruno/ (Colección de Bruno para probar la API) 🐶**
+        * entidad/ (Endpoints de la entidad genérica)
+            * crear_entidad.bru
+            * obtener_entidad.bru
+            * ...
+        * environments/
+            * Local.bru (Variables de entorno, ej: {{baseUrl}})
+        * bruno.json (Configuración de la colección)
+    * **migraciones/ (Scripts SQL para la BD) 📜**
+        * 001_create_entidad_A.sql
+        * 002_create_entidad_B.sql
+    * **node_modules/ (Dependencias de npm)**
+    * **src/ (El código fuente de la aplicación)**
+        * **1° core/ (El "Núcleo" - Lógica pura, no sabe nada del exterior)**
+            * aplicacion/ (Los "Verbos" - Lógica de negocio) 🧠
+                * IEntidadCasosUso.ts (El Contrato de la Lógica - ¿Qué hace?) 📝🧠
+                * EntidadCasosUso.ts (El Cerebro - ¿Cómo lo hace?) 🧠
+            * dominio/ (Los "Sustantivos" - Reglas de la entidad) 🏷️
+                * Entidades/
+                    * IEntidad.ts (El Contrato del Dato - ¿Qué es una Entidad?) 📝🏷️
+            * puertos/ (Contratos con el exterior)
+                * IEntidadRepositorio.ts (El Contrato de la BD - ¿Cómo se guarda?) 📝💾
+        * **2° infraestructura/ (El "Mundo Real" - Conexiones y herramientas)**
+            * db/
+                * postgres.ts (El Conector a PostgreSQL - ¡Aquí va pg!) 🔌
+            * repositorios/
+                * EntidadRepositorio.ts (La Implementación del Contrato - ¡Aquí se hacen las queries!) 🛠️💾
+        * **3° presentacion/ (La "Fachada" - Cómo se habla con el mundo)**
+            * controladores/
+                * EntidadControlador.ts (El Controlador de Tráfico - Maneja HTTP) 🚦
+            * esquemas/
+                * entidadEsma.ts (El Guardia de Seguridad - ¡Aquí va `Zod`!) 👮🏻‍♂️
+            * rutas/
+                * entidadEnrutador.ts (El Mapa de Rutas - Endpoints) 🗺️📍
+        * **common/ (Archivos compartidos)**
+            * configuracion.ts (Carga las variables de entorno `.env`) ⚙️
+        * app.ts (El "Ensamblaje" - Aquí se conecta todo y arranca Fastify) ⚡
+        * index.ts (La "Llave de Arranque" - El `npm run dev`) 🔑
+    * **.gitignore (Archivos a ignorar por Git)**
+    * **package.json (Dependencias del proyecto) 📦**
+    * **README.md (La documentación que estamos escribiendo) 📄**
+    * **tsconfig.json (Configuración de TypeScript) 🔵**
+
+
+
+
+
 PRISMAPI/ (Carpeta raíz del proyecto)
 ├── bruno/ (Colección de Bruno para probar la API) 🐶
 │   ├── entidad/ (Endpoints de la entidad genérica)
@@ -133,6 +181,7 @@ PRISMAPI/ (Carpeta raíz del proyecto)
 ├── package.json (Dependencias del proyecto) 📦
 ├── README.md (La documentación que estamos escribiendo) 📄
 └── tsconfig.json (Configuración de TypeScript) 🔵
+
 
 ## 5. Gestión de Tareas y Avances (Sprints)
 
