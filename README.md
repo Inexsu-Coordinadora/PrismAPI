@@ -4,16 +4,17 @@ PrismAPI es una API RESTful que sirve como núcleo para una aplicación de gesti
 
 > ℹ️ **Nota:** Para conocer las decisiones de arquitectura, la metodología de trabajo y la gestión del proyecto, por favor consulta el [Informe de Implementación y Avances](./Documentacion/Informe_Implementacion.md).
 
---
+---
 
 ## Tabla de Contenidos
 * [Tecnologías](#tecnologías)
-* [Prerrequisitos](#prerrequisitos)
 * [Herramientas de Desarrollo](#herramientas-de-desarrollo)
+* [Prerrequisitos](#prerrequisitos)
 * [Instalación](#instalación)
 * [Variables de Entorno](#variables-de-entorno)
 * [Ejecución](#ejecución)
 * [Migraciones](#migraciones)
+* [Probando la API con Bruno](#probando-la-api-con-bruno)
 
 ---
 
@@ -57,7 +58,7 @@ Pasos claros para instalar el proyecto.
 
 1.  Clona el repositorio:
     ```bash
-    git clone https://github.com/Inexsu-Coordinadora/PrismAPI.git
+    git clone [https://github.com/Inexsu-Coordinadora/PrismAPI.git](https://github.com/Inexsu-Coordinadora/PrismAPI.git)
     ```
 2.  Navega a la carpeta del proyecto:
     ```bash
@@ -85,7 +86,7 @@ Explica cómo configurar las variables de entorno.
     PGHOST=localhost
     
     # Este es el puerto estándar de PostgreSQL.
-    # Cámbialo solo si sabes que tu base de datos corre en un puerto diferente.
+    # Cámbialo solo si tu base de datos corre en un puerto diferente.
     PGPORT=5432 
     
     # Debes completar estas credenciales
