@@ -67,7 +67,7 @@ Para ilustrar esta separación de responsabilidades, a continuación se presenta
 ``
 ![Esquema directorios del proyecto](../Documentacion/images/esquema_directorios_proyecto.png)
 
-
+``
 ## 5. Gestión de Tareas y Avances (Sprints)
 
 El trabajo del equipo se organizará en 4 sprints, uno por semana, con el objetivo de completar la totalidad de los entregables. Esta metodología busca facilitar el seguimiento de los avances en las tareas asignadas, permitir actualizaciones constantes entre los miembros del equipo y asegurar el cumplimiento exitoso de lo propuesto.
