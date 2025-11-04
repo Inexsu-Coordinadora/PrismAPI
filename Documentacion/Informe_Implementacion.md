@@ -31,10 +31,15 @@ Ser líderes en la transformación de la gestión de proyectos, ofreciendo a los
 
 ![Foto del equipo](./images/Equipo.png)
 
+
+<div align="center">
+
 | | |
-| :--- | :--- |
-| **[Jennifer Caballero]**<br>*Ingeniera Química \| Desarrolladora Backend* | **[Katerine Henao]**<br>*Comunicadora Gráfica Publicitaria \| Desarrolladora Backend* |
-| **[Melissa Martinez]**<br>*Administradora de Empresas*<br>*Ingeniera Industrial \| Desarrolladora Backend* | **[Mónica Lizeth Calvo]**<br>*Ingeniera Industrial \| Desarrolladora Backend* |
+| :---: | :---: |
+| **Mónica Lizeth Calvo**<br>*Ingeniera Industrial \| Desarrolladora Backend* | **Jeniffer Caballero**<br>*Ingeniera Química \| Desarrolladora Backend* |
+| **Melissa Martinez**<br>*Administradora de Empresas*<br>*Ingeniera Industrial \| Desarrolladora Backend* | **Katerine Henao**<br>*Comunicadora Gráfica Publicitaria \| Desarrolladora Backend* |
+
+</div>
 
 ## 4. Decisiones Técnicas y Arquitectura
 
