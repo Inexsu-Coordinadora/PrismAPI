@@ -128,7 +128,7 @@ Este proyecto no utiliza un ORM para migraciones automáticas. La estructura de 
 5.  Abre y ejecuta estos archivos **en el orden numérico** para crear las tablas correctamente. Deberás copiar el contenido de cada archivo y pegarlo en la herramienta de consulta (Query Tool) de pgAdmin.
 
 * `001-tabla-proyectos.sql`` (Ejecutar primero)
-* `002-tabla-clientes.sql` (Ejecutar segundo)
+* `002-tabla-clientes.sql`` (Ejecutar segundo)
 * ...y así sucesivamente.
 
 Una vez ejecutados todos los scripts en orden, tu base de datos estará lista para que la aplicación se conecte a ella.
@@ -136,7 +136,7 @@ Una vez ejecutados todos los scripts en orden, tu base de datos estará lista pa
 ## 🐶 Probando la API con Bruno
 Para facilitar las pruebas de los endpoints, este repositorio incluye una colección de Bruno lista para importar.
 
-**❕[También puedes ver una demostración en video de cómo probar los endpoints en YouTube]([URL_DEL_VIDEO_AQUI])**
+**❕[También puedes ver una demostración en video de cómo probar los endpoints en YouTube](https://youtu.be/zojR3-eEUBs?si=WgxIcyMkey_CwzYi)**
 
 1.  Abre la aplicación de escritorio de **Bruno**.
 2.  Haz clic en "Open Collection" (Abrir Colección).
