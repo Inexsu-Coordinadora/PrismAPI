@@ -1,0 +1,22 @@
+meta {
+  name: Crear Tarea
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{baseUrl}}/tareas
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "tituloTarea": "Hacer el Pull Request (PR)"
+  }
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

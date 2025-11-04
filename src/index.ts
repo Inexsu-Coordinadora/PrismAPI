@@ -1,3 +1,2 @@
-import { startServer } from  './core/presentacion/app';
-
+import { startServer } from "./core/presentacion/app";
 startServer();
