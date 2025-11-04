@@ -3,8 +3,8 @@ import { CrearClienteDto, ActualizarClienteDto } from "../dominio/Entidades/Clie
 
 export interface IClienteCasosUso {
   crearCliente(cliente: CrearClienteDto): Promise<ICliente>;
-  obtenerTodos(): Promise<ICliente[]>;
-  obtenerPorId(id: string): Promise<ICliente>;
-  actualizarCliente(id: string, cliente: ActualizarClienteDto): Promise<ICliente>;
-  eliminarCliente(id: string): Promise<void>;
+  obtenerClientes(): Promise<ICliente[]>;
+  obtenerClientePorId(idCliente: string): Promise<ICliente>;
+  actualizarCliente(idCliente: string, cliente: ActualizarClienteDto): Promise<ICliente>;
+  eliminarCliente(idCliente: string): Promise<void>;
 }

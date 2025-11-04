@@ -1,32 +1,37 @@
 import { ICliente } from "../ICliente"
 
 export class Cliente implements ICliente {
-  id: string;
-  nombre: string;
-  email: string;
-  telefono: string;
-  documentoIdentidad: string;
+  idCliente: string;
+  nombreCliente: string;
+  apellidoCliente: string;
+  documentoCliente: string;
+  emailCliente: string;
+  telefonoCliente: string;
+  
   
 
   constructor(datosCliente: ICliente) {
-    this.id = datosCliente.id;
-    this.nombre = datosCliente.nombre;
-    this.email = datosCliente.email;
-    this.telefono = datosCliente.telefono;
-    this.documentoIdentidad = datosCliente.documentoIdentidad;
+    this.idCliente = datosCliente.idCliente;
+    this.nombreCliente = datosCliente.nombreCliente;
+    this.apellidoCliente = datosCliente.nombreCliente;
+    this.emailCliente = datosCliente.emailCliente;
+    this.telefonoCliente = datosCliente.telefonoCliente;
+    this.documentoCliente = datosCliente.documentoCliente;
   }
 }
 
 export interface CrearClienteDto {
-  nombre: string;
-  email: string;
-  telefono: string;
-  documentoIdentidad: string;
+  nombreCliente: string;
+  apellidoCliente: string;
+  emailCliente: string | null;
+  telefonoCliente: string;
+  documentoCliente: string;
 }
 
 export interface ActualizarClienteDto {
-  nombre?: string | undefined;
-  email?: string | undefined;
-  telefono?: string | undefined;
-  documentoIdentidad?: string | undefined;
+  nombreCliente?: string | undefined;
+  apellidoCliente?: string | undefined;
+  emailCliente?: string | undefined;
+  telefonoCliente?: string | undefined;
+  documentoCliente?: string | undefined;
 }

@@ -30,7 +30,7 @@ export class ClienteControlador {
     reply: FastifyReply
   ) => {
     try {
-      const clientes = await this.clientesCasosUso.obtenerTodos();
+      const clientes = await this.clientesCasosUso.obtenerClientes();
       return reply.code(200).send({
         mensaje: "Clientes encontrados correctamente",
         clientes: clientes,
@@ -48,7 +48,7 @@ export class ClienteControlador {
   ) => {
     try {
       const { id } = request.params;
-      const cliente = await this.clientesCasosUso.obtenerPorId(id);
+      const cliente = await this.clientesCasosUso.obtenerClientePorId(id);
 
       return reply.code(200).send({
         mensaje: "Cliente encontrado correctamente",
@@ -70,10 +70,10 @@ export class ClienteControlador {
   ) => {
     try {
       const { id } = request.params;
-      const datosActualizar = actualizarClienteEsquema.parse(request.body);
+      const datosActualizarCliente = actualizarClienteEsquema.parse(request.body);
       const clienteActualizado = await this.clientesCasosUso.actualizarCliente(
         id,
-        datosActualizar
+        datosActualizarCliente
       );
 
       return reply.code(200).send({

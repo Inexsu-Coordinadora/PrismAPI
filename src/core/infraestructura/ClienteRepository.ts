@@ -6,33 +6,36 @@ import { CrearClienteDto, ActualizarClienteDto } from '../dominio/Entidades/Clie
 import { IClienteRepositorio } from '../dominio/repositorio/IClienteRepositorio';
 
 export class ClienteRepository implements IClienteRepositorio {
-  
+
+
   private mapearCliente(fila: any): Cliente {
     const datosCliente: ICliente = {
-      id: fila.id,
-      nombre: fila.nombre,
-      email: fila.email,
-      telefono: fila.telefono,
-      documentoIdentidad: fila.documento_identidad
+      idCliente: fila.id_cliente,
+      nombreCliente: fila.nombre_cliente,
+      apellidoCliente: fila.apellido_cliente,
+      emailCliente: fila.email_cliente,
+      telefonoCliente: fila.telefono_cliente,
+      documentoCliente: fila.documento_cliente
     };
     return new Cliente(datosCliente);
   }
 
 
-  async crear(datos: CrearClienteDto): Promise<Cliente> {
-    const id = uuidv4();
+  async crearCliente(datosCliente: CrearClienteDto): Promise<Cliente> {
+    const idCliente = uuidv4();
     const query = `
-      INSERT INTO clientes (id, nombre, email, telefono, documento_identidad)
-      VALUES ($1, $2, $3, $4, $5)
+      INSERT INTO clientes (id_cliente, nombre_cliente, apellido_cliente, email_cliente, telefono_cliente, documento_cliente)
+      VALUES ($1, $2, $3, $4, $5, $6)
       RETURNING *
     `;
     
     const parametros = [
-      id, 
-      datos.nombre, 
-      datos.email, 
-      datos.telefono, 
-      datos.documentoIdentidad
+      idCliente, 
+      datosCliente.nombreCliente, 
+      datosCliente.apellidoCliente,
+      datosCliente.emailCliente, 
+      datosCliente.telefonoCliente, 
+      datosCliente.documentoCliente
     ];
     
     const resultado = await ejecutarConsulta(query, parametros);
@@ -40,16 +43,16 @@ export class ClienteRepository implements IClienteRepositorio {
   }
 
 
-  async obtenerTodos(): Promise<Cliente[]> {
+  async obtenerClientes(): Promise<Cliente[]> {
     const query = 'SELECT * FROM clientes ORDER BY fecha_creacion DESC';
     const resultado = await ejecutarConsulta(query);
     
     return resultado.rows.map(fila => this.mapearCliente(fila));
   }
-
-  async obtenerPorId(id: string): Promise<Cliente | null> {
-    const query = 'SELECT * FROM clientes WHERE id = $1';
-    const resultado = await ejecutarConsulta(query, [id]);
+ 
+  async obtenerClientePorId(idCliente: string): Promise<Cliente | null> {
+    const query = 'SELECT * FROM clientes WHERE id_cliente = $1';
+    const resultado = await ejecutarConsulta(query, [idCliente]);
     
     if (resultado.rows.length === 0) {
       return null;
@@ -58,60 +61,64 @@ export class ClienteRepository implements IClienteRepositorio {
     return this.mapearCliente(resultado.rows[0]);
   }
 
-  async actualizar(id: string, datos: ActualizarClienteDto): Promise<Cliente | null> {
+  async actualizarCliente(idCliente: string, datosCliente: ActualizarClienteDto): Promise<Cliente | null> {
 
     const mapeoColumnas: { [key: string]: string } = {
-      nombre: 'nombre',
-      email: 'email',
-      telefono: 'telefono',
-      documentoIdentidad: 'documento_identidad'
+      nombreCliente: 'nombre_cliente',
+      apellidoCliente: 'apellido_cliente',
+      emailCliente: 'email_cliente',
+      telefonoCliente: 'telefono_cliente',
+      documentoCliente: 'documento_cliente'
     };
 
-    const columnasActualizar = Object.keys(datos)
-      .map(key => mapeoColumnas[key])
-      .filter(Boolean);
+    const campos = Object.entries(datosCliente)
+      .filter(([_, value]) => value !== undefined)
+      .map(([key, value]) => ({
+        columna: mapeoColumnas[key],
+        valor: value
+      }));
 
-    if (columnasActualizar.length === 0) {
-      return this.obtenerPorId(id);
+    if (campos.length === 0) {
+      return this.obtenerClientePorId(idCliente);
     }
 
-    const setClause = columnasActualizar
-      .map((col, i) => `${col} = $${i + 1}`)
+    const setClause = campos
+      .map((campo, i) => `${campo.columna} = $${i + 1}`)
       .join(', ');
 
-    const parametros = Object.values(datos);
-    parametros.push(id);
+    const parametros = campos.map(c => c.valor);
+    parametros.push(idCliente);
 
     const query = `
-      UPDATE clientes 
+      UPDATE clientes
       SET ${setClause}, fecha_actualizacion = CURRENT_TIMESTAMP
-      WHERE id = $${parametros.length}
+      WHERE id_cliente = $${parametros.length}
       RETURNING *
     `;
 
     const resultado = await ejecutarConsulta(query, parametros);
-    
+
     if (resultado.rows.length === 0) {
       return null;
     }
-    
+
     return this.mapearCliente(resultado.rows[0]);
   }
 
-  async eliminar(id: string): Promise<boolean> {
-    const query = 'DELETE FROM clientes WHERE id = $1';
-    const resultado = await ejecutarConsulta(query, [id]);
+  async eliminarCliente(idCliente: string): Promise<boolean> {
+    const query = 'DELETE FROM clientes WHERE id_cliente = $1';
+    const resultado = await ejecutarConsulta(query, [idCliente]);
     
     return resultado.rowCount !== null && resultado.rowCount > 0;
   }
 
 
-  async existeEmail(email: string, idExcluir?: string): Promise<boolean> {
-    let query = 'SELECT COUNT(*) FROM clientes WHERE email = $1';
-    const parametros: (string | number | null)[] = [email];
+  async existeEmailCliente(emailCliente: string, idExcluir?: string): Promise<boolean> {
+    let query = 'SELECT COUNT(*) FROM clientes WHERE email_cliente = $1';
+    const parametros: (string | number | null)[] = [emailCliente];
     
     if (idExcluir) {
-      query += ' AND id != $2';
+      query += ' AND id_cliente != $2';
       parametros.push(idExcluir);
     }
     
@@ -119,12 +126,12 @@ export class ClienteRepository implements IClienteRepositorio {
     return parseInt(resultado.rows[0].count) > 0;
   }
 
-  async existeDocumento(documento: string, idExcluir?: string): Promise<boolean> {
-    let query = 'SELECT COUNT(*) FROM clientes WHERE documento_identidad = $1';
-    const parametros: (string | number | null)[] = [documento];
+  async existeDocumentoCliente(documentoCliente: string, idExcluir?: string): Promise<boolean> {
+    let query = 'SELECT COUNT(*) FROM clientes WHERE documento_cliente = $1';
+    const parametros: (string | number | null)[] = [documentoCliente];
     
     if (idExcluir) {
-      query += ' AND id != $2';
+      query += ' AND id_cliente != $2';
       parametros.push(idExcluir);
     }
     

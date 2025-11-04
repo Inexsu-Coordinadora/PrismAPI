@@ -1,9 +1,10 @@
 
 export interface ICliente {
-  id: string;
-  documentoIdentidad: string;
-  nombre: string;
-  email: string;
-  telefono: string;
+  idCliente: string;
+  nombreCliente: string;
+  apellidoCliente: string;
+  documentoCliente: string;
+  emailCliente: string;
+  telefonoCliente: string;
   
   }

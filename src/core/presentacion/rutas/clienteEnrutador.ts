@@ -11,10 +11,10 @@ function clienteEnrutador(
   controlador: ClienteControlador
 ) {
   app.get("/clientes", controlador.listarClientes);
-  app.get("/clientes/:id", controlador.obtenerClientePorId);
+  app.get("/clientes/:idCliente", controlador.obtenerClientePorId);
   app.post("/clientes", controlador.crearCliente);
-  app.put("/clientes/:id", controlador.actualizarCliente);
-  app.delete("/clientes/:id", controlador.eliminarCliente);
+  app.put("/clientes/:idCliente", controlador.actualizarCliente);
+  app.delete("/clientes/:idCliente", controlador.eliminarCliente);
 }
 
 

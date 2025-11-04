@@ -2,17 +2,17 @@ import { ActualizarClienteDto, CrearClienteDto } from "../Entidades/Cliente";
 import { ICliente } from "../ICliente"
 
 export interface IClienteRepositorio {
-  crear(datos: CrearClienteDto): Promise<ICliente>;
+  crearCliente(datosCliente: CrearClienteDto): Promise<ICliente>;
   
-  obtenerTodos(): Promise<ICliente[]>;
+  obtenerClientes(): Promise<ICliente[]>;
 
-  obtenerPorId(id: string): Promise<ICliente | null>;
+  obtenerClientePorId(idCliente: string): Promise<ICliente | null>;
   
-  actualizar(id: string, datos: ActualizarClienteDto): Promise<ICliente | null>;
+  actualizarCliente(idCliente: string, datosCliente: ActualizarClienteDto): Promise<ICliente | null>;
   
-  eliminar(id: string): Promise<boolean>; 
+  eliminarCliente(idCliente: string): Promise<boolean>; 
   
-  existeEmail(email: string, idExcluir?: string): Promise<boolean>;
+  existeEmailCliente(emailCliente: string, idClienteExcluir?: string): Promise<boolean>;
   
-  existeDocumento(documento: string, idExcluir?: string): Promise<boolean>;
+  existeDocumentoCliente(documentoCliente: string, idClienteExcluir?: string): Promise<boolean>;
 }
