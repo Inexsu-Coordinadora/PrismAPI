@@ -1,6 +1,6 @@
 {
   "version": "1",
-  "name": "gestor-proyectos-db",
+  "name": "Gestor Proyectos",
   "type": "collection",
   "ignore": [
     "node_modules",

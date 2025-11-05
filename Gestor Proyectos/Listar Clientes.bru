@@ -1,16 +1,15 @@
 meta {
-  name: 1. Crear Cliente
+  name: Listar Clientes
   type: http
   seq: 2
 }
 
 get {
-  url: http://localhost:3001/api/clientes
+  url: {{BaseUrl}}
   body: none
   auth: inherit
 }
 
 settings {
   encodeUrl: true
-  timeout: 0
 }

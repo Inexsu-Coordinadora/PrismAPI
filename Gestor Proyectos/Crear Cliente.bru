@@ -1,11 +1,11 @@
 meta {
-  name: Eliminar Cliente
+  name: Crear Cliente
   type: http
-  seq: 6
+  seq: 1
 }
 
-delete {
-  url: http://127.0.0.1:3001/api/clientes/
+post {
+  url: {{BaseUrl}}
   body: none
   auth: inherit
 }

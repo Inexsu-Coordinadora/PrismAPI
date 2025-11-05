@@ -1,11 +1,11 @@
 meta {
-  name: Obtener Cliente por ID
+  name: Actualizar Cliente
   type: http
   seq: 4
 }
 
-get {
-  url: http://127.0.0.1:3001/api/clientes
+put {
+  url: {{BaseUrl}}
   body: none
   auth: inherit
 }
