@@ -2,7 +2,7 @@ import Fastify from 'fastify';;
 import {FastifyError} from 'fastify';
 
 //* Aqui importamos los enrutadores de todas las entidades
-//import { construirClientesEnrutador } from "./rutas/clientesEnrutador";
+import { construirClienteEnrutador } from "./rutas/clienteEnrutador";
 import { construirProyectosEnrutador } from "./rutas/proyectosEnrutador";
 import { construirConsultorEnrutador } from "./rutas/consultorEnrutador";
 import { construirTareasEnrutador } from "./rutas/tareasEnrutador";
@@ -12,7 +12,7 @@ const app = Fastify({ logger: true });
 app.register(
 async (appInstance) => {
     //* Aquí  construimos todos los enrutadores
-    // construirClientesEnrutador(appInstance);
+    construirClienteEnrutador(appInstance);
     construirProyectosEnrutador (appInstance);
     construirConsultorEnrutador(appInstance);
     construirTareasEnrutador(appInstance);
