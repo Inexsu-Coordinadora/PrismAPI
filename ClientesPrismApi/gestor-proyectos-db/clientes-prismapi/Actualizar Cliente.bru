@@ -1,0 +1,15 @@
+meta {
+  name: Actualizar Cliente
+  type: http
+  seq: 5
+}
+
+put {
+  url: http://127.0.0.1:3001/api/clientes
+  body: none
+  auth: inherit
+}
+
+settings {
+  encodeUrl: true
+}

@@ -44,7 +44,7 @@ export class ClienteRepository implements IClienteRepositorio {
 
 
   async obtenerClientes(): Promise<Cliente[]> {
-    const query = 'SELECT * FROM clientes ORDER BY fecha_creacion DESC';
+    const query = 'SELECT * FROM clientes ORDER BY nombre_cliente ASC';
     const resultado = await ejecutarConsulta(query);
     
     return resultado.rows.map(fila => this.mapearCliente(fila));
@@ -91,7 +91,7 @@ export class ClienteRepository implements IClienteRepositorio {
 
     const query = `
       UPDATE clientes
-      SET ${setClause}, fecha_actualizacion = CURRENT_TIMESTAMP
+      SET ${setClause}
       WHERE id_cliente = $${parametros.length}
       RETURNING *
     `;

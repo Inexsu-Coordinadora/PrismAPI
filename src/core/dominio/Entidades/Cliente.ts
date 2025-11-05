@@ -4,7 +4,7 @@ export class Cliente implements ICliente {
   idCliente: string;
   nombreCliente: string;
   apellidoCliente: string;
-  documentoCliente: string;
+  documentoCliente: number;
   emailCliente: string;
   telefonoCliente: string;
   
@@ -13,7 +13,7 @@ export class Cliente implements ICliente {
   constructor(datosCliente: ICliente) {
     this.idCliente = datosCliente.idCliente;
     this.nombreCliente = datosCliente.nombreCliente;
-    this.apellidoCliente = datosCliente.nombreCliente;
+    this.apellidoCliente = datosCliente.apellidoCliente;
     this.emailCliente = datosCliente.emailCliente;
     this.telefonoCliente = datosCliente.telefonoCliente;
     this.documentoCliente = datosCliente.documentoCliente;

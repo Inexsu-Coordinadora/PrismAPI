@@ -4,34 +4,34 @@ import { Cliente, CrearClienteDto, ActualizarClienteDto } from '../dominio/Entid
 import { crearClienteEsquema, actualizarClienteEsquema } from '../presentacion/esquemas/clienteEsquema';
 
 export class ClienteCasosUso implements IClienteCasosUso {
-  constructor(private repositorio: IClienteRepositorio) {}
+  constructor(private clienteRepositorio: IClienteRepositorio) {}
 
   // Create
   async crearCliente(datos: CrearClienteDto): Promise<Cliente> {
     
     const datosValidados = crearClienteEsquema.parse(datos);
     
-    const emailExisteCliente = await this.repositorio.existeEmailCliente(datosValidados.emailCliente);
+    const emailExisteCliente = await this.clienteRepositorio.existeEmailCliente(datosValidados.emailCliente);
     if (emailExisteCliente) {
       throw new Error('Ya existe un cliente con ese email');
     }
     
-    const documentoExiste = await this.repositorio.existeDocumentoCliente(datosValidados.documentoCliente);
+    const documentoExiste = await this.clienteRepositorio.existeDocumentoCliente(datosValidados.documentoCliente);
     if (documentoExiste) {
       throw new Error('Ya existe un cliente con ese documento de identidad');
     }
     
-    return await this.repositorio.crearCliente(datosValidados);
+    return await this.clienteRepositorio.crearCliente(datosValidados);
   }
 
   // Read
   async obtenerClientes(): Promise<Cliente[]> {
-    return await this.repositorio.obtenerClientes();
+    return await this.clienteRepositorio.obtenerClientes();
   }
 
 
   async obtenerClientePorId(id: string): Promise<Cliente> {
-    const cliente = await this.repositorio.obtenerClientePorId(id);
+    const cliente = await this.clienteRepositorio.obtenerClientePorId(id);
     
     if (!cliente) {
       throw new Error('Cliente no encontrado');
@@ -45,26 +45,26 @@ export class ClienteCasosUso implements IClienteCasosUso {
 
     const datosValidados = actualizarClienteEsquema.parse(datos) as ActualizarClienteDto;
     
-    const clienteExiste = await this.repositorio.obtenerClientePorId(id);
+    const clienteExiste = await this.clienteRepositorio.obtenerClientePorId(id);
     if (!clienteExiste) {
       throw new Error('Cliente no encontrado');
     }
     
     if (datosValidados.emailCliente) {
-      const emailExiste = await this.repositorio.existeEmailCliente(datosValidados.emailCliente, id);
+      const emailExiste = await this.clienteRepositorio.existeEmailCliente(datosValidados.emailCliente, id);
       if (emailExiste) {
         throw new Error('Ya existe otro cliente con ese email');
       }
     }
     
     if (datosValidados.documentoCliente) {
-      const documentoExiste = await this.repositorio.existeDocumentoCliente(datosValidados.documentoCliente, id);
+      const documentoExiste = await this.clienteRepositorio.existeDocumentoCliente(datosValidados.documentoCliente, id);
       if (documentoExiste) {
         throw new Error('Ya existe otro cliente con ese documento de identidad');
       }
     }
     
-    const clienteActualizado = await this.repositorio.actualizarCliente(id, datosValidados);
+    const clienteActualizado = await this.clienteRepositorio.actualizarCliente(id, datosValidados);
     
     if (!clienteActualizado) {
       throw new Error('Error al actualizar el cliente');
@@ -75,7 +75,7 @@ export class ClienteCasosUso implements IClienteCasosUso {
 
   // Delete
   async eliminarCliente(idCliente: string): Promise<void> {
-    const eliminado = await this.repositorio.eliminarCliente(idCliente);
+    const eliminado = await this.clienteRepositorio.eliminarCliente(idCliente);
     
     if (!eliminado) {
       throw new Error('Cliente no encontrado');

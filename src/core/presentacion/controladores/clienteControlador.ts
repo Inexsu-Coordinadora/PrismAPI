@@ -43,12 +43,12 @@ export class ClienteControlador {
 
 
   obtenerClientePorId = async (
-    request: FastifyRequest<{ Params: { id: string } }>,
+    request: FastifyRequest<{ Params: { idCliente: string } }>,
     reply: FastifyReply
   ) => {
     try {
-      const { id } = request.params;
-      const cliente = await this.clientesCasosUso.obtenerClientePorId(id);
+      const { idCliente } = request.params;
+      const cliente = await this.clientesCasosUso.obtenerClientePorId(idCliente);
 
       return reply.code(200).send({
         mensaje: "Cliente encontrado correctamente",
@@ -65,14 +65,14 @@ export class ClienteControlador {
 
 
   actualizarCliente = async (
-    request: FastifyRequest<{ Params: { id: string }; Body: ActualizarClienteDto }>,
+    request: FastifyRequest<{ Params: { idCliente: string }; Body: ActualizarClienteDto }>,
     reply: FastifyReply
   ) => {
     try {
-      const { id } = request.params;
+      const { idCliente } = request.params;
       const datosActualizarCliente = actualizarClienteEsquema.parse(request.body);
       const clienteActualizado = await this.clientesCasosUso.actualizarCliente(
-        id,
+        idCliente,
         datosActualizarCliente
       );
 
@@ -90,16 +90,16 @@ export class ClienteControlador {
 
 
   eliminarCliente = async (
-    request: FastifyRequest<{ Params: { id: string } }>,
+    request: FastifyRequest<{ Params: { idCliente: string } }>,
     reply: FastifyReply
   ) => {
     try {
-      const { id } = request.params;
-      await this.clientesCasosUso.eliminarCliente(id);
+      const { idCliente } = request.params;
+      await this.clientesCasosUso.eliminarCliente(idCliente);
 
       return reply.code(200).send({
         mensaje: "Cliente eliminado correctamente",
-        idClienteEliminado: id,
+        idClienteEliminado: idCliente,
       });
     } catch (error) {
       if (error instanceof Error && error.message === "Cliente no encontrado") {

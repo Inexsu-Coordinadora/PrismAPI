@@ -13,5 +13,7 @@ export async function ejecutarConsulta(
   consulta: string,
   parametros?: Array<number | string | null>
 ) {
+  
+  console.log('cons', configuration)
   return await pool.query(consulta, parametros);
 }

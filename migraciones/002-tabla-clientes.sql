@@ -1,11 +1,11 @@
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp"; 
 
 CREATE TABLE IF NOT EXISTS clientes (
-    idCliente UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-    nombreCliente VARCHAR(100) NOT NULL,
-    apellidoCliente VARCHAR(100) NOT NULL,
-    documentoCliente NUMBER,
-    emailCliente VARCHAR(100) NOT NULL,
-    telefonoCliente VARCHAR(100) NOT NULL,
+    id_cliente UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    nombre_cliente VARCHAR(100) NOT NULL,
+    apellido_cliente VARCHAR(100) NOT NULL,
+    documento_cliente INTEGER,
+    email_cliente VARCHAR(100) NOT NULL,
+    telefono_cliente VARCHAR(100) NOT NULL
    
 );
