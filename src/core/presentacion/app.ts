@@ -1,10 +1,11 @@
-import Fastify from "fastify";
-import { FastifyError } from "fastify";
+import Fastify from 'fastify';;
+import {FastifyError} from 'fastify';
+
 //* Aqui importamos los enrutadores de todas las entidades
 import { construirClienteEnrutador } from "./rutas/clienteEnrutador";
-//import { construirProyectosEnrutador } from "./rutas/proyectosEnrutador";
-//import { construirConsultoresEnrutador } from "./rutas/proyectosEnrutador";
-//import { construirTareasEnrutador } from "./rutas/tareasEnrutador";
+import { construirProyectosEnrutador } from "./rutas/proyectosEnrutador";
+import { construirConsultorEnrutador } from "./rutas/consultorEnrutador";
+import { construirTareasEnrutador } from "./rutas/tareasEnrutador";
 
 const app = Fastify({ logger: true });
 
@@ -12,9 +13,9 @@ app.register(
 async (appInstance) => {
     //* Aquí  construimos todos los enrutadores
     construirClienteEnrutador(appInstance);
-    // construirProyectosEnrutador (appInstance);
-    // construirConsultoresEnrutadorappInstance);
-    //construirTareasEnrutador(appInstance);
+    construirProyectosEnrutador (appInstance);
+    construirConsultorEnrutador(appInstance);
+    construirTareasEnrutador(appInstance);
 },
 { prefix: "/api" }
 );
