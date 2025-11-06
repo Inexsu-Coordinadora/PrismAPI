@@ -58,7 +58,7 @@ Pasos claros para instalar el proyecto.
 
 1.  Clona el repositorio:
     ```bash
-    git clone [https://github.com/Inexsu-Coordinadora/PrismAPI.git](https://github.com/Inexsu-Coordinadora/PrismAPI.git)
+    git clone git@github.com:Inexsu-Coordinadora/PrismAPI.git
     ```
 2.  Navega a la carpeta del proyecto:
     ```bash
@@ -141,7 +141,7 @@ Para facilitar las pruebas de los endpoints, este repositorio incluye una colecc
 
 1.  Abre la aplicación de escritorio de **Bruno**.
 2.  Haz clic en "Open Collection" (Abrir Colección).
-3.  Navega hasta la carpeta de este proyecto y selecciona la carpeta `bruno` (o `bruno_collection`, el nombre que le hayas puesto).
+3.  Navega hasta la carpeta de este proyecto y selecciona la carpeta `Gestor Proyectos`.
 4.  Bruno importará automáticamente todos los endpoints (ej: "Crear Proyecto", "Obtener Usuarios", etc.).
 
 ### Configuración del Entorno en Bruno
