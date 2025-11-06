@@ -37,7 +37,7 @@ Ser líderes en la transformación de la gestión de proyectos, ofreciendo a los
 | | |
 | :---: | :---: |
 | **Mónica Lizeth Calvo**<br>*Ingeniera Industrial \| Desarrolladora Backend* | **Jeniffer Caballero**<br>*Ingeniera Química \| Desarrolladora Backend* |
-| **Melissa Martinez**<br>*Administradora de Empresas*<br>*Ingeniera Industrial \| Desarrolladora Backend* | **Katerine Henao**<br>*Comunicadora Gráfica Publicitaria \| Desarrolladora Backend* |
+| **Melissa Martinez**<br>*Ingeniera Industrial \| Desarrolladora Backend* | **Katerine Henao**<br>*Comunicadora Gráfica Publicitaria \| Desarrolladora Backend* |
 
 </div>
 
@@ -69,10 +69,18 @@ Esta arquitectura se caracteriza por:
 
 Para ilustrar esta separación de responsabilidades, a continuación se presenta el esquema de directorios del proyecto:
 
-``
+
 ![Esquema directorios del proyecto](../Documentacion/images/esquema_directorios_proyecto.png)
 
-``
+### Principios de Clean Code
+
+Además de la estructura arquitectónica, el equipo se comprometió a seguir los principios de **Clean Code** en la medida de lo posible. Esto se traduce en:
+
+* **Nombres Significativos:** Usar nombres de variables, funciones y clases que revelen su intención (ej. `TareaCasosUso` en lugar de `ManagerT`).
+* **Funciones Pequeñas:** Crear funciones que hagan una sola cosa (Principio de Responsabilidad Única a nivel de función).
+* **Evitar Repetir Código (DRY):** Reutilizar lógica (como la `configuracion.ts`) en lugar de copiar y pegar.
+* **Comentarios Claros:** Usar comentarios solo donde es necesario para explicar el "por qué" de una lógica compleja, no el "qué".
+
 ## 5. Gestión de Tareas y Avances (Sprints)
 
 El trabajo del equipo se organizará en 4 sprints, uno por semana, con el objetivo de completar la totalidad de los entregables. Esta metodología busca facilitar el seguimiento de los avances en las tareas asignadas, permitir actualizaciones constantes entre los miembros del equipo y asegurar el cumplimiento exitoso de lo propuesto.
