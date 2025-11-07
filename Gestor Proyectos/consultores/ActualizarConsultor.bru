@@ -1,0 +1,27 @@
+meta {
+  name: ActualizarConsultor
+  type: http
+  seq: 4
+}
+
+put {
+  url: {{base_url}}/api/consultores/143517d8-d7e0-4858-996c-f40c5ed62c38
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "nombre_consultor": "Cammilo",
+    "especialidad_consultor": "Desarrollo Backend",
+    "disponibilidad_consultor": "ocupado",
+    "email_consultor": "melissa.martinez@example.com",
+    "telefono_consultor": "3004567890"
+  }
+  
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}
