@@ -1,4 +1,4 @@
-import {IConsultor, DisponibilidadConsultor} from "../IConsultor";
+import {IConsultor, DisponibilidadConsultor} from "./IConsultor";
 
 export class Consultor implements IConsultor {
     nombreConsultor: string;
