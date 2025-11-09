@@ -23,7 +23,7 @@ export class GestionTareasServicio implements IGestionTareasServicio{
     async crearTareaEnProyecto(idProyecto: string, datosTarea: CrearTareaServicioDTO): Promise<string> {
         
         //* --------- 1. Validación: Proyecto existe ---------// 
-        //!Pasa tal cual
+   
         const proyecto = await this.proyectoRepositorio.obtenerProyectoPorId(idProyecto);
         if (!proyecto) {
             throw new Error(`Proyecto no encontrado con ID: ${idProyecto}`);
@@ -31,7 +31,6 @@ export class GestionTareasServicio implements IGestionTareasServicio{
 
         //* --------- 2. Validación: Consultor existe (si se asigna) ---------//
         if (datosTarea.idConsultorAsignado) {
-            //! Pasa igual pero cambia el parametro de obtenerConsultorPorId(idConsultor)
             const consultorExiste = await this.consultorRepositorio.obtenerConsultorPorId(datosTarea.idConsultorAsignado);
             if (!consultorExiste) {
                 throw new Error(`Consultor no encontrado con ID: ${datosTarea.idConsultorAsignado}`);
@@ -57,12 +56,7 @@ export class GestionTareasServicio implements IGestionTareasServicio{
         );
         if (tareaExistente) {
             throw new Error(`Ya existe una tarea con el título '${datosTarea.tituloTarea}' en este proyecto.`);
-        }
-
-
-
-
-
+        } 
         
         throw new Error("Method not implemented.");
     }
