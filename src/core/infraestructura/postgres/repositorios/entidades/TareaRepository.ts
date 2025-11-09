@@ -2,96 +2,149 @@ import { ITareaRepositorio } from "../../../../dominio/repositorio/entidades/ITa
 import { ITarea } from "../../../../dominio/entidades/ITarea";
 import { ejecutarConsulta } from "../../ClientePostgres";
 
-//* Tipo helper para el resultado de nuestra función privada
+
 type PartesConsulta = {
     columnasSQL: string[];
     parametros: (string | number | null)[];
     placeholders: string[]; //* Solo para crearTarea -> INSERT
     setClauses: string[];   //* Solo para actualizarTarea -> UPDATE
-}
-
+};
 export class TareaRepository implements ITareaRepositorio {
-
-async crearTarea(datosTarea: ITarea): Promise<string> {
-    const { columnasSQL, parametros, placeholders } = 
-            this.construirPartesConsulta(datosTarea); //* <-- Usa el Helper 3
-
-    if (columnasSQL.length === 0) {
+    
+    async crearTarea(datosTarea: ITarea): Promise<string> {
+        const { columnasSQL, parametros, placeholders } = 
+        this.construirPartesConsulta(datosTarea); //* <-- Usa el Helper 3
+        
+        if (columnasSQL.length === 0) {
             throw new Error("No hay datos válidos para crear la tarea.");
         }
-
-    const query = `
+        
+        const query = `
         INSERT INTO tareas(${columnasSQL.join(", ")})
         VALUES (${placeholders.join(", ")})
         RETURNING id_tarea
         `;
-
-    const respuesta = await ejecutarConsulta(query, parametros);
+        
+        const respuesta = await ejecutarConsulta(query, parametros);
         return respuesta.rows[0].id_tarea;
-}
-
-
-async listarTareas(limite?: number): Promise<ITarea[]> {
-    let query = "SELECT * FROM tareas ORDER BY id_tarea ASC";
-    const valores: number[] = [];
-
-    if (limite !== undefined) {
-    query += " LIMIT $1";
-    valores.push(limite);
     }
-
-    const result = await ejecutarConsulta(query, valores);
-
-    return result.rows.map(this.mapearTarea);//* <-- Usa el Helper 1
-}
-
-async obtenerTareaPorId(idTarea: string): Promise<ITarea | null> {
-    const query = "SELECT * FROM tareas WHERE id_tarea = $1";
-    const result = await ejecutarConsulta(query, [idTarea]);
-
-    if (result.rows.length === 0) {
-    return null;
-    }
-    return this.mapearTarea(result.rows[0]); //* <-- Usa el Helper 1
-}
-
-async actualizarTarea(
-    idTarea: string,
-    datosTarea: Partial<ITarea>
-): Promise<ITarea | null> {
     
-    const { parametros, setClauses } = 
-            this.construirPartesConsulta(datosTarea); //* <-- Usa el Helper 3
+    
+    async listarTareas(limite?: number): Promise<ITarea[]> {
+        let query = "SELECT * FROM tareas ORDER BY id_tarea ASC";
+        const valores: number[] = [];
+        
+        if (limite !== undefined) {
+            query += " LIMIT $1";
+            valores.push(limite);
+        }
+        
+        const result = await ejecutarConsulta(query, valores);
+        
+        return result.rows.map(this.mapearTarea);//* <-- Usa el Helper 1
+    }
+    
 
+    async obtenerTareaPorId(idTarea: string): Promise<ITarea | null> {
+        const query = "SELECT * FROM tareas WHERE id_tarea = $1";
+        const result = await ejecutarConsulta(query, [idTarea]);
+        
+        if (result.rows.length === 0) {
+            return null;
+        }
+        return this.mapearTarea(result.rows[0]); //* <-- Usa el Helper 1
+    }
+    
+
+    async actualizarTarea(
+        idTarea: string,
+        datosTarea: Partial<ITarea>
+    ): Promise<ITarea | null> {
+        
+        const { parametros, setClauses } = 
+        this.construirPartesConsulta(datosTarea); //* <-- Usa el Helper 3
+        
         if (setClauses.length === 0) {
             return this.obtenerTareaPorId(idTarea); 
         }
         
         const setClause = setClauses.join(", ");
         parametros.push(idTarea);
-
-    const query = `
-    UPDATE tareas
-    SET ${setClause}
-    WHERE id_tarea = $${parametros.length}
-    RETURNING *; 
-    `;
-
-    const result = await ejecutarConsulta(query,parametros);
-    
-    if (result.rows.length === 0) {
-        return null;
+        
+        const query = `
+        UPDATE tareas
+        SET ${setClause}
+        WHERE id_tarea = $${parametros.length}
+        RETURNING *; 
+        `;
+        
+        const result = await ejecutarConsulta(query,parametros);
+        
+        if (result.rows.length === 0) {
+            return null;
+        }
+        return this.mapearTarea(result.rows[0]); //* <-- Usa el Helper 1
+        
     }
-    return this.mapearTarea(result.rows[0]); //* <-- Usa el Helper 1
 
-}
-async eliminarTarea(idTarea: string): Promise<void> {
-    const query ="DELETE FROM tareas WHERE id_tarea = $1";
-    await ejecutarConsulta(query, [idTarea]);
-}
 
-  //* HELPER 1: Esta es una "fábrica" que construye objetos SQL(snake_case)  -> JS(camelCase)
-  //*  Se usa para CONSTRUIR el objeto JS después de recibir de la BD 
+    async eliminarTarea(idTarea: string): Promise<void> {
+        const query ="DELETE FROM tareas WHERE id_tarea = $1";
+        await ejecutarConsulta(query, [idTarea]);
+    }
+
+    //* ------------------------ Nuevos Métodos de S4 (Consultas Complejas) ------------------------ //
+
+    async buscarPorTituloYProyecto(tituloTarea: string, idProyecto: string): Promise<ITarea | null> {
+        const query = `
+            SELECT * FROM tareas 
+            WHERE titulo_tarea = $1 AND id_proyecto = $2
+        `;
+
+        const parametros = [tituloTarea, idProyecto];
+        const result = await ejecutarConsulta(query, parametros);
+
+        if (result.rows.length === 0) {
+            return null;
+        }
+        
+        return this.mapearTarea(result.rows[0]);//* <-- Usa el Helper 1
+
+    }
+
+
+    async obtenerTareasPorProyecto(idProyecto: string): Promise<ITarea[]> {
+        const query = `
+            SELECT * FROM tareas 
+            WHERE id_proyecto = $1 
+            ORDER BY titulo_tarea ASC
+        `;
+        
+        const result = await ejecutarConsulta(query, [idProyecto]);
+        return result.rows.map(this.mapearTarea);//* <-- Usa el Helper 1
+    }
+
+
+    async obtenerTareaDeProyectoPorId(idTarea: string, idProyecto: string): Promise<ITarea | null> {
+        const query = `
+            SELECT * FROM tareas 
+            WHERE id_tarea = $1 AND id_proyecto = $2
+        `;
+        const parametros = [idTarea, idProyecto];
+        const result = await ejecutarConsulta(query, parametros);
+
+        if (result.rows.length === 0) {
+            return null;
+        }
+        
+        return this.mapearTarea(result.rows[0]);//* <-- Usa el Helper 1
+    
+    }
+    
+
+    
+    //* HELPER 1: Esta es una "fábrica" que construye objetos SQL(snake_case)  -> JS(camelCase)
+    //*  Se usa para CONSTRUIR el objeto JS después de recibir de la BD 
     private mapearTarea(fila: any): ITarea {
         return {
         idTarea: fila.id_tarea,
@@ -149,12 +202,5 @@ async eliminarTarea(idTarea: string): Promise<void> {
         }
         return { columnasSQL, parametros, placeholders, setClauses };
     }
-
-
-
-
-
-
-
 
 }
