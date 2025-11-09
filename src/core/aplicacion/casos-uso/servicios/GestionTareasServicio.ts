@@ -23,7 +23,7 @@ export class GestionTareasServicio implements IGestionTareasServicio{
     async crearTareaEnProyecto(idProyecto: string, datosTarea: CrearTareaServicioDTO): Promise<string> {
         
         //* --------- 1. Validación: Proyecto existe ---------// 
-   
+
         const proyecto = await this.proyectoRepositorio.obtenerProyectoPorId(idProyecto);
         if (!proyecto) {
             throw new Error(`Proyecto no encontrado con ID: ${idProyecto}`);
