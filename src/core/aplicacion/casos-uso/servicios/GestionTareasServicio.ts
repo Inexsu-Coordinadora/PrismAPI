@@ -17,82 +17,122 @@ export class GestionTareasServicio implements IGestionTareasServicio{
         private readonly proyectoRepositorio: IProyectoRepositorio,
         private readonly consultorRepositorio: IConsultorRepositorio,
         // TODO: private asignacionRepositorio: IAsignacionRepositorio 
-    ) {
+    ) {} 
 
-    } 
+    //* ---------------------- MÉTODOS PÚBLICOS (El "Qué")  ----------------------// 
+
     async crearTareaEnProyecto(idProyecto: string, datosTarea: CrearTareaServicioDTO): Promise<string> {
         
-        //* --------- 1. Validación: Proyecto existe ---------// 
+        //* ---------------------- 1. Validaciones  ----------------------// 
+        const proyecto = await this.validarProyecto(idProyecto);
+        await this.validarConsultor(datosTarea.idConsultorAsignado);
+        await this.validarReglasDeNegocio(datosTarea, proyecto);
+        //TODO:Validación: Consultor asignado al proyecto, esta la validación depende del S1
+        
+        //* ---------------------- 2. Ejecución  ----------------------// 
+        const datosParaCrear: ITarea = { ...datosTarea,  idProyecto: idProyecto,};
+        const idNuevaTarea = await this.tareaRepositorio.crearTarea(datosParaCrear);
+        return idNuevaTarea;
+    }
 
+
+    async obtenerTareasPorProyecto(idProyecto: string): Promise<ITarea[]> {
+        await this.validarProyecto(idProyecto);
+        return await this.tareaRepositorio.obtenerTareasPorProyecto(idProyecto);
+    }
+
+
+    async obtenerTareaDeProyectoPorId(idTarea: string, idProyecto: string): Promise<ITarea | null> {
+        const tarea = await this.validarTareaEnProyecto(idTarea, idProyecto);
+        return tarea;
+    }
+
+
+    async actualizarTareaEnProyecto(idTarea: string, idProyecto: string, datosTarea: ActualizarTareaServicioDTO): Promise<ITarea | null> {
+        
+        //* ---------------------- 1. Validaciones  ----------------------// 
+        const tareaActual = await this.validarTareaEnProyecto(idTarea, idProyecto); //* 1°. Validar que la tarea/proyecto existen (reutilizamos helper S4)
+        const proyecto = await this.validarProyecto(idProyecto); //* 2°. Obtener el proyecto existe (para validar fechas)
+        await this.validarConsultor(datosTarea.idConsultorAsignado); //* 3° Validar consultor (si se está cambiando)
+        //TODO:Validación: Consultor asignado al proyecto, esta la validación depende del S1
+        
+        //* 4° Validar fecha límite (si se está cambiando) (reutilizamos helper)
+        if (datosTarea.fechaLimiteTarea) { 
+            this.validarFechaLimite(datosTarea.fechaLimiteTarea, proyecto);
+        }
+
+        //* 5° Validación S4: No se puede completar una tarea ya completada
+        if (datosTarea.estadoTarea === 'completada' && tareaActual.estadoTarea === 'completada') {
+            throw new Error("La tarea ya se encuentra completada.");
+        }
+
+        //* 6° Si todo pasa, actualizamos la tarea
+        const tareaActualizada = await this.tareaRepositorio.actualizarTarea(idTarea, datosTarea as Partial<ITarea>);
+        return tareaActualizada;
+    }
+
+
+    async eliminarTareaDeProyecto(idTarea: string, idProyecto: string): Promise<void> {
+        await this.validarTareaEnProyecto(idTarea, idProyecto);
+        await this.tareaRepositorio.eliminarTarea(idTarea); 
+    }
+
+    //* ---------------------- HELPERS PRIVADOS (El "Cómo")  ----------------------// 
+
+    //* HELPER 1: Valida que el proyecto exista y lo devuelve.
+    private async validarProyecto(idProyecto: string): Promise<IProyecto> {
         const proyecto = await this.proyectoRepositorio.obtenerProyectoPorId(idProyecto);
         if (!proyecto) {
             throw new Error(`Proyecto no encontrado con ID: ${idProyecto}`);
         }
+        return proyecto;
+    }
 
-        //* --------- 2. Validación: Consultor existe (si se asigna) ---------//
-        if (datosTarea.idConsultorAsignado) {
-            const consultorExiste = await this.consultorRepositorio.obtenerConsultorPorId(datosTarea.idConsultorAsignado);
-            if (!consultorExiste) {
-                throw new Error(`Consultor no encontrado con ID: ${datosTarea.idConsultorAsignado}`);
-            }
+
+    //* HELPER 2: Valida que el consultor exista (si se proporciona uno).
+    private async validarConsultor(idConsultor?: string | null): Promise<void> {
+        if (!idConsultor) {return;} //* Es opcional, si no viene, no se valida nada!
         
-
-                //* --------- 2.1. Validación: Consultor asignado al proyecto (S1) ---------//
-                //TODO: Esta  la validación depende del Servicio 1
-                // const asignacion = await this.asignacionRepositorio.obtenerAsignacion(idProyecto,datosTarea.idConsultorAsignado);
-                    // if (!asignacion) {
-                    //    throw new Error(`El consultor no está asignado a este proyecto.`);
-                    // }
+        const consultor = await this.consultorRepositorio.obtenerConsultorPorId(idConsultor);
+        if (!consultor) {
+            throw new Error(`Consultor asignado no encontrado con ID: ${idConsultor}`);
         }
+    }
 
-        //* --------- 3. Validación: Fecha límite coherente ---------//
-        //* Extraemos esta lógica a un método privado(Helper) para mantener la limpieza.
+    //* HELPER 3:Valida las reglas de negocio (fechas, duplicados) antes de crear la tarea.
+    private async validarReglasDeNegocio(datosTarea: CrearTareaServicioDTO, proyecto: IProyecto): Promise<void> {
+        
+        //* 1. Validar Fecha Límite
         this.validarFechaLimite(datosTarea.fechaLimiteTarea, proyecto);
 
-        //* --------- 4. Validación: Duplicidad de Tarea (Nombre) ---------//
+        //* 2. Validar Duplicidad
         const tareaExistente = await this.tareaRepositorio.buscarPorTituloYProyecto(
             datosTarea.tituloTarea, 
-            idProyecto
+            proyecto.idProyecto! //* Sabemos que idProyecto no es null aquí
         );
         if (tareaExistente) {
             throw new Error(`Ya existe una tarea con el título '${datosTarea.tituloTarea}' en este proyecto.`);
-        } 
-        
-        throw new Error("Method not implemented.");
-    }
-    
-    async obtenerTareasPorProyecto(idProyecto: string): Promise<ITarea[]> {
-        throw new Error("Method not implemented.");
-    }
-    async obtenerTareaDeProyectoPorId(idTarea: string, idProyecto: string): Promise<ITarea | null> {
-        throw new Error("Method not implemented.");
-    }
-    async actualizarTareaEnProyecto(idTarea: string, idProyecto: string, datosTarea: ActualizarTareaServicioDTO): Promise<ITarea | null> {
-        throw new Error("Method not implemented.");
-    }
-    async eliminarTareaDeProyecto(idTarea: string, idProyecto: string): Promise<void> {
-        throw new Error("Method not implemented.");
-    }
-
-    //* --------- Métodos Privados (Helpers)---------//
-
-        private validarFechaLimite(fechaLimiteTarea: Date | null, proyecto: IProyecto) {
-            // Si no hay fecha límite, no hay nada que validar
-        if (!fechaLimiteTarea) {
-            return;
         }
+    }
 
-        //
+    //* HELPER 4: Validar Fecha Límite
+        private validarFechaLimite(fechaLimiteTarea: Date | null, proyecto: IProyecto) {
+        if (!fechaLimiteTarea) {return; }//* Si no hay fecha límite, no se valida nada!
         if (proyecto.fechaInicio && fechaLimiteTarea < proyecto.fechaInicio) { //TODO cambiar .fechaInicio por .fechaInicioProyecto 
             throw new Error(`La fecha límite (${fechaLimiteTarea.toISOString().split('T')[0]}) no puede ser anterior a la fecha de inicio del proyecto (${proyecto.fechaInicio.toISOString().split('T')[0]}).`);
         }
-        
-        //
         if (proyecto.fechaFin && fechaLimiteTarea > proyecto.fechaFin) { //TODO cambiar .fechaFin por .fechaFinProyecto
             throw new Error(`La fecha límite (${fechaLimiteTarea.toISOString().split('T')[0]}) no puede ser posterior a la fecha de fin del proyecto (${proyecto.fechaFin.toISOString().split('T')[0]}).`);
         }
         }
 
+    //* HELPER 5: Valida que una Tarea exista Y pertenezca a un Proyecto.
+    private async validarTareaEnProyecto(idTarea: string, idProyecto: string): Promise<ITarea> {
+        const tarea = await this.tareaRepositorio.obtenerTareaDeProyectoPorId(idTarea, idProyecto);
+        if (!tarea) {
+            //* Este error se reutiliza en GET, PUT y DELETE
+            throw new Error(`Tarea no encontrada con ID: ${idTarea} en el proyecto: ${idProyecto}`);
+        }
+        return tarea;
+    }
 }
-
-    
