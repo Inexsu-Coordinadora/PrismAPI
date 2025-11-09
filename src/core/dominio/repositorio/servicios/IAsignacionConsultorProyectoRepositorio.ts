@@ -3,10 +3,6 @@ import { IAsignacionConsultorProyecto } from "../../servicios/IAsignacionConsult
 
 export interface IAsignacionConsultorProyectoRepositorio {
 
-existeConsultor(idConsultor:string):Promise<boolean>
-
-existeProyecto(idProyecto:string):Promise<boolean>;
-
 //Crear asignación: asignar consultor a proyecto
 asignarConsultorProyecto(datosAsignacion: IAsignacionConsultorProyecto): Promise<string>;
 
@@ -17,9 +13,9 @@ obtenerAsignacionPorConsultor(idConsultor:string):Promise<IAsignacionConsultorPr
 
 obtenerAsignacionPorProyecto(idProyecto:string): Promise<IAsignacionConsultorProyecto[]>;
 
-existeAsignacionDuplicada(idConsultor: string,idProyecto: string,rolConsultor: string): Promise<boolean>;
+obtenerAsignacionExistente(idConsultor: string,idProyecto: string,rolConsultor: string | null): Promise<IAsignacionConsultorProyecto | null>;
 
-obtenerDedicacionConsultor(idConsultor:string,fechaInicioAsignacion: string,fechaFinAsignacion: string):Promise<number>
+obtenerDedicacionConsultor(idConsultor:string,fechaInicioAsignacion: Date,fechaFinAsignacion: Date | null):Promise<number>
 
 actualizarAsignacion(idAsignacion:string, datosAsignacion: IAsignacionConsultorProyecto):Promise<IAsignacionConsultorProyecto>
 
