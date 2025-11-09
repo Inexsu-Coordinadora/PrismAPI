@@ -1,6 +1,6 @@
 import { ITareaRepositorio } from "../../../../dominio/repositorio/entidades/ITareasRepositorio";
 import { ITarea } from "../../../../dominio/entidades/ITarea";
-import { ejecutarConsulta } from "./ClientePostgres";
+import { ejecutarConsulta } from "../../ClientePostgres";
 
 export class TareaRepository implements ITareaRepositorio {
   //* Este es un "mapeador", que traduce los nombres de la BD (snake_case) a los nombres de nuestro proyecto (camelCase).
@@ -74,7 +74,15 @@ async actualizarTarea(
 
     const setClause = columnasActualizar.map((col, i) => `${col}=$${i + 1}`).join(", ");
 
-    const parametros = Object.values(datosTarea).map((val) => val ?? null);
+    const parametros = Object.values(datosTarea).map((val) => {
+    // Si el valor es una fecha...
+    if (val instanceof Date) {
+        // ...conviértelo a string 'YYYY-MM-DD'
+        return val.toISOString().split('T')[0];
+    }
+    // Para todo lo demás (string, null, undefined)...
+    return val ?? null;
+    });
     parametros.push(idTarea);
 
     const query = `

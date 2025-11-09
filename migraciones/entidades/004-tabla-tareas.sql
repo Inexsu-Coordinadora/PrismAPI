@@ -15,7 +15,7 @@ CREATE TABLE IF NOT EXISTS tareas (
 
     -- Nuevos campos requeridos por la E2 Servicio 4 --
 
-    fecha_limite DATE NULL, 
+    fecha_limite_tarea DATE NULL, 
     id_proyecto UUID NULL, 
     id_consultor_asignado UUID NULL,
 

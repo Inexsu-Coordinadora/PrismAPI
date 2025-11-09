@@ -19,3 +19,5 @@ export interface IGestionTareasServicio {
     datosTarea: ActualizarTareaServicioDTO): Promise<ITarea | null>; 
   eliminarTareaDeProyecto(idTarea: string, idProyecto: string): Promise<void>; //* Elimina una tarea específica de un proyecto.
 }
+
+

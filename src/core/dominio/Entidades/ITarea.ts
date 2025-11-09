@@ -9,5 +9,5 @@ export interface ITarea{
     //*-- Nuevos campos requeridos por la E2 Servicio 4 --
     idProyecto?: string | null | undefined;
     idConsultorAsignado?: string | null | undefined;
-    fechaLimite?: Date | null | undefined;
+    fechaLimiteTarea?: Date | null | undefined;
 }

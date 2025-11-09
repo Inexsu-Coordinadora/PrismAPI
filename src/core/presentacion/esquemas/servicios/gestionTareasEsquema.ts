@@ -13,7 +13,7 @@ export const CrearProyectoTareaEsquema = BaseCrearTareaEsquema.extend({ //* Exte
     .nullable()
     .transform((val) => val ?? null),
 
-    fechaLimite: z.coerce.date({ //* z.coerce.date() convierte "YYYY-MM-DD" a Date
+    fechaLimiteTarea: z.coerce.date({ //* z.coerce.date() convierte "YYYY-MM-DD" a Date
         error: "Debe proporcionar una fecha límite válida"
     })
     .optional()

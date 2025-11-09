@@ -8,7 +8,7 @@ export class Tarea implements ITarea{
     //*-- Nuevos campos requeridos por la E2 Servicio 4 --
     idProyecto?: string| null;;
     idConsultorAsignado?: string | null;
-    fechaLimite?: Date | null;
+    fechaLimiteTarea?: Date | null;
 
     constructor(datosTarea : ITarea){
         this.tituloTarea = datosTarea.tituloTarea;
@@ -18,6 +18,6 @@ export class Tarea implements ITarea{
         //* --- Inicializamos los nuevos campos ---
         this.idProyecto = datosTarea.idProyecto?? null;
         this.idConsultorAsignado = datosTarea.idConsultorAsignado ?? null;
-        this.fechaLimite = datosTarea.fechaLimite ?? null;
+        this.fechaLimiteTarea = datosTarea.fechaLimiteTarea ?? null;
     }
 }
