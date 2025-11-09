@@ -7,7 +7,7 @@ export interface ITarea{
     estadoTarea: EstadoTarea;
 
     //*-- Nuevos campos requeridos por la E2 Servicio 4 --
-    idProyecto: string;
+    idProyecto?: string | null | undefined;
     idConsultorAsignado?: string | null | undefined;
     fechaLimite?: Date | null | undefined;
 }

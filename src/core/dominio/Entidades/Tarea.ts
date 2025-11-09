@@ -6,7 +6,7 @@ export class Tarea implements ITarea{
     estadoTarea: EstadoTarea;
 
     //*-- Nuevos campos requeridos por la E2 Servicio 4 --
-    idProyecto: string;
+    idProyecto?: string| null;;
     idConsultorAsignado?: string | null;
     fechaLimite?: Date | null;
 
@@ -16,7 +16,7 @@ export class Tarea implements ITarea{
         this.estadoTarea = datosTarea.estadoTarea;
 
         //* --- Inicializamos los nuevos campos ---
-        this.idProyecto = datosTarea.idProyecto;
+        this.idProyecto = datosTarea.idProyecto?? null;
         this.idConsultorAsignado = datosTarea.idConsultorAsignado ?? null;
         this.fechaLimite = datosTarea.fechaLimite ?? null;
     }

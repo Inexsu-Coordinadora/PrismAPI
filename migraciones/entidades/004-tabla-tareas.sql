@@ -16,7 +16,7 @@ CREATE TABLE IF NOT EXISTS tareas (
     -- Nuevos campos requeridos por la E2 Servicio 4 --
 
     fecha_limite DATE NULL, 
-    id_proyecto UUID NOT NULL, 
+    id_proyecto UUID NULL, 
     id_consultor_asignado UUID NULL,
 
 
@@ -34,7 +34,7 @@ CREATE TABLE IF NOT EXISTS tareas (
         ON DELETE SET NULL -- Si se borra el consultor, la tarea queda 'huerfana' (sin asignar)
 
     -- Asegura que una tarea (por su título) sea única DENTRO de un proyecto
-    CONSTRAINT tarea_unica_por_proyecto UNIQUE (id_proyecto, titulo_tarea),
+    --CONSTRAINT tarea_unica_por_proyecto UNIQUE (id_proyecto, titulo_tarea),
 
 
 );
