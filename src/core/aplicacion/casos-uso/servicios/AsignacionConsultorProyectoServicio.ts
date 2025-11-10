@@ -2,15 +2,16 @@ import { IAsignacionConsultorProyecto } from "../../../dominio/servicios/IAsigna
 import { IAsignacionConsultorProyectoRepositorio } from "../../../dominio/repositorio/servicios/IAsignacionConsultorProyectoRepositorio";
 import { AsignacionConsultorProyectoDTO } from "../../../presentacion/esquemas/servicios/asignacionConsultorProyectoEsquema";
 import { GestionAsignacionConsultor } from "../../gestion-servicio/GestionAsignacionConsultor";
+import { IAsignacionConsultorProyectoServicio } from "../../interfaces/servicios/IAsignacionConsultorProyectoServicio";
 
 
-export class  AsignacionConsultorProyectoServicio{
+export class  AsignacionConsultorProyectoServicio implements IAsignacionConsultorProyectoServicio{
 constructor(
 private readonly asignacionesRepositorio: IAsignacionConsultorProyectoRepositorio,
 private readonly validador: GestionAsignacionConsultor
 ){}
 
-async ejecutar(datosAsignacion: AsignacionConsultorProyectoDTO){
+async asignarConsultorProyecto(datosAsignacion: AsignacionConsultorProyectoDTO){
 
     await this.validador.validarAsignacion(datosAsignacion);
 

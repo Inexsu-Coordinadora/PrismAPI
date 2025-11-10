@@ -3,7 +3,7 @@ import { AsignacionConsultorProyectoDTO } from "../../../presentacion/esquemas/s
 
 export interface IAsignacionConsultorProyectoServicio{
 
-asignarConsultorProyecto(asignacion: AsignacionConsultorProyectoDTO): Promise<string>;
+asignarConsultorProyecto(asignacion: AsignacionConsultorProyectoDTO): Promise<{ mensaje: string; asignacion: string}>;
 
 obtenerAsignacionPorId(idAsignacion:string):Promise<IAsignacionConsultorProyecto | null>;
 
@@ -12,6 +12,8 @@ obtenerAsignacionPorConsultor(idConsultor:string):Promise<IAsignacionConsultorPr
 obtenerAsignacionPorProyecto(idProyecto:string):Promise<IAsignacionConsultorProyecto[]>;
 
 obtenerAsignacionExistente(idConsultor:string, idProyecto: string, rolConsultor: string | null):Promise<IAsignacionConsultorProyecto | null>;
+
+obtenerDedicacionExistente(idConsultor:string, fechaInicioAsignacion: Date, fechaFinAsignacion: Date | null): Promise<number>;
 
 actualizarAsignacion (idAsignacion:string, asignacion:AsignacionConsultorProyectoDTO): Promise<IAsignacionConsultorProyecto | null>; 
 
