@@ -3,9 +3,9 @@ import { CrearTareaEsquema as BaseCrearTareaEsquema,
         ActualizarTareaEsquema as BaseActualizarTareaEsquema } from "../entidades/tareaEsquema";
 
 
-//* ------------ 1. Esquema para CREAR una Tarea de Proyecto ------------//        
+//* ------------ 1. Definimos los NUEVOS campos del S4 por separado ------------//        
 //*(Este será el 'body' de nuestro nuevo endpoint: POST /proyectos/:idProyecto/tareas)
-export const CrearProyectoTareaEsquema = BaseCrearTareaEsquema.extend({ //* Extendemos con los nuevos campos
+const CamposServicioS4 = z.object({
     idConsultorAsignado: z
     .string()
     .uuid({ message: "El idConsultorAsignado debe ser un UUID válido" })
@@ -19,12 +19,17 @@ export const CrearProyectoTareaEsquema = BaseCrearTareaEsquema.extend({ //* Exte
     .optional()
     .nullable()
     .transform((val) => val ?? null),
-
 });
+
+//* ------------ 2. Esquema de CREAR: (Base de Creación E1) + (Campos S4) ------------//   
+export const CrearProyectoTareaEsquema = BaseCrearTareaEsquema
+.extend(CamposServicioS4.shape); //* Extendemos con los nuevos campos
+
 //* Exportamos el tipo de dato que recibe el Caso de Uso
 export type CrearTareaServicioDTO = z.infer<typeof CrearProyectoTareaEsquema>;
 
-//* ------------- 2. Esquema para ACTUALIZAR Tarea de Proyecto ------------//
-export const ActualizarProyectoTareaEsquema = CrearProyectoTareaEsquema.partial();
+//* ------------ 3. Esquema de ACTUALIZAR: (Base de Actualización E1) + (Campos S4) ------------//
+export const ActualizarProyectoTareaEsquema = CrearProyectoTareaEsquema
+.extend(CamposServicioS4.shape);
 export type ActualizarTareaServicioDTO = z.infer<typeof ActualizarProyectoTareaEsquema>;
 
