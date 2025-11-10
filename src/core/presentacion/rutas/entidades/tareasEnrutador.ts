@@ -1,7 +1,7 @@
 import { FastifyInstance } from "fastify";
-import { TareasControlador } from "../controladores/tareasControlador";
+import { TareasControlador } from "../../controladores/entidades/tareasControlador";
 import { ITareaRepositorio } from "../../../dominio/repositorio/entidades/ITareasRepositorio";
-import { ITareasCasosUso } from "../../aplicacion/ITareasCasosUso";
+import { ITareasCasosUso } from "../../../aplicacion/interfaces/entidades/ITareasCasosUso";
 import { TareasCasosUso } from "../../../aplicacion/casos-uso/entidades/TareaCasosUso";
 import { TareaRepository } from "../../../infraestructura/postgres/repositorios/entidades/TareaRepository";
 
@@ -13,7 +13,7 @@ import { TareaRepository } from "../../../infraestructura/postgres/repositorios/
         controlador: TareasControlador
     ){
         
-        app.get("/tareas",controlador.listarTarea); //* // Cuando llegue un GET a /tareas, llama a controlador.listarTarea ...
+        app.get("/tareas",controlador.listarTareas); //* // Cuando llegue un GET a /tareas, llama a controlador.listarTarea ...
         app.get("/tareas/:idTarea", controlador.obtenerTareaPorId);
         app.post("/tareas", controlador.crearTarea);
         app.put("/tareas/:idTarea",controlador.actualizarTarea);

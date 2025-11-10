@@ -7,12 +7,12 @@ import {
     ActualizarTareaServicioDTO
 } from "../../esquemas/servicios/gestionTareasEsquema";
 import { IGestionTareasServicio } from "../../../aplicacion/interfaces/servicios/IGestionTareasServicio";
-import { request } from "http";
 
 //* ----------------- Controlador para el S4, Maneja el tráfico HTTP y lo dirige al servicio de aplicación. -----------------//
 export class GestionTareasControlador {
     //* Inyectamos el "cerebro" (Servicio)
     constructor(private readonly gestionTareasServicio: IGestionTareasServicio){}
+
 
     //* ----------------- 1°CREAR Tarea en Proyecto (POST/proyectos/:idProyecto/tareas) -----------------//
     crearTareaEnProyecto = async (
@@ -29,10 +29,9 @@ export class GestionTareasControlador {
             });
         } catch (error) {
             return this.manejarError(reply, error, "Error al crear la tarea en el proyecto");
-
         }   
-
     }
+
 
     //* ----------------- 2°LISTAR Tareas de Proyecto(GET/proyectos/:idProyecto/tareas) -----------------//
     listarTareasProyecto = async (
@@ -54,7 +53,7 @@ export class GestionTareasControlador {
 
 
     //* ----------------- 3° OBTENER Tarea por ID de Proyecto(GET/proyectos/:idProyecto/tareas/:idTarea) -----------------//
-    obtenerTareaPorIdProyecto = async (
+    obtenerTareaDeProyectoPorId = async (
         request: FastifyRequest<{Params: {idProyecto: string; idTarea: string};}>,
         reply: FastifyReply
     ) => {
@@ -70,6 +69,7 @@ export class GestionTareasControlador {
             return this.manejarError(reply, error, "Error al obtener la tarea del proyecto");
         }
     }
+
 
     //* ----------------- 4° ACTUALIZAR Tarea de Proyecto (PUT/proyectos/:idProyecto/tareas/:idTarea)-----------------//
     actualizarTareaEnProyecto = async (   
@@ -88,6 +88,7 @@ export class GestionTareasControlador {
             return this.manejarError(reply, error, "Error al actualizar la tarea del proyecto");
         }
     }
+
 
     //* ----------------- 5° ELIMINAR Tarea de Proyecto (DELETE/proyectos/:idProyecto/tareas/:idTarea)-----------------//
     eliminarTareaEnProyecto = async (
@@ -140,9 +141,4 @@ export class GestionTareasControlador {
             error: String(error),
         });
     }
-
-
-
-
-
 }

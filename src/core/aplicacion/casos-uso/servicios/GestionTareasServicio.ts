@@ -36,7 +36,7 @@ export class GestionTareasServicio implements IGestionTareasServicio{
     }
 
 
-    async    c(idProyecto: string): Promise<ITarea[]> {
+    async obtenerTareasPorProyecto(idProyecto: string): Promise<ITarea[]> {
         await this.validarProyecto(idProyecto);
         return await this.tareaRepositorio.obtenerTareasPorProyecto(idProyecto);
     }

@@ -1,9 +1,9 @@
 import { IConsultorRepositorio } from "../../../../dominio/repositorio/entidades/IConsultorRepositorio";
-import { ejecutarConsulta } from "./ClientePostgres";
+import { ejecutarConsulta } from "../../ClientePostgres";
 import { IConsultor } from "../../../../dominio/entidades/IConsultor";
 import { ConsultorDTO } from "../../../../presentacion/esquemas/entidades/consultorEsquema";
 
-export class ConsultorRepositorio implements IConsultorRepositorio {
+export class ConsultorRepository implements IConsultorRepositorio {
     async crearConsultor(datosConsultor: ConsultorDTO): Promise<IConsultor> {
         const columnas = Object.keys(datosConsultor)
         .map(key => key.replace(/([a-z0-9])([A-Z])/g, '$1_$2').toLowerCase());
