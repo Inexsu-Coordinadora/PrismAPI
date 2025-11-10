@@ -1,58 +1,25 @@
 import { IAsignacionConsultorProyecto } from "../../../dominio/servicios/IAsignacionConsultorProyecto";
 import { IAsignacionConsultorProyectoRepositorio } from "../../../dominio/repositorio/servicios/IAsignacionConsultorProyectoRepositorio";
-import { IConsultorRepositorio } from "../../../dominio/repositorio/entidades/IConsultorRepositorio";
-import { IProyectoRepositorio } from "../../../dominio/repositorio/entidades/IProyectoRepositorio";
 import { AsignacionConsultorProyectoDTO } from "../../../presentacion/esquemas/servicios/asignacionConsultorProyectoEsquema";
+import { GestionAsignacionConsultor } from "../../gestion-servicio/GestionAsignacionConsultor";
 
 
 export class  AsignacionConsultorProyectoServicio{
 constructor(
-private asignacionesRepositorio: IAsignacionConsultorProyectoRepositorio,
-private consultorRepositorio: IConsultorRepositorio,
-private proyectoRepositorio: IProyectoRepositorio
+private readonly asignacionesRepositorio: IAsignacionConsultorProyectoRepositorio,
+private readonly validador: GestionAsignacionConsultor
 ){}
 
-async asignarConsultorProyecto(datosAsignacion: AsignacionConsultorProyectoDTO){
+async ejecutar(datosAsignacion: AsignacionConsultorProyectoDTO){
 
-    const { idConsultor, idProyecto, fechaInicioAsignacion, fechaFinAsignacion, porcentajeDedicacion, rolConsultor } = datosAsignacion;
-
-    //validar si existe el consultor
-    const consultor = await this.consultorRepositorio.obtenerConsultorPorId(idConsultor);
-    if (!consultor){
-        throw new Error ("El consultor no existe.");
-    }
-
-    //validar si existe proyecto
-    const proyecto = await this.proyectoRepositorio.obtenerProyectoPorId(idProyecto);
-    if(!proyecto){
-        throw new Error("El proyecto no existe.");
-    }
-
-    //validar asignación duplicada
-    const asignacionExistente = await this.asignacionesRepositorio.obtenerAsignacionExistente(
-        idConsultor,
-        idProyecto,
-        rolConsultor ?? null
-    );
-    if (asignacionExistente){
-        throw new Error ("Ya existe una asignación de este consultor a este proyecto.");
-    }
-
-    //validar fechas    
-    if (fechaFinAsignacion && fechaFinAsignacion < fechaInicioAsignacion) {
-        throw new Error("La fecha fin debe ser posterior o igual a la fecha de inicio.");
-    }
-
-    // validar dedicación total
-    const dedicacion = porcentajeDedicacion ?? 0; // Si es null/undefined, usa 0
-    const dedicacionConsultor = await this.asignacionesRepositorio.obtenerDedicacionConsultor(datosAsignacion.idConsultor, fechaInicioAsignacion, fechaFinAsignacion);
-
-    if (dedicacionConsultor + dedicacion > 100) {
-            throw new Error(`La dedicación total excede el 100%. Actualmente tiene ${dedicacionConsultor}% asignado.`);
-        }
+    await this.validador.validarAsignacion(datosAsignacion);
 
     //creamos la asignación después de validar
-    return await this.asignacionesRepositorio.asignarConsultorProyecto(datosAsignacion);
+    const asignacion = await this.asignacionesRepositorio.asignarConsultorProyecto(datosAsignacion);
+    return {
+        mensaje: "Consultor asignado exitosamente al proyecto",
+        asignacion
+    };
 }
 
 async obtenerAsignacionPorId(idAsignacion:string): Promise<IAsignacionConsultorProyecto | null>{
@@ -92,6 +59,8 @@ async actualizarAsignacion(idAsignacion:string, datosAsignacion: AsignacionConsu
         throw new Error("Asignación no encontrada");;
     }
 
+    //usar el validador pasando el Id excluir
+    await this.validador.validarAsignacion(datosAsignacion, idAsignacion);
     const asignacionActualizada = await this.asignacionesRepositorio.actualizarAsignacion(idAsignacion, datosAsignacion);
     return asignacionActualizada;
 }

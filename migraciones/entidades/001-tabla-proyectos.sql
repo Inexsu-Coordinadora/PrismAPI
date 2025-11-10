@@ -8,3 +8,15 @@ CREATE TABLE IF NOT EXISTS proyectos (
     fecha_fin DATE NULL,
     estado_proyecto VARCHAR(20) NOT NULL
 );
+
+/*Agregar nueva columna*/
+
+ALTER TABLE proyectos
+ADD COLUMN id_cliente UUID NULL,
+
+/*Después Agregar clave foránea*/
+ALTER TABLE proyectos
+ADD CONSTRAINT fk_proyecto_cliente
+FOREIGN KEY (id_cliente)
+REFERENCES clientes(id_cliente);
+
