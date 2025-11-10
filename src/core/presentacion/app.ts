@@ -11,7 +11,7 @@ import { construirTareasEnrutador } from "./rutas/entidades/tareasEnrutador";
 //* Aqui importamos los enrutadores de todos los servicios
 // import { construirAsignacionConsultorProyectoEnrutador } from './rutas/servicios/asignacionConsultorProyectoEnrutador';
 // import { construirConsultaProyectoEnrutador } from './rutas/servicios/consultaProyectoEnrutador';
-// import { construirGestionTareasEnrutador } from './rutas/servicios/gestionTareasEnrutador';
+import { construirGestionTareasEnrutador } from './rutas/servicios/gestionTareasEnrutador';
 // import { construirRegistroHorasEnrutador } from './rutas/servicios/registroHorasEnrutador'; 
 
 
@@ -28,7 +28,7 @@ async (appInstance) => {
     //* Aquí construimos todos los enrutadores de Servicios
     // construirAsignacionConsultorProyectoEnrutador(appInstance);
     // construirConsultaProyectoEnrutador(appInstance);
-    // construirGestionTareasEnrutador(appInstance);
+    construirGestionTareasEnrutador(appInstance);
     // construirRegistroHorasEnrutador(appInstance);
 
 
