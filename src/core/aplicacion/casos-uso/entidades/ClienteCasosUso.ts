@@ -1,5 +1,5 @@
 import { IClienteRepositorio } from '../../../dominio/repositorio/entidades/IClienteRepositorio';
-import { IClienteCasosUso } from '../../IClienteCasosUso';
+import { IClienteCasosUso } from '../../interfaces/entidades/IClienteCasosUso';
 import { Cliente, CrearClienteDto, ActualizarClienteDto } from '../../../dominio/entidades/Cliente';
 import { crearClienteEsquema, actualizarClienteEsquema } from '../../../presentacion/esquemas/entidades/clienteEsquema';
 

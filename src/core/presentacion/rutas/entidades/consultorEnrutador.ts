@@ -1,9 +1,9 @@
-import { FastifyInstance } from "fastify";
-import { ConsultorControlador } from "../controladores/consultorControlador";
-import { ConsultorCasosUso } from "../../../aplicacion/casos-uso/entidades/ConsultorCasosUso";
+import {FastifyInstance } from "fastify";
+import {ConsultorControlador } from "../../controladores/entidades/consultorControlador";
+import {ConsultorCasosUso } from "../../../aplicacion/casos-uso/entidades/ConsultorCasosUso";
 import {IConsultorRepositorio} from "../../../dominio/repositorio/entidades/IConsultorRepositorio";
-import {IConsultorCasosUso} from "../../aplicacion/IConsultorCasosUso";
-import {ConsultorRepositorio} from "../../../infraestructura/postgres/repositorios/entidades/ConsultorRepository";
+import {IConsultorCasosUso} from "../../../aplicacion/interfaces/entidades/IConsultorCasosUso";
+import {ConsultorRepository} from "../../../infraestructura/postgres/repositorios/entidades/ConsultorRepository";
 
 function consultoresEnrutador(app:FastifyInstance, controlador: ConsultorControlador) {
     app.get("/consultores", controlador.obtenerConsultores);
@@ -14,7 +14,7 @@ function consultoresEnrutador(app:FastifyInstance, controlador: ConsultorControl
 }
 
 export async function construirConsultorEnrutador(app: FastifyInstance) {
-    const consultorRepo: IConsultorRepositorio = new ConsultorRepositorio();
+    const consultorRepo: IConsultorRepositorio = new ConsultorRepository();
     const CCasosUso: IConsultorCasosUso = new ConsultorCasosUso(consultorRepo);
     const controlador =new ConsultorControlador(CCasosUso);
 

@@ -1,7 +1,7 @@
 import { FastifyRequest, FastifyReply } from "fastify";
-import { IClienteCasosUso } from "../../aplicacion/IClienteCasosUso";
-import { CrearClienteDto, ActualizarClienteDto } from "../../dominio/entidades/Cliente";
-import { crearClienteEsquema, actualizarClienteEsquema  } from "../../presentacion/esquemas/clienteEsquema";
+import { IClienteCasosUso } from "../../../aplicacion/interfaces/entidades/IClienteCasosUso";
+import { CrearClienteDto, ActualizarClienteDto } from "../../../dominio/entidades/Cliente";
+import { crearClienteEsquema, actualizarClienteEsquema  } from "../../esquemas/entidades/clienteEsquema";
 import { ZodError } from "zod";
 
 export class ClienteControlador {

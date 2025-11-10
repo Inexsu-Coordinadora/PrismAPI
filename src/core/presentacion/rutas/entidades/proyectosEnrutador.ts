@@ -1,9 +1,11 @@
 import { FastifyInstance } from "fastify";
-import { ProyectosControlador } from "../controladores/ProyectosControlador";
+
+import { ProyectosControlador } from "../../controladores/entidades/ProyectosControlador";
 import { IProyectoRepositorio } from "../../../dominio/repositorio/entidades/IProyectoRepositorio";
 import { ProyectoRepository } from "../../../infraestructura/postgres/repositorios/entidades/ProyectoRepository";
-import { ProyectoCasosUso } from "../../../aplicacion/Proyecto/ProyectosCasosUso";
-import { IProyectosCasosUso } from "../../../aplicacion/Proyecto/IProyectosCasosUso";
+import { ProyectoCasosUso } from "../../../aplicacion/casos-uso/entidades/ProyectosCasosUso";
+import { IProyectosCasosUso } from "../../../aplicacion/interfaces/entidades/IProyectosCasosUso";
+
 
 function proyectosEnrutador (
     app: FastifyInstance,
