@@ -1,6 +1,6 @@
 import { ITareaRepositorio } from "../../../../dominio/repositorio/entidades/ITareasRepositorio";
 import { ITarea } from "../../../../dominio/entidades/ITarea";
-import { ejecutarConsulta } from "./ClientePostgres";
+import { ejecutarConsulta } from "../../ClientePostgres";
 
 export class TareaRepository implements ITareaRepositorio {
   //* Este es un "mapeador", que traduce los nombres de la BD (snake_case) a los nombres de nuestro proyecto (camelCase).

@@ -1,6 +1,6 @@
 import { FastifyRequest, FastifyReply } from "fastify";
-import { ITareasCasosUso } from "../../aplicacion/ITareasCasosUso";
-import { CrearTareaEsquema, TareaDTO, ActualizarTareaEsquema, ActualizarTareaDTO } from "../esquemas/tareaEsquema";
+import { ITareasCasosUso } from "../../../aplicacion/interfaces/entidades/ITareasCasosUso";
+import { CrearTareaEsquema, TareaDTO, ActualizarTareaDTO, ActualizarTareaEsquema } from "../../esquemas/entidades/tareaEsquema";
 import { ZodError } from "zod";
 
 

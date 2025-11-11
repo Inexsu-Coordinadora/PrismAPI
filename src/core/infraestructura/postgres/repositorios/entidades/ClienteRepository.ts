@@ -1,7 +1,7 @@
 import { v4 as uuidv4 } from 'uuid';
 import { Cliente } from '../../../../dominio/entidades/Cliente';
 import { ICliente } from '../../../../dominio/entidades/ICliente';
-import { ejecutarConsulta } from './ClientePostgres';
+import { ejecutarConsulta } from '../../ClientePostgres';
 import { CrearClienteDto, ActualizarClienteDto } from '../../../../dominio/entidades/Cliente';
 import { IClienteRepositorio } from '../../../../dominio/repositorio/entidades/IClienteRepositorio';
 
