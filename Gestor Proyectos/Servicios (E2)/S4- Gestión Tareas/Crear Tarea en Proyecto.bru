@@ -5,11 +5,22 @@ meta {
 }
 
 post {
-  url: {{baseUrl}}
-  body: none
+  url: {{baseUrl}}/proyectos/20819114-aa3d-40fc-a971-f41213f9e3f0/tareas
+  body: json
   auth: inherit
+}
+
+body:json {
+  {
+    "tituloTarea": "Revisión Legal",
+    "descripcionTarea": "Reunirse con el equipo de BI para definir el nuevo esquema.",
+    "estadoTarea": "pendiente",
+    "fechaLimiteTarea": "2025-05-10",
+    "idConsultorAsignado": "a1a1a1a1-aaaa-4aaa-aaaa-aaaaaaaaaaa1"
+  }
 }
 
 settings {
   encodeUrl: true
+  timeout: 0
 }

@@ -29,7 +29,7 @@ export const CrearProyectoTareaEsquema = BaseCrearTareaEsquema
 export type CrearTareaServicioDTO = z.infer<typeof CrearProyectoTareaEsquema>;
 
 //* ------------ 3. Esquema de ACTUALIZAR: (Base de Actualización E1) + (Campos S4) ------------//
-export const ActualizarProyectoTareaEsquema = CrearProyectoTareaEsquema
+export const ActualizarProyectoTareaEsquema = BaseActualizarTareaEsquema
 .extend(CamposServicioS4.shape);
 export type ActualizarTareaServicioDTO = z.infer<typeof ActualizarProyectoTareaEsquema>;
 
