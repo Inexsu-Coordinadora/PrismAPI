@@ -1,0 +1,29 @@
+meta {
+  name: crear asignacion
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{baseUrl}}/asignaciones
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+  
+    "idConsultor": "a1a1a1a1-aaaa-4aaa-aaaa-aaaaaaaaaaa1",
+    "idProyecto": "fbeffd55-5ad8-4be2-929c-51ecdcde8a6e",
+    "rolConsultor": "analista",
+    "porcentajeDedicacion": 20,
+    "fechaInicioAsignacion": "2025-09-15",
+    "fechaFinAsignacion": "2025-10-15"
+  
+  }
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}
