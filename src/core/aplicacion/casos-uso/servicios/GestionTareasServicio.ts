@@ -7,7 +7,7 @@ import { CrearTareaServicioDTO, ActualizarTareaServicioDTO,} from "../../../pres
 import { ITareaRepositorio } from "../../../dominio/repositorio/entidades/ITareasRepositorio";
 import { IProyectoRepositorio } from "../../../dominio/repositorio/entidades/IProyectoRepositorio";
 import { IConsultorRepositorio } from "../../../dominio/repositorio/entidades/IConsultorRepositorio";
-//TODO: import { IAsignacionRepositorio } from "../../dominio/repositorio/IAsignacionRepositorio";
+//TODO: import { IAsignacionConsultorProyectoRepositorio } from "../../../dominio/repositorio/servicios/IAsignacionConsultorProyectoRepositorio";
 
 //*Este es el "Cerebro" del S4. Implementa la lógica de negocio compleja que conecta Tareas, Proyectos y Consultores.
 export class GestionTareasServicio implements IGestionTareasServicio{
@@ -16,8 +16,9 @@ export class GestionTareasServicio implements IGestionTareasServicio{
         private readonly tareaRepositorio: ITareaRepositorio,
         private readonly proyectoRepositorio: IProyectoRepositorio,
         private readonly consultorRepositorio: IConsultorRepositorio,
-        // TODO: private asignacionRepositorio: IAsignacionRepositorio 
+        // TODO: private readonly asignacionRepositorio: IAsignacionConsultorProyectoRepositorio,
     ) {} 
+
 
     //* ---------------------- MÉTODOS PÚBLICOS (El "Qué")  ----------------------// 
 
@@ -27,7 +28,7 @@ export class GestionTareasServicio implements IGestionTareasServicio{
         const proyecto = await this.validarProyecto(idProyecto);
         await this.validarConsultor(datosTarea.idConsultorAsignado);
         await this.validarReglasDeNegocio(datosTarea, proyecto);
-        //TODO:Validación: Consultor asignado al proyecto, esta la validación depende del S1
+        //TODO: await this.validarConsultorEnProyecto(datosTarea.idConsultorAsignado, idProyecto);
         
         //* ---------------------- 2. Ejecución  ----------------------// 
         const datosParaCrear: ITarea = { ...datosTarea,  idProyecto: idProyecto,};
@@ -54,7 +55,7 @@ export class GestionTareasServicio implements IGestionTareasServicio{
         const tareaActual = await this.validarTareaEnProyecto(idTarea, idProyecto); //* 1°. Validar que la tarea/proyecto existen (reutilizamos helper S4)
         const proyecto = await this.validarProyecto(idProyecto); //* 2°. Obtener el proyecto existe (para validar fechas)
         await this.validarConsultor(datosTarea.idConsultorAsignado); //* 3° Validar consultor (si se está cambiando)
-        //TODO:Validación: Consultor asignado al proyecto, esta la validación depende del S1
+        //TODO: await this.validarConsultorEnProyecto(datosTarea.idConsultorAsignado, idProyecto);
         
         //* 4° Validar fecha límite (si se está cambiando) (reutilizamos helper)
         if (datosTarea.fechaLimiteTarea) { 
@@ -135,4 +136,20 @@ export class GestionTareasServicio implements IGestionTareasServicio{
         }
         return tarea;
     }
+
+
+    // TODO: HELPER 6: Valida que un consultor esté asignado a un Proyecto.
+    /* private async validarConsultorEnProyecto(idConsultorAsignado: string | null | undefined,idProyecto: string): Promise<void> {
+        if(idConsultorAsignado){
+            const asignacion = await this.asignacionRepositorio.obtenerAsignacionExistente(idConsultorAsignado, idProyecto, null);
+        if (!asignacion){
+                throw new Error (`El consultor ${idConsultorAsignado} no está asignado a este proyecto.`);
+            } 
+        }
+    } */
+    
+
+
+
+
 }

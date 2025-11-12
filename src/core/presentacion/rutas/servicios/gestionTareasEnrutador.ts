@@ -12,13 +12,14 @@ import { GestionTareasServicio } from "../../../aplicacion/casos-uso/servicios/G
 import { TareaRepository } from "../../../infraestructura/postgres/repositorios/entidades/TareaRepository";
 import { ProyectoRepository } from "../../../infraestructura/postgres/repositorios/entidades/ProyectoRepository";
 import { ConsultorRepository } from "../../../infraestructura/postgres/repositorios/entidades/ConsultorRepository";
+// TODO: import { AsignacionConsultorProyectoRepository } from "../../../infraestructura/postgres/repositorios/servicios/AsignacionConsultorProyectoRepository";
 
-// (CONTRATOS)
+//* (CONTRATOS)
 import { ITareaRepositorio } from "../../../dominio/repositorio/entidades/ITareasRepositorio";
 import { IProyectoRepositorio } from "../../../dominio/repositorio/entidades/IProyectoRepositorio";
 import { IConsultorRepositorio } from "../../../dominio/repositorio/entidades/IConsultorRepositorio";
-// TODO: import { IAsignacionRepositorio } from "../../../dominio/repositorio/servicios/IAsignacionRepositorio";
-// TODO: import { AsignacionRepository } from "../../../infraestructura/postgres/repositorios/servicios/AsignacionRepository";
+// TODO: import { IAsignacionConsultorProyectoRepositorio } from "../../../dominio/repositorio/servicios/IAsignacionConsultorProyectoRepositorio";
+
 
 
   //* ----------------- 1. FUNCIÓN DE RUTAS -----------------//
@@ -39,7 +40,7 @@ export async function construirGestionTareasEnrutador(app: FastifyInstance) {
     const tareaRepo: ITareaRepositorio = new TareaRepository();
     const proyectoRepo: IProyectoRepositorio = new ProyectoRepository();
     const consultorRepo: IConsultorRepositorio = new ConsultorRepository();
-    // TODO: const asignacionRepo: IAsignacionRepositorio = new AsignacionRepository();
+    // TODO: const asignacionRepo: IAsignacionConsultorProyectoRepositorio = new AsignacionConsultorProyectoRepository();
 
     //* 2. Capa Aplicación (Creamos el "cerebro" y le pasamos las herramientas)
     const gestionTareasServicio: IGestionTareasServicio = new GestionTareasServicio(
