@@ -6,13 +6,13 @@ let pool: Pool;
 
 function getPool() {
     if (!pool) {
-        // 1. LLAMAMOS A LA FUNCIÓN
+        //* 1° LLAMAMOS A LA FUNCIÓN
         const configuration = getConfig();
         
         console.log("***** INICIALIZANDO POOL DE CONEXIÓN *****");
         console.log("Conectando a DB:", configuration.baseDatos.nombreDb);
         
-        // 2. Usamos la configuración fresca
+        //* 2° Usamos la configuración fresca
         pool = new Pool({
             host: configuration.baseDatos.host,
             user: configuration.baseDatos.usuario,
@@ -30,8 +30,6 @@ export async function ejecutarConsulta(
 ) {
   const poolConexion = getPool();
   
-  // (Este log ya no es necesario o puedes modificarlo)
-  // console.log('cons', getConfig()) 
 
   return await poolConexion.query(consulta, parametros);
 }
