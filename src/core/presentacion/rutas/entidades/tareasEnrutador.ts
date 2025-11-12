@@ -13,7 +13,7 @@ import { TareaRepository } from "../../../infraestructura/postgres/repositorios/
         controlador: TareasControlador
     ){
         
-        app.get("/tareas",controlador.listarTarea); //* // Cuando llegue un GET a /tareas, llama a controlador.listarTarea ...
+        app.get("/tareas",controlador.listarTareas); //* // Cuando llegue un GET a /tareas, llama a controlador.listarTarea ...
         app.get("/tareas/:idTarea", controlador.obtenerTareaPorId);
         app.post("/tareas", controlador.crearTarea);
         app.put("/tareas/:idTarea",controlador.actualizarTarea);

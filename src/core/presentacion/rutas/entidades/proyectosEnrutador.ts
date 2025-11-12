@@ -5,6 +5,7 @@ import { ProyectoRepository } from "../../../infraestructura/postgres/repositori
 import { ProyectoCasosUso } from "../../../aplicacion/casos-uso/entidades/ProyectosCasosUso";
 import { IProyectosCasosUso } from "../../../aplicacion/interfaces/entidades/IProyectosCasosUso";
 
+
 function proyectosEnrutador (
     app: FastifyInstance,
     proyectosController: ProyectosControlador
