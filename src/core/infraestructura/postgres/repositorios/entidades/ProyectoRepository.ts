@@ -12,7 +12,7 @@ export class ProyectoRepository implements IProyectoRepositorio {
             idProyecto: fila.id_proyecto,
             nombreProyecto: fila.nombre_proyecto,
             tipoProyecto: fila.tipo_proyecto ,
-            fechaInicioProyecto: fila.fecha_inicio_Proyecto ? new Date (fila.fecha_inicio_proyecto): null,
+            fechaInicioProyecto: fila.fecha_inicio_proyecto ? new Date (fila.fecha_inicio_proyecto): null,
             fechaFinProyecto: fila.fecha_fin_proyecto ? new Date(fila.fecha_fin_proyecto): null,
             estadoProyecto:fila.estado_proyecto
         }

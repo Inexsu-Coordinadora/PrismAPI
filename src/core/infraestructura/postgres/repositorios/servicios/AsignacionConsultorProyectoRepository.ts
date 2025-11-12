@@ -113,6 +113,7 @@ export class AsignacionConsultorProyectoRepository implements IAsignacionConsult
     const resultado = await ejecutarConsulta(query, parametros);
     
     return parseInt(resultado.rows[0].dedicacion_acumulada) || 0;
+
 }
     
 async actualizarAsignacion(idAsignacion: string, datosAsignacion: IAsignacionConsultorProyecto): Promise<IAsignacionConsultorProyecto> {

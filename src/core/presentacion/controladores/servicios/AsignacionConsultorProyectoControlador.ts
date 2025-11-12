@@ -114,12 +114,12 @@ export class AsignacionConsultorProyectoControlador{
         }
     }
 
-    obtenerDedicacionExistente = async (request: FastifyRequest, reply: FastifyReply) => {
+    obtenerDedicacionConsultor = async (request: FastifyRequest, reply: FastifyReply) => {
         try {
             const { idConsultor } = request.params as { idConsultor: string };
             const { fechaInicio, fechaFin } = request.query as { fechaInicio: string, fechaFin?: string };
             
-            const dedicacion = await this.asignacionServicio.obtenerDedicacionExistente(
+            const dedicacion = await this.asignacionServicio.obtenerDedicacionConsultor(
                 idConsultor,
                 new Date(fechaInicio),
                 fechaFin ? new Date(fechaFin) : null

@@ -30,7 +30,7 @@ function asignacionConsultorProyectoEnrutador(
     app.get("/asignaciones/verificar/existente", controlador.obtenerAsignacionExistente);
 
     // GET - Calcular dedicación del consultor
-    app.get("/asignaciones/consultor/:idConsultor/dedicacion", controlador.obtenerDedicacionExistente);
+    app.get("/asignaciones/consultor/:idConsultor/dedicacion", controlador.obtenerDedicacionConsultor);
 
     // PUT - Actualizar asignación
     app.put("/asignaciones/:idAsignacion", controlador.actualizarAsignacion);

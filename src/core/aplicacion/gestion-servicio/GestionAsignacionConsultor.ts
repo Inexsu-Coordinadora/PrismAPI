@@ -22,7 +22,7 @@ export class GestionAsignacionConsultor {
         this.validarFechas(datosAsignacion.fechaInicioAsignacion, datosAsignacion.fechaFinAsignacion);
         this.validarEstadoYFechas(datosAsignacion, proyecto);
         this.validarFechasDentroProyecto(datosAsignacion, proyecto);
-        this.validarDedicacion(datosAsignacion);
+        await this.validarDedicacion(datosAsignacion);
     }
 
     // MÉTODOS PRIVADOS (validaciones específicas)
@@ -100,11 +100,16 @@ export class GestionAsignacionConsultor {
         const dedicacionConsultor = await this.asignacionRepo.obtenerDedicacionConsultor(
             datosAsignacion.idConsultor,
             datosAsignacion.fechaInicioAsignacion,
-            datosAsignacion.fechaFinAsignacion
+            datosAsignacion.fechaFinAsignacion,        
+            
         );
+
+    
+
         const totalDedicacion = dedicacionConsultor + (datosAsignacion.porcentajeDedicacion ?? 0);
         if (totalDedicacion > 100) {
             throw new Error(`La dedicación total excede el 100%. Actualmente tiene ${dedicacionConsultor}% asignado.` + `Nueva: ${datosAsignacion.porcentajeDedicacion}%, Total: ${totalDedicacion}`);
+            
         }
     }
 }

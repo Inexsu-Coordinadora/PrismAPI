@@ -13,7 +13,7 @@ obtenerAsignacionPorProyecto(idProyecto:string):Promise<IAsignacionConsultorProy
 
 obtenerAsignacionExistente(idConsultor:string, idProyecto: string, rolConsultor: string | null):Promise<IAsignacionConsultorProyecto | null>;
 
-obtenerDedicacionExistente(idConsultor:string, fechaInicioAsignacion: Date, fechaFinAsignacion: Date | null): Promise<number>;
+obtenerDedicacionConsultor(idConsultor:string, fechaInicioAsignacion: Date, fechaFinAsignacion: Date | null): Promise<number>;
 
 actualizarAsignacion (idAsignacion:string, asignacion:AsignacionConsultorProyectoDTO): Promise<IAsignacionConsultorProyecto | null>; 
 

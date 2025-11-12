@@ -13,7 +13,7 @@ private readonly validador: GestionAsignacionConsultor
 
 async asignarConsultorProyecto(datosAsignacion: AsignacionConsultorProyectoDTO){
 
-    await this.validador.validarAsignacion(datosAsignacion);
+    await this.validador.validarAsignacion(datosAsignacion);    
 
     //creamos la asignación después de validar
     const asignacion = await this.asignacionesRepositorio.asignarConsultorProyecto(datosAsignacion);
@@ -47,7 +47,7 @@ async obtenerAsignacionExistente(idConsultor:string, idProyecto:string, rolConsu
     return asignacionExistente;
 }
 
-async obtenerDedicacionExistente(idConsultor:string, fechaInicioAsignacion:Date, fechaFinAsignacion:Date |null):Promise<number>{
+async obtenerDedicacionConsultor(idConsultor:string, fechaInicioAsignacion:Date, fechaFinAsignacion:Date |null):Promise<number>{
     const dedicacionExistente = await this.asignacionesRepositorio.obtenerDedicacionConsultor(idConsultor, fechaInicioAsignacion, fechaFinAsignacion);
     console.log(dedicacionExistente);
     return dedicacionExistente;

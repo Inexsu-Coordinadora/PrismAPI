@@ -1,6 +1,7 @@
 import {z} from "zod";
 
 export const CrearAsignacionConsultorProyectoEsquema = z.object({
+    
     idConsultor: z
     .string()
     .nonempty("El id del consultor es obligatorio"),    
