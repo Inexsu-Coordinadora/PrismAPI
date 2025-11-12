@@ -1,5 +1,5 @@
-import { ITarea } from "../dominio/interfaces/entidades/ITarea";
-import { TareaDTO, ActualizarTareaDTO } from "../presentacion/esquemas/tareaEsquema";
+import { ITarea } from "../../../dominio/entidades/ITarea";
+import { TareaDTO, ActualizarTareaDTO } from "../../../presentacion/esquemas/entidades/tareaEsquema";
 
 
 export interface ITareasCasosUso {

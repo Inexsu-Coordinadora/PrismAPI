@@ -1,7 +1,7 @@
 import { IProyectoRepositorio } from "../../../../dominio/repositorio/entidades/IProyectoRepositorio";
-import { ejecutarConsulta } from "./ClientePostgres";
+import { ejecutarConsulta } from "../../ClientePostgres";
 import { IProyecto } from "../../../../dominio/entidades/IProyecto";
-import { ProyectoQueryParams } from "../../../../aplicacion/Proyecto/ProyectoQueryParams";
+import { ProyectoQueryParams } from "../../../../aplicacion/casos-uso/entidades/proyecto/ProyectoQueryParams";
 
 export class ProyectoRepository implements IProyectoRepositorio {
 
@@ -12,19 +12,19 @@ export class ProyectoRepository implements IProyectoRepositorio {
             idProyecto: fila.id_proyecto,
             nombreProyecto: fila.nombre_proyecto,
             tipoProyecto: fila.tipo_proyecto ,
-            fechaInicio: fila.fecha_inicio ? new Date (fila.fecha_inicio): null,
-            fechaFin: fila.fecha_fin ? new Date(fila.fecha_fin): null,
+            fechaInicioProyecto: fila.fecha_inicio_proyecto ? new Date (fila.fecha_inicio_proyecto): null,
+            fechaFinProyecto: fila.fecha_fin_proyecto ? new Date(fila.fecha_fin_proyecto): null,
             estadoProyecto:fila.estado_proyecto
         }
     }
     async crearProyecto(datosProyecto: IProyecto): Promise<string>{
-        const {nombreProyecto, tipoProyecto, fechaInicio, fechaFin, estadoProyecto} = datosProyecto;
+        const {nombreProyecto, tipoProyecto, fechaInicioProyecto, fechaFinProyecto, estadoProyecto} = datosProyecto;
 
-        const fechaInicioStr = fechaInicio instanceof Date ? fechaInicio.toISOString().split('T')[0] : (fechaInicio ?? null);
-        const fechaFinStr = fechaFin instanceof Date ? fechaFin.toISOString().split('T')[0] : (fechaFin ?? null);
+        const fechaInicioStr = fechaInicioProyecto instanceof Date ? fechaInicioProyecto.toISOString().split('T')[0] : (fechaInicioProyecto ?? null);
+        const fechaFinStr = fechaFinProyecto instanceof Date ? fechaFinProyecto.toISOString().split('T')[0] : (fechaFinProyecto ?? null);
         
         const query = 
-        `INSERT INTO proyectos (nombre_proyecto, tipo_proyecto, fecha_inicio, fecha_fin, estado_proyecto)
+        `INSERT INTO proyectos (nombre_proyecto, tipo_proyecto, fecha_inicio_proyecto, fecha_fin_proyecto, estado_proyecto)
         VALUES ($1, $2, $3, $4, $5)
         RETURNING * --aquí Postgress genera el id automáticamente`;
 
@@ -91,7 +91,7 @@ export class ProyectoRepository implements IProyectoRepositorio {
         //Nombre de los campos que el usuario puede emplear para ordenar
         const columnasOrdenables: Record<string, string> = {
         nombreProyecto: "nombre_proyecto",
-        fechaInicio: "fecha_inicio",
+        fechaInicioProyecto: "fecha_inicio_proyecto",
         estadoProyecto: "estado_proyecto",
         };
 
@@ -139,8 +139,8 @@ export class ProyectoRepository implements IProyectoRepositorio {
         const mapeoColumnas: { [key in keyof IProyecto]?: string } = {
         nombreProyecto: "nombre_proyecto",
         tipoProyecto: "tipo_proyecto",
-        fechaInicio: "fecha_inicio",
-        fechaFin: "fecha_fin",
+        fechaInicioProyecto: "fecha_inicio_proyecto",
+        fechaFinProyecto: "fecha_fin_proyecto",
         estadoProyecto: "estado_proyecto",
 
         };

@@ -1,10 +1,10 @@
 import { FastifyRequest, FastifyReply } from "fastify";
-import { IProyectosCasosUso } from "../../aplicacion/Proyecto/IProyectosCasosUso";
-import { CrearProyectoEsquema, ProyectoDTO } from "../esquemas/proyectoEsquema";
+import { IProyectosCasosUso } from "../../../aplicacion/interfaces/entidades/IProyectosCasosUso";
+import { CrearProyectoEsquema, ProyectoDTO } from "../../esquemas/entidades/proyectoEsquema";
 import { ZodError } from "zod";
-import { IProyecto } from "../../dominio/interfaces/entidades/IProyecto";
+import { IProyecto } from "../../../dominio/entidades/IProyecto";
 import { request } from "http";
-import { ProyectoQueryParams } from "../../aplicacion/Proyecto/ProyectoQueryParams";
+import { ProyectoQueryParams } from "../../../aplicacion/casos-uso/entidades/proyecto/ProyectoQueryParams";
 
 export class ProyectosControlador {
     constructor(private proyectosCasosUso: IProyectosCasosUso){}

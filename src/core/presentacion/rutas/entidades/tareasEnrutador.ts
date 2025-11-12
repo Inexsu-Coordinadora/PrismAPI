@@ -1,7 +1,7 @@
 import { FastifyInstance } from "fastify";
-import { TareasControlador } from "../controladores/tareasControlador";
+import { TareasControlador } from "../../controladores/entidades/tareasControlador";
 import { ITareaRepositorio } from "../../../dominio/repositorio/entidades/ITareasRepositorio";
-import { ITareasCasosUso } from "../../aplicacion/ITareasCasosUso";
+import { ITareasCasosUso } from "../../../aplicacion/interfaces/entidades/ITareasCasosUso";
 import { TareasCasosUso } from "../../../aplicacion/casos-uso/entidades/TareaCasosUso";
 import { TareaRepository } from "../../../infraestructura/postgres/repositorios/entidades/TareaRepository";
 

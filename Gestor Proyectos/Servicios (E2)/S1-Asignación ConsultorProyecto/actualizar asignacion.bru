@@ -1,0 +1,29 @@
+meta {
+  name: actualizar asignacion
+  type: http
+  seq: 5
+}
+
+put {
+  url: {{baseUrl}}/asignaciones/4eda54e9-2038-4a72-a4e9-24d59022f06d
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {  
+      
+    "idConsultor": "a1a1a1a1-aaaa-4aaa-aaaa-aaaaaaaaaaa1",
+    "idProyecto": "0835d11a-e665-4444-ac52-36048aa2ad45",
+    "rolConsultor": "coordinador",
+    "porcentajeDedicacion": 50,
+    "fechaInicioAsignacion": "2025-02-07",
+    "fechaFinAsignacion": "2025-02-01"  
+  
+  }
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

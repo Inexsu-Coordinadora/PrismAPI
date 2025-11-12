@@ -1,5 +1,6 @@
 import Fastify from 'fastify';;
 import {FastifyError} from 'fastify';
+import { getConfig } from "../../common/configuracion";
 
 //* Aqui importamos los enrutadores de todas las entidades
 import { construirClienteEnrutador } from "./rutas/entidades/clienteEnrutador";
@@ -9,7 +10,7 @@ import { construirTareasEnrutador } from "./rutas/entidades/tareasEnrutador";
 
 
 //* Aqui importamos los enrutadores de todos los servicios
-// import { construirAsignacionConsultorProyectoEnrutador } from './rutas/servicios/asignacionConsultorProyectoEnrutador';
+import { construirAsignacionConsultorProyectoEnrutador } from './rutas/servicios/asignacionConsultorProyectoEnrutador';
 // import { construirConsultaProyectoEnrutador } from './rutas/servicios/consultaProyectoEnrutador';
 // import { construirGestionTareasEnrutador } from './rutas/servicios/gestionTareasEnrutador';
 // import { construirRegistroHorasEnrutador } from './rutas/servicios/registroHorasEnrutador'; 
@@ -26,7 +27,7 @@ async (appInstance) => {
     construirTareasEnrutador(appInstance);
 
     //* Aquí construimos todos los enrutadores de Servicios
-    // construirAsignacionConsultorProyectoEnrutador(appInstance);
+    construirAsignacionConsultorProyectoEnrutador(appInstance);
     // construirConsultaProyectoEnrutador(appInstance);
     // construirGestionTareasEnrutador(appInstance);
     // construirRegistroHorasEnrutador(appInstance);
@@ -37,8 +38,12 @@ async (appInstance) => {
 );
 
 export const startServer = async (): Promise<void> => {
+  // ¡Llama a la función!
+const config = getConfig();
+
 try {
-    await app.listen({ port: Number(process.env.PUERTO) });
+    // ¡Usa la config fresca!
+    await app.listen({ port: config.httpPuerto });
     app.log.info("El servidor esta corriendo...");
 } catch (err) {
     app.log.error(`Error al ejecutar el servidor\n ${err}`);
@@ -49,7 +54,6 @@ try {
     statusCode: 500,
     message: `El servidor no se pudo iniciar: ${(err as Error).message}`,
     };
-
     throw serverError;
 }
 };
