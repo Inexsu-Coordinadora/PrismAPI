@@ -62,12 +62,19 @@ export class AsignacionConsultorProyectoRepository implements IAsignacionConsult
     }
 
     async obtenerAsignacionExistente(idConsultor: string, idProyecto: string, rolConsultor: string | null): Promise<IAsignacionConsultorProyecto | null> {
-        const query = `
+        let query = `
             SELECT * FROM asignaciones_consultores_proyectos 
-            WHERE id_consultor = $1 AND id_proyecto = $2 AND rol_consultor = $3
+            WHERE id_consultor = $1 AND id_proyecto = $2
         `;
         
-        const parametros = [idConsultor, idProyecto, rolConsultor];
+        const parametros = [idConsultor, idProyecto];
+        // ¡ESTA ES LA MAGIA QUE NECESITAS!
+        if (rolConsultor) {
+        query += ` AND rol_consultor = $3`;
+        parametros.push(rolConsultor);
+    }
+
+
         const result = await ejecutarConsulta(query, parametros);
 
         if (result.rows.length === 0) {
