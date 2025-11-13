@@ -1,4 +1,4 @@
-import { IProyecto, EstadoProyecto } from "../IProyecto";
+import { IProyecto, EstadoProyecto } from "./IProyecto";
 
 export class Proyecto implements IProyecto {
     nombreProyecto: string;
