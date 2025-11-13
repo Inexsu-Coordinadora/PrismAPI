@@ -51,7 +51,7 @@ A continuación, se detallan los 4 servicios implementados.
 
 El Servicio 1 es fundamental para la Entrega 2, ya que constituye el núcleo para la gestión de asignaciones de consultores a proyectos. Proporciona endpoints que implementan sólidas validaciones de negocio, asegurando la integridad de los datos y la optimización de recursos. Este servicio no solo permite vincular consultores a proyectos, sino que también sirve de base para las validaciones realizadas en otros servicios, como S3 y S4.
 
-🎥 **Demonstración en Video (S1):** [Haz clic aquí para ver la demostración en YouTube](https://youtu.be/HRGAN_EFj1s)
+🎥 **Demostración en Video (S1):** [Haz clic aquí para ver la demostración en YouTube](https://youtu.be/HRGAN_EFj1s)
 
 Este video muestra la operación de todos los endpoints de este servicio, incluyendo casos de éxito y todas las validaciones de error (inexistencia, duplicidad, exceso de dedicación).
 
@@ -197,7 +197,7 @@ El Servicio 1 proporciona métodos que son utilizados por otros servicios:
 
 Este servicio permite consultar la información de proyectos, pero filtrada desde la perspectiva de un cliente específico.
 
-🎥 **Demonstración en Video (S2):**
+🎥 **Demostración en Video (S2):**
 
 [Haz clic aquí para ver la demostración en YouTube](URL_PLACEHOLDER_S2)
 
@@ -227,7 +227,7 @@ Obtiene la lista de proyectos de un cliente, con filtros opcionales (estado, fec
 
 Este servicio permite a los consultores registrar horas (partes) en los proyectos, validando que el registro sea coherente con su asignación (S1).
 
-🎥 **Demonstración en Video (S3):**
+🎥 **Demostración en Video (S3):**
 
 [Haz clic aquí para ver la demostración en YouTube](URL_PLACEHOLDER_S3)
 
@@ -261,7 +261,7 @@ Registra un nuevo parte de horas de un consultor a un proyecto en una fecha espe
 
 Este servicio expande el CRUD de Tareas (E1), anidando la gestión de tareas dentro de un proyecto específico e integrando validaciones con Proyectos y Consultores (S1).
 
-🎥 **Demonstración en Video (S4):** [Haz clic aquí para ver la demostración en YouTube](https://youtu.be/z3O-AX3xk2Q)
+🎥 **Demostración en Video (S4):** [Haz clic aquí para ver la demostración en YouTube](https://youtu.be/z3O-AX3xk2Q)
 
 
 
