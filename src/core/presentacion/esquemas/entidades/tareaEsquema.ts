@@ -14,8 +14,8 @@ export const CrearTareaEsquema = z.object({
   .string()
   .max(500, "La descripción no puede tener más de 500 caracteres")
   .optional()
-  .nullable()
-  .transform((val)=> val ?? null),//* .transform() asegura que si es 'undefined' o 'null', se guarde como 'null'
+  .nullable(),
+  //.transform((val)=> val ?? null),//* .transform() asegura que si es 'undefined' o 'null', se guarde como 'null'
 
   
   estadoTarea: z

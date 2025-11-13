@@ -117,7 +117,7 @@ export class GestionTareasServicio implements IGestionTareasServicio{
     }
 
     //* HELPER 4: Validar Fecha Límite
-        private validarFechaLimite(fechaLimiteTarea: Date | null, proyecto: IProyecto) {
+        private validarFechaLimite(fechaLimiteTarea: Date | null | undefined, proyecto: IProyecto) {
         if (!fechaLimiteTarea) {return; }//* Si no hay fecha límite, no se valida nada!
         if (proyecto.fechaInicio && fechaLimiteTarea < proyecto.fechaInicio) { //TODO cambiar .fechaInicio por .fechaInicioProyecto 
             throw new Error(`La fecha límite (${fechaLimiteTarea.toISOString().split('T')[0]}) no puede ser anterior a la fecha de inicio del proyecto (${proyecto.fechaInicio.toISOString().split('T')[0]}).`);

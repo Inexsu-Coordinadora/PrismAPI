@@ -10,15 +10,15 @@ const CamposServicioS4 = z.object({
     .string()
     .uuid({ message: "El idConsultorAsignado debe ser un UUID válido" })
     .optional()
-    .nullable()
-    .transform((val) => val ?? null),
+    .nullable(),
+    //.transform((val) => val ?? null),
 
     fechaLimiteTarea: z.coerce.date({ //* z.coerce.date() convierte "YYYY-MM-DD" a Date
         error: "Debe proporcionar una fecha límite válida"
     })
     .optional()
-    .nullable()
-    .transform((val) => val ?? null),
+    .nullable(),
+    //.transform((val) => val ?? null),
 });
 
 //* ------------ 2. Esquema de CREAR: (Base de Creación E1) + (Campos S4) ------------//   
