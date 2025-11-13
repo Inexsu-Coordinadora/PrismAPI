@@ -1,0 +1,21 @@
+meta {
+  name: obtener dedicacion
+  type: http
+  seq: 7
+}
+
+get {
+  url: {{baseUrl}}/asignaciones/consultor/a1a1a1a1-aaaa-4aaa-aaaa-aaaaaaaaaaa1/dedicacion?fechaInicio=2025-03-01&fechaFin=2025-10-15
+  body: none
+  auth: inherit
+}
+
+params:query {
+  fechaInicio: 2025-03-01
+  fechaFin: 2025-10-15
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

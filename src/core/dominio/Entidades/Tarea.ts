@@ -1,4 +1,4 @@
-import { ITarea, EstadoTarea } from "../ITarea";
+import { ITarea, EstadoTarea } from "./ITarea";
 
 export class Tarea implements ITarea{
     tituloTarea: string;

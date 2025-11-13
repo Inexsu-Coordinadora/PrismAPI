@@ -1,0 +1,22 @@
+meta {
+  name: asignacion existente
+  type: http
+  seq: 6
+}
+
+get {
+  url: {{baseUrl}}/asignaciones/verificar/existente?idConsultor=a1a1a1a1-aaaa-4aaa-aaaa-aaaaaaaaaaa1&idProyecto=0835d11a-e665-4444-ac52-36048aa2ad45&rolConsultor=jefe
+  body: none
+  auth: inherit
+}
+
+params:query {
+  idConsultor: a1a1a1a1-aaaa-4aaa-aaaa-aaaaaaaaaaa1
+  idProyecto: 0835d11a-e665-4444-ac52-36048aa2ad45
+  rolConsultor: jefe
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}
