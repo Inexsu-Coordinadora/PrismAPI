@@ -220,6 +220,7 @@ Para ilustrar esta separación de responsabilidades, a continuación se presenta
 
 Para reflejar la implementación de los nuevos servicios, la estructura de la base de datos también evolucionó para incluir nuevas tablas (`asignaciones`, `registros_horas`) y nuevas relaciones (como `tareas` conectada a `proyectos` y `consultores`).
 El siguiente Diagrama de Entidad-Relación (ERD) muestra la estructura de datos final del proyecto:
+
 ![Diagrama Entidad-Relación E2](./images/ERD_Completo_E2.png) 
 
 ---
