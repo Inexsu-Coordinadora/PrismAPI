@@ -7,5 +7,5 @@ CREATE TABLE IF NOT EXISTS clientes (
     documento_cliente INTEGER,
     email_cliente VARCHAR(100) NOT NULL,
     telefono_cliente VARCHAR(100) NOT NULL
-   
+    
 );

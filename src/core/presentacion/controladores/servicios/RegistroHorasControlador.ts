@@ -11,6 +11,9 @@ import {
   RegistroHorasDTO,
 } from "../../esquemas/servicios/registroHorasEsquema";
 
+// interfaz de dominio (forma del registro en la capa de aplicación)
+import { IRegistroHoras } from "../../../dominio/servicios/IRegistroHoras";
+
 /**
  * Controlador para el servicio de Registro y control de horas.
  * Aquí validamos la forma de los datos de entrada (Zod) y mapeamos nombres
@@ -27,6 +30,7 @@ export class RegistroHorasControlador {
   /**
    * Lista los registros de horas.
    * Permite filtrar por id_consultor y/o id_proyecto vía query params:
+   * GET /registrar-horas?id_consultor=...&id_proyecto=...
    */
   listarRegistrosHoras = async (
     request: FastifyRequest<{
@@ -58,6 +62,7 @@ export class RegistroHorasControlador {
   //--------------------------------- METODO GET BY ID ---------------------------------//
   /**
    * Obtiene un registro de horas por su identificador.
+   * GET /registrar-horas/:idRegistro
    */
   obtenerRegistroHoraPorId = async (
     request: FastifyRequest<{ Params: { idRegistro: string } }>,
@@ -91,6 +96,7 @@ export class RegistroHorasControlador {
   //--------------------------------- METODO POST ---------------------------------//
   /**
    * Crea un nuevo registro de horas.
+   * POST /registrar-horas
    */
   crearRegistroHoras = async (
     request: FastifyRequest<{ Body: RegistroHorasDTO }>,
@@ -101,10 +107,11 @@ export class RegistroHorasControlador {
       const datosValidados = CrearRegistroHorasEsquema.parse(request.body);
 
       // 2) Mapeamos a camelCase para la capa de aplicación
-      const datosParaServicio = {
+      const datosParaServicio: IRegistroHoras = {
+        idRegistroHoras: undefined, // lo genera la BD
         idConsultor: datosValidados.id_consultor,
         idProyecto: datosValidados.id_proyecto,
-        fechaRegistro: datosValidados.fecha_registro,       //  ya es Date
+        fechaRegistro: datosValidados.fecha_registro,       // ya es Date
         horasTrabajadas: datosValidados.horas_trabajadas,   // ya es number
         descripcionActividad: datosValidados.descripcion_actividad.trim(),
       };
@@ -135,6 +142,7 @@ export class RegistroHorasControlador {
   //--------------------------------- METODO DELETE ---------------------------------//
   /**
    * Elimina un registro de horas por id.
+   * DELETE /registrar-horas/:idRegistro
    */
   eliminarRegistroHoras = async (
     request: FastifyRequest<{ Params: { idRegistro: string } }>,

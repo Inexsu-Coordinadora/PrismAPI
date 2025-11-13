@@ -5,39 +5,42 @@ import { ejecutarConsulta } from "../../ClientePostgres";
 // Consultas reales sobre la tabla registrar_horas.
 export class RegistroHorasRepository implements IRegistroHorasRepositorio {
 
-//---------------------------- INSERTA UN NUEVO REGISTRO DE HORAS ----------------------------//
-  async crearParteHora(datos: IRegistroHoras): Promise<IRegistroHoras> {
-    const columnas = Object.keys(datos)                                // camelCase a snake_case
-      .map((key) => key.replace(/([a-z0-9])([A-Z])/g, "$1_$2").toLowerCase());
+  //---------------------------- INSERTA UN NUEVO REGISTRO DE HORAS ----------------------------//
+async crearParteHora(datos: IRegistroHoras): Promise<IRegistroHoras> {
+  // 1) Filtrar las propiedades que sí tienen valor (evitamos idRegistroHoras = null)
+  const entriesFiltradas = Object.entries(datos).filter(
+    ([, v]) => v !== undefined && v !== null
+  );
 
-    // CORRECCIÓN: no se envía Date al POOL. CONVIERTE A 'YYYY-MM-DD' Y TIPAMOS COMO (string|number|null)[]
-    // Tomamos los valores, pero si alguno es Date lo convertimos a string 'YYYY-MM-DD'
-    const entries = Object.entries(datos).map(([k, v]) => {
-      if (v instanceof Date) {
-        const y = v.getFullYear();
-        const m = String(v.getMonth() + 1).padStart(2, "0");
-        const d = String(v.getDate()).padStart(2, "0");
-        return [k, `${y}-${m}-${d}`]; // <- queda string
-      }
-      return [k, v];
-    });
-
-    const parametros: Array<string | number | null> = entries.map(([, v]) =>
-      (v as string | number | null) ?? null
+  // 2) Columnas: camelCase -> snake_case
+  const columnas = entriesFiltradas
+    .map(([key]) =>
+      key.replace(/([a-z0-9])([A-Z])/g, "$1_$2").toLowerCase()
     );
 
-    const placeholders = parametros.map((_, i) => `$${i + 1}`).join(", "); // valor temporal o marcador de posición
+  // 3) Valores: si es Date la paso a 'YYYY-MM-DD'
+  const parametros: Array<string | number> = entriesFiltradas.map(([, v]) => {
+    if (v instanceof Date) {
+      const y = v.getFullYear();
+      const m = String(v.getMonth() + 1).padStart(2, "0");
+      const d = String(v.getDate()).padStart(2, "0");
+      return `${y}-${m}-${d}`;
+    }
+    return v as string | number;
+  });
 
-    const query = // Query de inserción y devuelve el registro creado
-      `INSERT INTO registrar_horas (${columnas.join(", ")})
-      VALUES (${placeholders})
-      RETURNING *
-      `;
+  const placeholders = parametros.map((_, i) => `$${i + 1}`).join(", ");
 
-    
-    const respuesta = await ejecutarConsulta(query, parametros);
-    return respuesta.rows[0];
-  }
+  const query = `
+    INSERT INTO registrar_horas (${columnas.join(", ")})
+    VALUES (${placeholders})
+    RETURNING *
+  `;
+
+  const respuesta = await ejecutarConsulta(query, parametros);
+  return respuesta.rows[0];
+}
+
 
 //---------------------------- LISTA TODOS LOS REGISTROS DE HORAS ----------------------------//
     async listarPartesHoras( idConsultor?: string, idProyecto?: string): Promise<IRegistroHoras[]> {

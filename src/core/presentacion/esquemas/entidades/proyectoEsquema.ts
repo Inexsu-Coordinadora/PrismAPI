@@ -17,12 +17,12 @@ export const CrearProyectoEsquema = z.object({
     .optional()
     .transform((val) => val ?? null),
 
-    fechaInicio: z.coerce.date ({
+    fechaInicioProyecto: z.coerce.date ({
         error: 
         "Debe proporcionar una fecha de inicio válida"}),
     
 
-    fechaFin: z.coerce.date ({
+    fechaFinProyecto: z.coerce.date ({
         error: 
         "Debe proporcionar una fecha de fin válida"})
         .optional(),
@@ -32,8 +32,8 @@ export const CrearProyectoEsquema = z.object({
 })
 .refine(
     (data) => {
-        if (data.fechaFin && data.fechaInicio){
-            return data.fechaFin > data.fechaInicio;
+        if (data.fechaFinProyecto && data.fechaInicioProyecto){
+            return data.fechaFinProyecto > data.fechaInicioProyecto;
     }    
     return true;
 },
@@ -44,7 +44,7 @@ export const CrearProyectoEsquema = z.object({
 )
 .refine(
     (data)=>{
-        if(data.estadoProyecto === 'finalizado' && !data.fechaFin){
+        if(data.estadoProyecto === 'finalizado' && !data.fechaFinProyecto){
             return false;
         }
         return true;

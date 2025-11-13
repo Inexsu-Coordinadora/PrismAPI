@@ -5,13 +5,7 @@ import { IRegistroHoras } from "../../../dominio/servicios/IRegistroHoras";
 import { IRegistroHorasRepositorio } from "../../../dominio/repositorio/servicios/IRegistroHorasRepositorio";
 import { IConsultorRepositorio } from "../../../dominio/repositorio/entidades/IConsultorRepositorio";
 import { IProyectoRepositorio } from "../../../dominio/repositorio/entidades/IProyectoRepositorio";
-
-// ESTA IMPORTACIÓN SE ACTIVARÁ CUANDO INTEGRE LA RAMA DEL S1
-// import { IAsignacionConsultorProyectoRepositorio } from "../../../dominio/repositorio/servicios/IAsignacionConsultorProyectoRepositorio";
-/********* SE UTILIZARA PARA LAS VALIDACIONES DE:
- * 4. Validar que el consultor esté asignado al proyecto -> S1
- * 5. Validar que la fecha del registro esté dentro del rango de la asignación
- **********/
+import { IAsignacionConsultorProyectoRepositorio } from "../../../dominio/repositorio/servicios/IAsignacionConsultorProyectoRepositorio";
 
 // interfaz de este servicio (la que expone los métodos)
 import { IRegistroHorasServicio } from "../../interfaces/servicios/IRegistroHorasServicio";
@@ -23,9 +17,7 @@ export class RegistroHorasServicio implements IRegistroHorasServicio {
     private readonly registroHorasRepo: IRegistroHorasRepositorio,
     private readonly consultorRepo: IConsultorRepositorio,
     private readonly proyectoRepo: IProyectoRepositorio,
-
-    // Cuando se integre con el S1, descomentar la línea siguiente y eliminar la simulación de más abajo.
-    // private readonly asignacionRepo: IAsignacionConsultorProyectoRepositorio
+    private readonly asignacionRepo: IAsignacionConsultorProyectoRepositorio
   ) {}
 
   // --------------------------- helpers privados --------------------------- //
@@ -47,18 +39,19 @@ export class RegistroHorasServicio implements IRegistroHorasServicio {
     if (input instanceof Date) {
       return new Date(input.getFullYear(), input.getMonth(), input.getDate());
     }
+
+    // Esperamos formato 'YYYY-MM-DD'
     const [y, m, d] = input.split("-").map(Number);
-    return new Date((y ?? 1970), ((m ?? 1) - 1), (d ?? 1));
-    /*
-    Si y es undefined, usa 1970 (un valor base neutro)
-    Si m es undefined, usa 1
-    Si d es undefined, usa 1
-    */
+    const year = y ?? 1970;
+    const month = (m ?? 1) - 1;
+    const day = d ?? 1;
+    return new Date(year, month, day);
   }
 
   /**
    * Duplicidad -> mismo consultor + proyecto + misma fecha (día) + misma descripción.
-    *OJO: el repo devuelve snake_case desde la BD. Normalizamos aquí para comparar.   */
+   * OJO: el repo devuelve snake_case desde la BD. Normalizamos aquí para comparar.
+   */
   private async existeDuplicado(datos: IRegistroHoras): Promise<boolean> {
     const lista = await this.registroHorasRepo.listarPartesHoras(
       datos.idConsultor,
@@ -71,8 +64,12 @@ export class RegistroHorasServicio implements IRegistroHorasServicio {
     return lista.some((r: any) => {
       const idConsultorRow: string = r.id_consultor ?? r.idConsultor;
       const idProyectoRow: string = r.id_proyecto ?? r.idProyecto;
-      const fechaRow: Date = this.toDateOnly(r.fecha_registro ?? r.fechaRegistro);
-      const descRow: string = this.normDesc(r.descripcion_actividad ?? r.descripcionActividad);
+      const fechaRow: Date = this.toDateOnly(
+        r.fecha_registro ?? r.fechaRegistro
+      );
+      const descRow: string = this.normDesc(
+        r.descripcion_actividad ?? r.descripcionActividad
+      );
 
       return (
         idConsultorRow === datos.idConsultor &&
@@ -90,8 +87,7 @@ export class RegistroHorasServicio implements IRegistroHorasServicio {
       datos.idConsultor
     );
     if (!consultor) {
-      // aquí lanzamos error, el controlador lo convierte en 404/400
-      throw new Error("El consultor indicado no existe"); // el controlador lo convierte en 404/400
+      throw new Error("El consultor indicado no existe");
     }
 
     //****** 2. Validar que el proyecto exista ******/
@@ -111,47 +107,44 @@ export class RegistroHorasServicio implements IRegistroHorasServicio {
     }
 
     //****** 4. Validar que el consultor esté asignado al proyecto -> S1 ******/
-    // Como aun no está inyectado el repositorio de asignaciones (S1),
-    // simulamos una validación mínima con las FECHAS DEL PROYECTO.
-    // Cuando integren, reemplazar este bloque por la validación real con asignaciones.
-    const tieneAsignacionReal = false; // <-- cambiar a true cuando integren y descomenten el repo
+    const asignacion = await this.asignacionRepo.obtenerAsignacionExistente(
+      datos.idConsultor,
+      datos.idProyecto,
+      null
+    );
 
-    if (tieneAsignacionReal) {
-      // SIMULACION TEMPORAL de código real (cuando exista el repo):
-      // const asignacion = await this.asignacionRepo.obtenerAsignacionPorConsultorYProyecto(
-      //   datos.idConsultor,
-      //   datos.idProyecto
-      // );
-      // if (!asignacion) {
-      //   throw new Error("El consultor no está asignado a este proyecto");
-      // }
+    if (!asignacion) {
+      throw new Error("El consultor no está asignado a este proyecto");
+    }
 
-      // ****** 5. Validar que la fecha del registro esté dentro del rango de la asignación ******/
-      // const fechaInicio = new Date(asignacion.fecha_inicio);
-      // const fechaFin = new Date(asignacion.fecha_fin);
-      // if (datos.fechaRegistro < fechaInicio || datos.fechaRegistro > fechaFin) {
-      //   throw new Error(
-      //     "La fecha del registro está fuera del rango de la asignación del consultor"
-      //   );
-      // }
-    } else {
-      // SIMULACIÓN TEMPORAL ***
-      //  - Si el proyecto tiene fechaInicio definida: no permitir registrar antes.
-      //  - Si el proyecto tiene fechaFin definida: no permitir registrar después.
-      const { fechaInicio, fechaFin, nombreProyecto } = proyecto;
+    // Tomamos las fechas de la asignación aceptando snake_case o camelCase
+    const fechaInicioRaw =
+      (asignacion as any).fechaInicioAsignacion ??
+      (asignacion as any).fecha_inicio_asignacion;
+    const fechaFinRaw =
+      (asignacion as any).fechaFinAsignacion ??
+      (asignacion as any).fecha_fin_asignacion ??
+      null;
 
-      if (fechaInicio && datos.fechaRegistro < fechaInicio) {
-        throw new Error(
-          `La fecha del registro no puede ser anterior al inicio del proyecto ${nombreProyecto}`
-        );
-      }
-      if (fechaFin && datos.fechaRegistro > fechaFin) {
-        throw new Error(
-          `La fecha del registro no puede ser posterior al fin del proyecto ${nombreProyecto}`
-        );
-      }
-      // Nota: esto NO verifica la asignación del consultor; sólo mantiene una restricción coherente
-      // hasta que integren el servicio de asignaciones.
+    if (!fechaInicioRaw) {
+      throw new Error(
+        "La asignación del consultor no tiene fecha de inicio configurada"
+      );
+    }
+
+    const fechaInicioAsig = this.toDateOnly(fechaInicioRaw);
+    const fechaFinAsig = fechaFinRaw ? this.toDateOnly(fechaFinRaw) : null;
+
+    //****** 5. Validar que la fecha del registro esté dentro del rango de la asignación ******/
+    const fechaRegistroSoloDia = this.toDateOnly(datos.fechaRegistro);
+
+    if (
+      fechaRegistroSoloDia < fechaInicioAsig ||
+      (fechaFinAsig && fechaRegistroSoloDia > fechaFinAsig)
+    ) {
+      throw new Error(
+        "La fecha del registro está fuera del rango de la asignación del consultor"
+      );
     }
 
     //****** 6. Validar no duplicidad exacta: mismo consultor, mismo proyecto, misma fecha y misma descripción ******/

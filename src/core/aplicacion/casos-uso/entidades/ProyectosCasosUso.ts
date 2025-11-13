@@ -1,8 +1,8 @@
-import { IProyecto } from "../../dominio/entidades/IProyecto";
-import { IProyectoRepositorio
-} from "../../dominio/repositorio/entidades/IProyectoRepositorio";
-import { ProyectoQueryParams } from "./ProyectoQueryParams";
-import { ResultadoProyectos } from "./ResultadoProyectos";
+import { IProyecto } from "../../../dominio/entidades/IProyecto";
+import { IProyectoRepositorio } from "../../../dominio/repositorio/entidades/IProyectoRepositorio";
+import { ProyectoQueryParams } from "./proyecto/ProyectoQueryParams";
+import { ResultadoProyectos } from "./proyecto/ResultadoProyectos";
+
 
 export class ProyectoCasosUso {
     constructor (private proyectoRepositorio: IProyectoRepositorio){}
