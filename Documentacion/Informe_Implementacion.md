@@ -7,7 +7,7 @@
    - [Misión](#misión)
    - [Visión](#visión)
    - [Valores](#valores)
-3. [Nuestro Equipo de Desarrollo](#3-nuestro-equipo-de-desarrollo-)
+3. [Nuestro Equipo de Desarrollo](#3-nuestro-equipo-de-desarrollo)
 4. [Decisiones Técnicas y Arquitectura](#4-decisiones-técnicas-y-arquitectura)
    - [Stack Tecnológico](#stack-tecnológico)
    - [Arquitectura](#arquitectura)
@@ -56,7 +56,7 @@ Ser líderes en la transformación de la gestión de proyectos, ofreciendo a los
 
 ---
 
-## 3. Nuestro Equipo de Desarrollo 👩‍💻
+## 3. Nuestro Equipo de Desarrollo
 
 ![Foto del equipo](./images/Equipo.png)
 
@@ -114,7 +114,7 @@ La distribución de las tareas por sprint será la siguiente:
 | :--- | :--- | :--- | :--- |
 | **1** | Mónica | Noviembre 4, 2025 | **Entrega 1:** CRUD de cuatro entidades principales. |
 | **2** | Jeniffer | Noviembre 12, 2025 | **Entrega 2:** Servicios de negocio |
-| **3** | Kate | Noviembre 17, 2025 | **Entrega 3:** Pruebas unitarias y de Integración|
+| **3** | Katerine | Noviembre 17, 2025 | **Entrega 3:** Pruebas unitarias y de Integración|
 | **4** | Melissa | Noviembre 24, 2025 | **Entrega 4:** Presentación Proyecto|
 
 ---
@@ -217,9 +217,11 @@ Para ilustrar esta separación de responsabilidades, a continuación se presenta
 --- 
 
 ### Diagrama de Entidad-Relación (E2)
+
 Para reflejar la implementación de los nuevos servicios, la estructura de la base de datos también evolucionó para incluir nuevas tablas (`asignaciones`, `registros_horas`) y nuevas relaciones (como `tareas` conectada a `proyectos` y `consultores`).
 El siguiente Diagrama de Entidad-Relación (ERD) muestra la estructura de datos final del proyecto:
 ![Diagrama Entidad-Relación E2](./images/ERD_Completo_E2.png) 
+
 ---
 ### Implementación de Servicios (E2) 
 A continuación, se detalla la implementación de cada uno de los cuatro servicios siguiendo esta arquitectura:
