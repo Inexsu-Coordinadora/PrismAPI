@@ -1,7 +1,7 @@
 import { FastifyInstance } from "fastify";
-import { ClienteControlador } from "../controladores/clienteControlador";
+import { ClienteControlador } from "../../controladores/entidades/clienteControlador";
 import { IClienteRepositorio } from "../../../dominio/repositorio/entidades/IClienteRepositorio";
-import { IClienteCasosUso } from "../../aplicacion/IClienteCasosUso";
+import { IClienteCasosUso } from "../../../aplicacion/interfaces/entidades/IClienteCasosUso";
 import { ClienteCasosUso } from "../../../aplicacion/casos-uso/entidades/ClienteCasosUso";
 import { ClienteRepository } from "../../../infraestructura/postgres/repositorios/entidades/ClienteRepository";
 
@@ -28,5 +28,3 @@ export async function construirClienteEnrutador(app: FastifyInstance) {
 
   clienteEnrutador(app, clienteControlador);
 }
-
-
