@@ -1,5 +1,5 @@
-import { IConsultor} from "../dominio/interfaces/entidades/IConsultor";
-import { ConsultorDTO, ActualizarConsultorDTO} from "../presentacion/esquemas/consultorEsquema";
+import { IConsultor } from "../../../dominio/entidades/IConsultor";
+import { ConsultorDTO, ActualizarConsultorDTO } from "../../../presentacion/esquemas/entidades/consultorEsquema";
 
 export interface IConsultorCasosUso {
     obtenerConsultores(limite?: number): Promise<IConsultor[]>;

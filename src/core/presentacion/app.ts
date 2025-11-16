@@ -1,5 +1,7 @@
 import Fastify from 'fastify';;
 import {FastifyError} from 'fastify';
+import { getConfig } from "../../common/configuracion";
+
 
 //* Aqui importamos los enrutadores de todas las entidades
 import { construirClienteEnrutador } from "./rutas/entidades/clienteEnrutador";

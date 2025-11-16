@@ -28,3 +28,4 @@ export async function construirClienteEnrutador(app: FastifyInstance) {
 
   clienteEnrutador(app, clienteControlador);
 }
+

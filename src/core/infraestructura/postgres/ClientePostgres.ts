@@ -29,7 +29,7 @@ export async function ejecutarConsulta(
   parametros?: Array<number | string | null>
 ) {
   const poolConexion = getPool();
-  
+  console.log(consulta,parametros)
 
   return await poolConexion.query(consulta, parametros);
 }

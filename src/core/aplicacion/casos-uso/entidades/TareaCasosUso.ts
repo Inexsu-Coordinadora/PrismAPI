@@ -1,7 +1,7 @@
 import { ITarea } from "../../../dominio/entidades/ITarea";
 import { TareaDTO, ActualizarTareaDTO } from "../../../presentacion/esquemas/entidades/tareaEsquema";
 import { ITareaRepositorio } from "../../../dominio/repositorio/entidades/ITareasRepositorio";
-import { ITareasCasosUso } from "../../ITareasCasosUso";
+import { ITareasCasosUso } from "../../interfaces/entidades/ITareasCasosUso";
 
 export class TareasCasosUso implements ITareasCasosUso{
 
