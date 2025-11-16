@@ -1,56 +1,67 @@
-import {z} from "zod";
-
-export const CrearAsignacionConsultorProyectoEsquema = z.object({
-    
-    idConsultor: z
-    .string()
-    .nonempty("El id del consultor es obligatorio"),    
-
-    idProyecto: z
-    .string()
-    .nonempty("El id del proyecto es obligatorio"),
-
-    rolConsultor: z
-    .string()
-    .min(2, "El rol del consultor debe tener al menos dos caracteres")
-    .max(30, " El rol del consultor debe tener máximo treinta caracteres")
-    .nullable()
-    .optional()
-    .transform((val)=> val ?? null),//* .transform() asegura que si es 'undefined' o 'null', se guarde como 'null',   
-
-    porcentajeDedicacion: z
-    .number()
-    .min(0, "El porcentaje no puede ser negativo")
-    .max(100, "El porcentaje no puede ser mayor a 100")
-    .nullable()
-    .optional()
-    .transform((val)=> val ?? null),
-
-    fechaInicioAsignacion: z.coerce.date ({
-        error: 
-        "Debe proporcionar una fecha de inicio válida"}),
-    
-
-    fechaFinAsignacion: z.coerce.date ({
-        error: 
-        "Debe proporcionar una fecha de fin válida"})
-        .optional()
-        .nullable()
-        .transform((val) => val ?? null)
-
-})
-.refine(
-    (data) => {
-    
-    if (!data.fechaFinAsignacion) return true;
-
-    return data.fechaFinAsignacion >= data.fechaInicioAsignacion;
-    },
-    {
-    message: 'La fecha fin debe ser posterior o igual a la fecha de inicio',
-    path: ['fechaFinAsignacion']
-}
-)
+import { z } from "zod";
 
 
-export type AsignacionConsultorProyectoDTO = z.infer<typeof CrearAsignacionConsultorProyectoEsquema>; 
+export const consultarProyectosPorClienteQueryEsquema = z
+  .object({
+    estadoProyecto: z
+      .enum(["activo", "finalizado", "pendiente"],{message:"El estado no es válido debe ser: activo | finalizado | pendiente"})
+      .optional(),
+
+    fechaInicioProyecto: z.iso
+      .date({ message: "fechaInicio debe ser una fecha en formato ISO válido" })
+      .optional(),
+
+    fechaFinProyecto: z.iso
+      .date({ message: "fechaFin debe ser una fecha en formato ISO válido" })
+      .optional(),
+  })
+  .strict();
+
+export type FiltrosConsultaProyectos = z.infer<
+  typeof consultarProyectosPorClienteQueryEsquema
+>;
+
+
+
+export const consultarProyectosPorClienteParamsEsquema = z
+  .object({
+    idCliente: z
+      .string()
+      .uuid({ message: "El ID del cliente debe ser un UUID válido" }),
+  })
+  .strict();
+
+export type ConsultarProyectosPorClienteParams = z.infer<
+  typeof consultarProyectosPorClienteParamsEsquema
+>;
+
+export const consultorEnProyectoEsquema = z.object({
+  nombre: z.string(),
+  rol: z.string().nullable(), 
+});
+
+export type ConsultorEnProyectoDTO = z.infer<typeof consultorEnProyectoEsquema>;
+
+
+export const proyectoConConsultoresEsquema = z.object({
+  codigoProyecto: z.string(), 
+  nombreProyecto: z.string(), 
+  estadoProyecto: z.enum(["activo", "finalizado", "pendiente"]),
+  fechaInicioProyecto: z.string().nullable(), 
+  fechaFinProyecto: z.string().nullable(),
+  consultores: z.array(consultorEnProyectoEsquema),
+});
+
+export type ProyectoConConsultoresDTO = z.infer<
+  typeof proyectoConConsultoresEsquema
+>;
+
+
+export const respuestaConsultarProyectosEsquema = z.object({
+  proyectos: z.array(proyectoConConsultoresEsquema),
+});
+
+export type RespuestaConsultarProyectos = z.infer<
+  typeof respuestaConsultarProyectosEsquema
+>;
+
