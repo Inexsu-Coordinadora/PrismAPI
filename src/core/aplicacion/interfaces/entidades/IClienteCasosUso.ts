@@ -1,5 +1,5 @@
-import { ICliente } from "../dominio/interfaces/entidades/ICliente";
-import { CrearClienteDto, ActualizarClienteDto } from "../dominio/entidades/Cliente";
+import { ICliente } from "../../../dominio/entidades/ICliente";
+import { CrearClienteDto, ActualizarClienteDto } from "../../../dominio/entidades/Cliente";
 
 export interface IClienteCasosUso {
   crearCliente(cliente: CrearClienteDto): Promise<ICliente>;

@@ -1,7 +1,7 @@
 import {FastifyRequest, FastifyReply} from 'fastify';
-import {IConsultor } from '../../../dominio/entidades/IConsultor';
+import { IConsultor } from '../../../dominio/entidades/IConsultor';
 import { IConsultorCasosUso } from '../../../aplicacion/interfaces/entidades/IConsultorCasosUso';
-import { ConsultorDTO, CrearConsultorEsquema} from '../../esquemas/entidades/consultorEsquema';
+import { ConsultorDTO, CrearConsultorEsquema } from '../../esquemas/entidades/consultorEsquema';
 import { ZodError} from 'zod';
 
 export class ConsultorControlador {

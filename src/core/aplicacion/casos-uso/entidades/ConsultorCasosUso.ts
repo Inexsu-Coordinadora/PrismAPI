@@ -1,7 +1,7 @@
 import { IConsultor } from "../../../dominio/entidades/IConsultor";
 import { IConsultorRepositorio} from "../../../dominio/repositorio/entidades/IConsultorRepositorio";
 import { ConsultorDTO, ActualizarConsultorDTO } from "../../../presentacion/esquemas/entidades/consultorEsquema";
-import { IConsultorCasosUso} from "../../interfaces/entidades/IConsultorCasosUso";
+import { IConsultorCasosUso } from "../../interfaces/entidades/IConsultorCasosUso";
 
 export class ConsultorCasosUso implements IConsultorCasosUso {
     constructor(private consultorRepositorio: IConsultorRepositorio) {}    // Inyección de dependencia
