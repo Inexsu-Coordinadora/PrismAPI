@@ -1,6 +1,5 @@
 import { IProyecto } from "../../entidades/IProyecto";
-import { ProyectoQueryParams } from "../../../aplicacion/casos-uso/entidades/proyecto/ProyectoQueryParams";
-
+import { ProyectoQueryParams } from "../../tipos/proyecto/ProyectoQueryParams";
 import { Pool } from "pg";
 
 export interface IProyectoRepositorio {

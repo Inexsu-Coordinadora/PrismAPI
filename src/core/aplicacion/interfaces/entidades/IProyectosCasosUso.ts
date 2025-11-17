@@ -1,7 +1,7 @@
 import { IProyecto } from "../../../dominio/entidades/IProyecto";
 import { ProyectoDTO } from "../../../presentacion/esquemas/entidades/proyectoEsquema";
-import { ProyectoQueryParams } from "../../casos-uso/entidades/proyecto/ProyectoQueryParams";
-import { ResultadoProyectos } from "../../casos-uso/entidades/proyecto/ResultadoProyectos";
+import { ProyectoQueryParams } from "../../../dominio/tipos/proyecto/ProyectoQueryParams";
+import { ResultadoProyectos } from "../../../dominio/tipos/proyecto/ResultadoProyectos";
 
 export interface IProyectosCasosUso {
     obtenerProyectos(params:ProyectoQueryParams):Promise<ResultadoProyectos>;
