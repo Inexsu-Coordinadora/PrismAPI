@@ -7,4 +7,5 @@ export interface IProyecto {
     fechaInicioProyecto?: Date | null | undefined,
     fechaFinProyecto?: Date | null | undefined,
     estadoProyecto:EstadoProyecto;
+    idCliente?: string | null | undefined;
 }

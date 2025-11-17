@@ -2,11 +2,10 @@
 
 PrismAPI es una API RESTful que sirve como núcleo para una aplicación de gestión de proyectos. A diferencia de las listas de tareas planas, el concepto central de PrismAPI es la organización por 'capas', permitiendo al usuario definir y administrar las distintas fases o componentes de un proyecto, desde la idea inicial hasta su finalización.
 
-> ℹ️ **Nota:** Para conocer las decisiones de arquitectura, la metodología de trabajo y la gestión del proyecto, por favor consulta el [Informe de Implementación y Avances](./Documentacion/Informe_Implementacion.md).
-
 ---
 
 ## Tabla de Contenidos
+* [Documentación del Proyecto](#-documentación-del-proyecto)
 * [Tecnologías](#tecnologías)
 * [Herramientas de Desarrollo](#herramientas-de-desarrollo)
 * [Prerrequisitos](#prerrequisitos)
@@ -16,6 +15,15 @@ PrismAPI es una API RESTful que sirve como núcleo para una aplicación de gesti
 * [Migraciones](#migraciones)
 * [Probando la API con Bruno](#probando-la-api-con-bruno)
 
+---
+## 📚 Documentación del Proyecto
+Este proyecto se divide en tres documentos principales para facilitar su revisión:
+
+* **1. README.md (Este archivo):** Contiene las instrucciones de instalación, configuración y ejecución del proyecto.
+* **2. Documentación de API:** Contiene el manual de referencia completo de la API, con todos los endpoints, validaciones y ejemplos de la E2.
+    * ➡️ **[Ver Documentación de API (E2)](./Documentacion/API_Endpoints_E2.md)**
+* **3. Informe de Implementación:** Explica las decisiones de arquitectura, el flujo de trabajo (Git) y los retos técnicos de la implementación.
+    * ➡️ **[Ver Informe de Implementación](./Documentacion/Informe_Implementacion.md)**
 ---
 
 ## 💻 Tecnologías
@@ -137,12 +145,22 @@ Una vez ejecutados todos los scripts en orden, tu base de datos estará lista pa
 ## 🐶 Probando la API con Bruno
 Para facilitar las pruebas de los endpoints, este repositorio incluye una colección de Bruno lista para importar.
 
-**❕[También puedes ver una demostración en video de cómo probar los endpoints en YouTube](https://youtu.be/zojR3-eEUBs?si=WgxIcyMkey_CwzYi)**
+**❕[También puedes ver una demostración en video de cómo probar los endpoints de nuestra primera entrega en YouTube](https://youtu.be/zojR3-eEUBs)**
 
 1.  Abre la aplicación de escritorio de **Bruno**.
 2.  Haz clic en "Open Collection" (Abrir Colección).
-3.  Navega hasta la carpeta de este proyecto y selecciona la carpeta `bruno` (o `bruno_collection`, el nombre que le hayas puesto).
-4.  Bruno importará automáticamente todos los endpoints (ej: "Crear Proyecto", "Obtener Usuarios", etc.).
+3.  Navega hasta la carpeta de este proyecto y selecciona la carpeta `Gestor Proyectos`.
+4.  Bruno importará la colección, la cual está organizada en dos carpetas principales:
+    * **`CRUDS Entidades (E1)`:** Contiene los endpoints básicos de la Entrega 1, agrupados por entidad:.
+        * `Proyectos`
+        * `Clientes`
+        * `Consultores`
+        * `Tareas`
+    * **`Servicios (E2)`:** Contiene los nuevos endpoints de la Entrega 2, organizados por servicio.
+        * `S1: Asignación ProyectoConsultor`
+        * `S2: Consulta Proyectos`
+        * `S3: Registro Horas`
+        * `S4: Gestión Tareas`
 
 ### Configuración del Entorno en Bruno
 Para evitar tener que escribir `http://localhost:3001/api` en cada petición:
@@ -153,3 +171,5 @@ Para evitar tener que escribir `http://localhost:3001/api` en cada petición:
     * `baseUrl`: `http://localhost:{{PUERTO}}/api`
 4.  Asegúrate de tener una variable `PUERTO` definida en Bruno (o simplemente pon `http://localhost:3001` si lo prefieres).
 5.  Ahora, en tus peticiones, puedes usar `{{baseUrl}}/proyectos` en lugar de la URL completa.
+
+

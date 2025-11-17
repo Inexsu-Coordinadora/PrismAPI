@@ -29,7 +29,9 @@ export async function ejecutarConsulta(
   parametros?: Array<number | string | null>
 ) {
   const poolConexion = getPool();
-  console.log(consulta,parametros)
+  
+  // (Este log ya no es necesario o puedes modificarlo)
+  // console.log('cons', getConfig()) 
 
   return await poolConexion.query(consulta, parametros);
 }

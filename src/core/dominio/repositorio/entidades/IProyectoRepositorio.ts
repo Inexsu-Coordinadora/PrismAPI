@@ -1,5 +1,5 @@
 import { IProyecto } from "../../entidades/IProyecto";
-import { ProyectoQueryParams } from "../../../aplicacion/Proyecto/ProyectoQueryParams";
+import { ProyectoQueryParams } from "../../../aplicacion/casos-uso/entidades/proyecto/ProyectoQueryParams";
 
 import { Pool } from "pg";
 

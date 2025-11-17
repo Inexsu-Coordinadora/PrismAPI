@@ -26,3 +26,4 @@ export async function construirProyectosEnrutador(app: FastifyInstance){
 
     proyectosEnrutador (app, proyectosController);
 }
+
