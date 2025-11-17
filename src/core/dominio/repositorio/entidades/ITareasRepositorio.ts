@@ -6,4 +6,13 @@ export interface ITareaRepositorio {
     obtenerTareaPorId(idTarea: string): Promise <ITarea | null>;
     actualizarTarea(idTarea: string, datosTarea: Partial <ITarea>):Promise <ITarea | null>;
     eliminarTarea (idTarea: string): Promise<void>;
+
+    //* --- Métodos de S4 (Consultas Complejas) ---
+    buscarPorTituloYProyecto(tituloTarea: string, idProyecto: string): Promise<ITarea | null>;
+    obtenerTareasPorProyecto(idProyecto: string): Promise<ITarea[]>;
+    obtenerTareaDeProyectoPorId(idTarea: string, idProyecto: string): Promise<ITarea | null>;
+
+
+
+
 }

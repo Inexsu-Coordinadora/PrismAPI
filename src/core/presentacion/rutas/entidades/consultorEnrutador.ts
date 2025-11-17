@@ -1,9 +1,9 @@
-import { FastifyInstance } from "fastify";
-import { ConsultorControlador } from "../../controladores/entidades/consultorControlador";
-import { ConsultorCasosUso } from "../../../aplicacion/casos-uso/entidades/ConsultorCasosUso";
+import {FastifyInstance } from "fastify";
+import {ConsultorControlador } from "../../controladores/entidades/consultorControlador";
+import {ConsultorCasosUso } from "../../../aplicacion/casos-uso/entidades/ConsultorCasosUso";
 import {IConsultorRepositorio} from "../../../dominio/repositorio/entidades/IConsultorRepositorio";
-import { IConsultorCasosUso } from "../../../aplicacion/interfaces/entidades/IConsultorCasosUso";
-import { ConsultorRepository } from "../../../infraestructura/postgres/repositorios/entidades/ConsultorRepository";
+import {IConsultorCasosUso} from "../../../aplicacion/interfaces/entidades/IConsultorCasosUso";
+import {ConsultorRepository} from "../../../infraestructura/postgres/repositorios/entidades/ConsultorRepository";
 
 function consultoresEnrutador(app:FastifyInstance, controlador: ConsultorControlador) {
     app.get("/consultores", controlador.obtenerConsultores);

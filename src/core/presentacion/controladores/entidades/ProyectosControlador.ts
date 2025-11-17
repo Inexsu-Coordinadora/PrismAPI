@@ -3,7 +3,6 @@ import { IProyectosCasosUso } from "../../../aplicacion/interfaces/entidades/IPr
 import { CrearProyectoEsquema, ProyectoDTO } from "../../esquemas/entidades/proyectoEsquema";
 import { ZodError } from "zod";
 import { IProyecto } from "../../../dominio/entidades/IProyecto";
-import { request } from "http";
 import { ProyectoQueryParams } from "../../../aplicacion/casos-uso/entidades/proyecto/ProyectoQueryParams";
 
 export class ProyectosControlador {

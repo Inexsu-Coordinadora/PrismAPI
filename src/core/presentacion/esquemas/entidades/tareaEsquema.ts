@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-const estadosValidos =["pendiente", "en-desarrollo", "finalizada"] as const;
+const estadosValidos =["pendiente", "en-progreso", "bloqueada", "completada"] as const;
 
 //* ----------------- 1. Esquema para CREAR Tarea -----------------//
 export const CrearTareaEsquema = z.object({
@@ -14,12 +14,12 @@ export const CrearTareaEsquema = z.object({
   .string()
   .max(500, "La descripción no puede tener más de 500 caracteres")
   .optional()
-  .nullable()
-  .transform((val)=> val ?? null),//* .transform() asegura que si es 'undefined' o 'null', se guarde como 'null'
+  .nullable(),
+  //.transform((val)=> val ?? null),//* .transform() asegura que si es 'undefined' o 'null', se guarde como 'null'
 
   
   estadoTarea: z
-  .enum(estadosValidos, "Estado no válido. Debe ser 'pendiente', 'en-desarrollo' o 'finalizada'")
+  .enum(estadosValidos, "Estado no válido. Debe ser 'pendiente', 'en-progreso', 'bloqueada' o 'completada'")
   .optional()
   .default("pendiente"),
 });

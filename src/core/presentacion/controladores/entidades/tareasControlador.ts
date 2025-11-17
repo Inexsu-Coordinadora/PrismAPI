@@ -26,7 +26,7 @@ export class TareasControlador {
     }
 
     //* ----------------- Método LISTAR Tarea (GET /tareas) -----------------//
-    listarTarea  = async (
+    listarTareas  = async (
         request: FastifyRequest <{Querystring: {limite?:number}}>,
         reply: FastifyReply
     )=>{
@@ -63,7 +63,7 @@ export class TareasControlador {
                 tarea: tarea,
             });
         } catch (error) {
-            return this.manejarError(reply,error,"Erro al obtener la tarea")
+            return this.manejarError(reply,error,"Error al obtener la tarea")
         }
     }
 

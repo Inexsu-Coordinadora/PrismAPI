@@ -1,5 +1,5 @@
 import { IProyectoRepositorio } from "../../../../dominio/repositorio/entidades/IProyectoRepositorio";
-import { ejecutarConsulta } from "../../ClientePostgres";
+import { ejecutarConsulta } from '../../ClientePostgres';
 import { IProyecto } from "../../../../dominio/entidades/IProyecto";
 import { ProyectoQueryParams } from "../../../../aplicacion/casos-uso/entidades/proyecto/ProyectoQueryParams";
 
