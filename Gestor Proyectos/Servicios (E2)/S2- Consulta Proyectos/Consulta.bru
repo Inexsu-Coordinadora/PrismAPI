@@ -5,11 +5,28 @@ meta {
 }
 
 get {
-  url: {{baseUrl
-  body: none
+  url: {{baseUrl}}/clientes/:idCliente/proyectos
+  body: json
   auth: inherit
+}
+
+params:query {
+  ~estadoProyecto: activo
+  ~fechaInicioProyecto: 2024-10-21
+  ~fechaFinProyecto: 2024-10-10
+}
+
+params:path {
+  idCliente: 8f6cc841-ebc3-4102-94ea-82fdd54606c1
+}
+
+body:json {
+  {
+    "idCliente" :"6cc841-ebc3-4102-94ea-82fdd54606c1"
+  }
 }
 
 settings {
   encodeUrl: true
+  timeout: 0
 }

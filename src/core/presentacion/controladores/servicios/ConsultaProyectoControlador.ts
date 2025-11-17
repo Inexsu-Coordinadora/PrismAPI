@@ -1,6 +1,5 @@
 import { FastifyRequest, FastifyReply } from "fastify";
 import { ZodError } from "zod";
-
 import {
   consultarProyectosPorClienteParamsEsquema,
   consultarProyectosPorClienteQueryEsquema,
