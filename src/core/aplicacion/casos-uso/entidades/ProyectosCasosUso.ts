@@ -3,7 +3,6 @@ import { IProyectoRepositorio } from "../../../dominio/repositorio/entidades/IPr
 import { ProyectoQueryParams } from "./proyecto/ProyectoQueryParams";
 import { ResultadoProyectos } from "./proyecto/ResultadoProyectos";
 
-
 export class ProyectoCasosUso {
     constructor (private proyectoRepositorio: IProyectoRepositorio){}
 
