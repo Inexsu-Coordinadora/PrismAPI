@@ -1,8 +1,6 @@
 import { ITarea } from "../../../dominio/entidades/ITarea";
 import { TareaDTO, ActualizarTareaDTO } from "../../../presentacion/esquemas/entidades/tareaEsquema";
 
-
-
 export interface ITareasCasosUso {
     crearTarea(tarea: TareaDTO): Promise <string>;
     listarTareas(limite?: number): Promise <ITarea[]>;

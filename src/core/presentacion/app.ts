@@ -1,5 +1,5 @@
-import Fastify from "fastify";
-import { FastifyError } from "fastify";
+import Fastify from 'fastify';
+import { FastifyError } from 'fastify';
 import { getConfig } from "../../common/configuracion";
 
 //* Aqui importamos los enrutadores de todas las entidades
@@ -12,7 +12,7 @@ import { construirTareasEnrutador } from "./rutas/entidades/tareasEnrutador";
 import { construirAsignacionConsultorProyectoEnrutador } from './rutas/servicios/asignacionConsultorProyectoEnrutador';
 // import { construirConsultaProyectoEnrutador } from './rutas/servicios/consultaProyectoEnrutador';
 import { construirGestionTareasEnrutador } from "./rutas/servicios/gestionTareasEnrutador";
-// import { construirRegistroHorasEnrutador } from './rutas/servicios/registroHorasEnrutador';
+import { construirRegistroHorasEnrutador } from './rutas/servicios/registroHorasEnrutador';
 
 const app = Fastify({ logger: true });
 
@@ -28,7 +28,7 @@ async (appInstance) => {
     construirAsignacionConsultorProyectoEnrutador(appInstance);
     // construirConsultaProyectoEnrutador(appInstance);
     construirGestionTareasEnrutador(appInstance);
-    // construirRegistroHorasEnrutador(appInstance);
+    construirRegistroHorasEnrutador(appInstance);
 },
 { prefix: "/api" }
 );

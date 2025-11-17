@@ -18,8 +18,8 @@ import { ConsultorRepository } from "../../../infraestructura/postgres/repositor
 import { ITareaRepositorio } from "../../../dominio/repositorio/entidades/ITareasRepositorio";
 import { IProyectoRepositorio } from "../../../dominio/repositorio/entidades/IProyectoRepositorio";
 import { IConsultorRepositorio } from "../../../dominio/repositorio/entidades/IConsultorRepositorio";
-// TODO: import { IAsignacionConsultorProyectoRepositorio } from "../../../dominio/repositorio/servicios/IAsignacionConsultorProyectoRepositorio";
-
+import { IAsignacionConsultorProyectoRepositorio } from "../../../dominio/repositorio/servicios/IAsignacionConsultorProyectoRepositorio";
+import { AsignacionConsultorProyectoRepository } from "../../../infraestructura/postgres/repositorios/servicios/AsignacionConsultorProyectoRepository";
 
 
   //* ----------------- 1. FUNCIÓN DE RUTAS -----------------//
@@ -40,14 +40,15 @@ export async function construirGestionTareasEnrutador(app: FastifyInstance) {
     const tareaRepo: ITareaRepositorio = new TareaRepository();
     const proyectoRepo: IProyectoRepositorio = new ProyectoRepository();
     const consultorRepo: IConsultorRepositorio = new ConsultorRepository();
-    // TODO: const asignacionRepo: IAsignacionConsultorProyectoRepositorio = new AsignacionConsultorProyectoRepository();
+    const asignacionRepo: IAsignacionConsultorProyectoRepositorio = new AsignacionConsultorProyectoRepository();
+
 
     //* 2. Capa Aplicación (Creamos el "cerebro" y le pasamos las herramientas)
     const gestionTareasServicio: IGestionTareasServicio = new GestionTareasServicio(
         tareaRepo,
         proyectoRepo,
         consultorRepo,
-        // TODO: asignacionRepo
+        asignacionRepo
     );
 
     //* 3. Capa Presentación (Creamos el "controlador" y le pasamos el cerebro)
@@ -55,9 +56,4 @@ export async function construirGestionTareasEnrutador(app: FastifyInstance) {
 
     //* 4. Conectamos el mapa de rutas con el controlador
     gestionTareasEnrutador(app, gestionTareasController);
-
-
-
-
-
 }

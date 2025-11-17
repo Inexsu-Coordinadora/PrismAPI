@@ -1,5 +1,4 @@
 import { FastifyInstance } from "fastify";
-
 import { ProyectosControlador } from "../../controladores/entidades/ProyectosControlador";
 import { IProyectoRepositorio } from "../../../dominio/repositorio/entidades/IProyectoRepositorio";
 import { ProyectoRepository } from "../../../infraestructura/postgres/repositorios/entidades/ProyectoRepository";
