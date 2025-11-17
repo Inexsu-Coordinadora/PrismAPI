@@ -1,6 +1,8 @@
 import { IProyectoRepositorio } from "../../../../dominio/repositorio/entidades/IProyectoRepositorio";
 import { ejecutarConsulta } from '../../ClientePostgres';
+import { ejecutarConsulta } from '../../ClientePostgres';
 import { IProyecto } from "../../../../dominio/entidades/IProyecto";
+import { ProyectoQueryParams } from "../../../../aplicacion/casos-uso/entidades/proyecto/ProyectoQueryParams";
 import { ProyectoQueryParams } from "../../../../aplicacion/casos-uso/entidades/proyecto/ProyectoQueryParams";
 
 export class ProyectoRepository implements IProyectoRepositorio {
@@ -19,11 +21,15 @@ export class ProyectoRepository implements IProyectoRepositorio {
     }
     async crearProyecto(datosProyecto: IProyecto): Promise<string>{
         const {nombreProyecto, tipoProyecto, fechaInicioProyecto, fechaFinProyecto, estadoProyecto} = datosProyecto;
+        const {nombreProyecto, tipoProyecto, fechaInicioProyecto, fechaFinProyecto, estadoProyecto} = datosProyecto;
 
+        const fechaInicioStr = fechaInicioProyecto instanceof Date ? fechaInicioProyecto.toISOString().split('T')[0] : (fechaInicioProyecto ?? null);
+        const fechaFinStr = fechaFinProyecto instanceof Date ? fechaFinProyecto.toISOString().split('T')[0] : (fechaFinProyecto ?? null);
         const fechaInicioStr = fechaInicioProyecto instanceof Date ? fechaInicioProyecto.toISOString().split('T')[0] : (fechaInicioProyecto ?? null);
         const fechaFinStr = fechaFinProyecto instanceof Date ? fechaFinProyecto.toISOString().split('T')[0] : (fechaFinProyecto ?? null);
         
         const query = 
+        `INSERT INTO proyectos (nombre_proyecto, tipo_proyecto, fecha_inicio_proyecto, fecha_fin_proyecto, estado_proyecto)
         `INSERT INTO proyectos (nombre_proyecto, tipo_proyecto, fecha_inicio_proyecto, fecha_fin_proyecto, estado_proyecto)
         VALUES ($1, $2, $3, $4, $5)
         RETURNING * --aquí Postgress genera el id automáticamente`;
@@ -92,6 +98,7 @@ export class ProyectoRepository implements IProyectoRepositorio {
         const columnasOrdenables: Record<string, string> = {
         nombreProyecto: "nombre_proyecto",
         fechaInicioProyecto: "fecha_inicio_proyecto",
+        fechaInicioProyecto: "fecha_inicio_proyecto",
         estadoProyecto: "estado_proyecto",
         };
 
@@ -139,6 +146,8 @@ export class ProyectoRepository implements IProyectoRepositorio {
         const mapeoColumnas: { [key in keyof IProyecto]?: string } = {
         nombreProyecto: "nombre_proyecto",
         tipoProyecto: "tipo_proyecto",
+        fechaInicioProyecto: "fecha_inicio_proyecto",
+        fechaFinProyecto: "fecha_fin_proyecto",
         fechaInicioProyecto: "fecha_inicio_proyecto",
         fechaFinProyecto: "fecha_fin_proyecto",
         estadoProyecto: "estado_proyecto",

@@ -38,4 +38,3 @@ import { TareaRepository } from "../../../infraestructura/postgres/repositorios/
         //* 4°. Finalmente, se le pasa el controlador al mapa de rutas
         tareasEnrutador(app, tareasController);
     }
-
