@@ -12,8 +12,9 @@ import { GestionTareasServicio } from "../../../aplicacion/casos-uso/servicios/G
 import { TareaRepository } from "../../../infraestructura/postgres/repositorios/entidades/TareaRepository";
 import { ProyectoRepository } from "../../../infraestructura/postgres/repositorios/entidades/ProyectoRepository";
 import { ConsultorRepository } from "../../../infraestructura/postgres/repositorios/entidades/ConsultorRepository";
+// TODO: import { AsignacionConsultorProyectoRepository } from "../../../infraestructura/postgres/repositorios/servicios/AsignacionConsultorProyectoRepository";
 
-// (CONTRATOS)
+//* (CONTRATOS)
 import { ITareaRepositorio } from "../../../dominio/repositorio/entidades/ITareasRepositorio";
 import { IProyectoRepositorio } from "../../../dominio/repositorio/entidades/IProyectoRepositorio";
 import { IConsultorRepositorio } from "../../../dominio/repositorio/entidades/IConsultorRepositorio";

@@ -68,13 +68,11 @@ export class AsignacionConsultorProyectoRepository implements IAsignacionConsult
         `;
         
         const parametros = [idConsultor, idProyecto];
-        // ¡ESTA ES LA MAGIA QUE NECESITAS!
+        
         if (rolConsultor) {
         query += ` AND rol_consultor = $3`;
         parametros.push(rolConsultor);
     }
-
-
         const result = await ejecutarConsulta(query, parametros);
 
         if (result.rows.length === 0) {

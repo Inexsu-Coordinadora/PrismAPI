@@ -21,6 +21,7 @@ export class GestionTareasServicio implements IGestionTareasServicio{
 
     ) {} 
 
+
     //* ---------------------- MÉTODOS PÚBLICOS (El "Qué")  ----------------------// 
 
     async crearTareaEnProyecto(idProyecto: string, datosTarea: CrearTareaServicioDTO): Promise<string> {
@@ -119,7 +120,7 @@ export class GestionTareasServicio implements IGestionTareasServicio{
     }
 
     //* HELPER 4: Validar Fecha Límite
-        private validarFechaLimite(fechaLimiteTarea: Date | null, proyecto: IProyecto) {
+        private validarFechaLimite(fechaLimiteTarea: Date | null | undefined, proyecto: IProyecto) {
         if (!fechaLimiteTarea) {return; }//* Si no hay fecha límite, no se valida nada!
         if (proyecto.fechaInicioProyecto && fechaLimiteTarea < proyecto.fechaInicioProyecto) { 
             throw new Error(`La fecha límite (${fechaLimiteTarea.toISOString().split('T')[0]}) no puede ser anterior a la fecha de inicio del proyecto (${proyecto.fechaInicioProyecto.toISOString().split('T')[0]}).`);

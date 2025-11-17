@@ -34,11 +34,11 @@ async (appInstance) => {
 );
 
 export const startServer = async (): Promise<void> => {
-  // ¡Llama a la función!
+  //* Llamado a la función
 const config = getConfig();
 
 try {
-    // ¡Usa la config fresca!
+    //* Usa la config fresca
     await app.listen({ port: config.httpPuerto });
     app.log.info("El servidor esta corriendo...");
 } catch (err) {
