@@ -1,4 +1,4 @@
-import { ICliente } from "../ICliente"
+import { ICliente } from "./ICliente"
 
 export class Cliente implements ICliente {
   idCliente: string;
