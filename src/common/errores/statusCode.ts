@@ -1,0 +1,10 @@
+export enum HttpStatus {
+    EXITO = 200,
+    CREADO = 201,
+    SIN_CONTENIDO = 204,
+    SOLICITUD_INCORRECTA = 400,
+    NO_AUTORIZADO = 401,
+    PROHIBIDO = 403,
+    NO_ENCONTRADO = 404,
+    ERROR_SERVIDOR = 500,
+}

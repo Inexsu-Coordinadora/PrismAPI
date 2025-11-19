@@ -1,4 +1,4 @@
-import { IProyecto } from "../../../../dominio/entidades/IProyecto";
+import { IProyecto } from "../../entidades/IProyecto";
 
 export interface ResultadoProyectos {
   data: IProyecto[];
