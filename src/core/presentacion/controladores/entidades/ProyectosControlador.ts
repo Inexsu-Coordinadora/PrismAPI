@@ -1,8 +1,7 @@
 import { FastifyRequest, FastifyReply } from "fastify";
 import { IProyectosCasosUso } from "../../../aplicacion/interfaces/entidades/IProyectosCasosUso";
-import { CrearProyectoEsquema, ProyectoDTO } from "../../esquemas/entidades/proyectoEsquema";
+import { CrearProyectoEsquema, ActualizarProyectoEsquema, ProyectoDTO, ActualizarProyectoDTO} from "../../esquemas/entidades/proyectoEsquema";
 import { ZodError } from "zod";
-import { IProyecto } from "../../../dominio/entidades/IProyecto";
 import { ProyectoQueryParams } from "../../../dominio/tipos/proyecto/ProyectoQueryParams";
 
 export class ProyectosControlador {
@@ -102,13 +101,13 @@ export class ProyectosControlador {
         actualizarProyecto = async (
             request: FastifyRequest<{
             Params:{idProyecto:string};
-            Body: IProyecto}>,
+            Body: ActualizarProyectoDTO }>,
             reply:FastifyReply
         )=>{
             try{
 
                 const {idProyecto}= request.params;
-                const nuevoProyecto = request.body;
+                const nuevoProyecto = ActualizarProyectoEsquema.parse(request.body);
                 const proyectoActualizado = await this.proyectosCasosUso.actualizarProyecto(
                     idProyecto, nuevoProyecto
                 );
@@ -123,10 +122,20 @@ export class ProyectosControlador {
                     proyectoActualizado: proyectoActualizado,
                 });
             } catch (err){
-                return reply.code(500).send({
-                    mensaje: "Error al actualizar el proyecto",
-                    error: err instanceof Error ? err.message : err,
-                });
+                if (err instanceof ZodError) {
+        //* Si el error es de Zod, enviamos los detalles
+        return reply.code(400).send({
+            mensaje: "Error al actualizar la tarea",
+            //* Mostramos el primer error de validación
+            error: err.issues[0]?.message || "Error de validación",
+        });
+        }
+        
+        //* Error genérico del servidor
+        return reply.code(500).send({
+        mensaje: "Error al actualizar la tarea",
+        error: err instanceof Error ? err.message : String(err),
+        });
             }
         };
 

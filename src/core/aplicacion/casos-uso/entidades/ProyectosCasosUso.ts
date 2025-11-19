@@ -2,6 +2,7 @@ import { IProyecto } from "../../../dominio/entidades/IProyecto";
 import { IProyectoRepositorio } from "../../../dominio/repositorio/entidades/IProyectoRepositorio";
 import { ProyectoQueryParams } from "../../../dominio/tipos/proyecto/ProyectoQueryParams";
 import { ResultadoProyectos } from "../../../dominio/tipos/proyecto/ResultadoProyectos";
+import { ActualizarProyectoDTO } from "../../../presentacion/esquemas/entidades/proyectoEsquema";
 
 
 export class ProyectoCasosUso {
@@ -31,9 +32,9 @@ export class ProyectoCasosUso {
         return idNuevoProyecto;
     }
 
-    async actualizarProyecto(idProyecto:string, proyecto:IProyecto):Promise<IProyecto | null>{
-        const proyectoActualizado = await this.proyectoRepositorio.actualizarProyecto(idProyecto, proyecto);
-        return proyectoActualizado || null;
+    async actualizarProyecto(idProyecto:string, proyecto:ActualizarProyectoDTO):Promise<IProyecto | null>{
+        const proyectoActualizado = await this.proyectoRepositorio.actualizarProyecto(idProyecto, proyecto as Partial<IProyecto>);
+        return proyectoActualizado;
     }
 
     async eliminarProyecto(idProyecto:string): Promise<void>{

@@ -57,10 +57,10 @@ async actualizarAsignacion(idAsignacion:string, datosAsignacion: AsignacionConsu
     const asignacionExistente = await this.asignacionesRepositorio.obtenerAsignacionPorId(idAsignacion);
 
     if(!asignacionExistente){
-        throw new Error("Asignación no encontrada");;
+        throw new Error("Asignación no encontrada");
     }
 
-    //usar el validador pasando el Id excluir
+    
     await this.validador.validarAsignacion(datosAsignacion, idAsignacion);
     const asignacionActualizada = await this.asignacionesRepositorio.actualizarAsignacion(idAsignacion, datosAsignacion);
     return asignacionActualizada;
