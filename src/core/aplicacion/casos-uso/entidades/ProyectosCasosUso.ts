@@ -23,7 +23,7 @@ export class ProyectoCasosUso {
     
     async obtenerProyectoPorId (idProyecto:string):Promise<IProyecto | null>{
         const proyectoObtenido = await this.proyectoRepositorio.obtenerProyectoPorId(idProyecto);
-        console.log(proyectoObtenido);
+        
         return proyectoObtenido;
     }
 

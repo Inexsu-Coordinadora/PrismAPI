@@ -1,4 +1,3 @@
-import { boolean } from "zod";
 import { IAsignacionConsultorProyecto } from "../../servicios/IAsignacionConsultorProyecto";
 
 export interface IAsignacionConsultorProyectoRepositorio {
@@ -6,7 +5,7 @@ export interface IAsignacionConsultorProyectoRepositorio {
 //Crear asignación: asignar consultor a proyecto
 asignarConsultorProyecto(datosAsignacion: IAsignacionConsultorProyecto): Promise<string>;
 
-//Obtener asignación
+
 obtenerAsignacionPorId(idAsignacion:string):Promise<IAsignacionConsultorProyecto | null>;
 
 obtenerAsignacionPorConsultor(idConsultor:string):Promise<IAsignacionConsultorProyecto[]>;

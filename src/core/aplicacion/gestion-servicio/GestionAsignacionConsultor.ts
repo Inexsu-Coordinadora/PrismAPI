@@ -29,14 +29,14 @@ export class GestionAsignacionConsultor {
     private async validarExistenciaConsultor(idConsultor:string):Promise<void>{
         const consultor = await this.consultorRepo.obtenerConsultorPorId(idConsultor);
         if (!consultor){
-        throw new Error (`El consultor ${idConsultor} no existe.`);
+        throw new Error (`El consultor con idConsultor: ${idConsultor} no existe.`);
     }
     }
 
     private async validarExistenciaProyecto(idProyecto:string):Promise<IProyecto>{
         const proyecto = await this.proyectoRepo.obtenerProyectoPorId(idProyecto);
         if(!proyecto){
-        throw new Error(`El proyecto ${idProyecto} no existe.`);
+        throw new Error(`El proyecto con idProyecto: ${idProyecto} no existe.`);
     }
         return proyecto;
     }
@@ -91,7 +91,7 @@ export class GestionAsignacionConsultor {
             throw new Error("La fecha de inicio de asignación no puede ser anterior a la fecha de inicio del proyecto");
         }
         if (fechaFinProyecto && fechaFinAsignacion && fechaFinAsignacion>fechaFinProyecto){
-            throw new Error(`La fecha de fin de la asignación, no puede ser posterior a la fecha de finalización del proyecto ${nombreProyecto}`);
+            throw new Error("La fecha de fin de la asignación, no puede ser posterior a la fecha de finalización del proyecto ");
         }
     }
 

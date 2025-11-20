@@ -25,31 +25,31 @@ async asignarConsultorProyecto(datosAsignacion: AsignacionConsultorProyectoDTO){
 
 async obtenerAsignacionPorId(idAsignacion:string): Promise<IAsignacionConsultorProyecto | null>{
     const asignacionObtenida = await this.asignacionesRepositorio.obtenerAsignacionPorId(idAsignacion);
-    // console.log(asignacionObtenida);
+    
     return asignacionObtenida;
 }
 
 async obtenerAsignacionPorConsultor(idConsultor:string): Promise<IAsignacionConsultorProyecto[]>{
     const asignacionObtenidaConsultor = await this.asignacionesRepositorio.obtenerAsignacionPorConsultor(idConsultor);
-    // console.log(asignacionObtenidaConsultor);
+    
     return asignacionObtenidaConsultor;
 }
 
 async obtenerAsignacionPorProyecto(idProyecto:string):Promise<IAsignacionConsultorProyecto[]>{
     const asignacionObtenidaProyecto = await this.asignacionesRepositorio.obtenerAsignacionPorProyecto(idProyecto);
-    // console.log(asignacionObtenidaProyecto);
+    
     return asignacionObtenidaProyecto;
 }
 
 async obtenerAsignacionExistente(idConsultor:string, idProyecto:string, rolConsultor:string | null ):Promise<IAsignacionConsultorProyecto | null>{
     const asignacionExistente = await this.asignacionesRepositorio.obtenerAsignacionExistente(idConsultor, idProyecto, rolConsultor);
-    // console.log('Asignación existente:', asignacionExistente);
+    
     return asignacionExistente;
 }
 
 async obtenerDedicacionConsultor(idConsultor:string, fechaInicioAsignacion:Date, fechaFinAsignacion:Date |null):Promise<number>{
     const dedicacionExistente = await this.asignacionesRepositorio.obtenerDedicacionConsultor(idConsultor, fechaInicioAsignacion, fechaFinAsignacion);
-    // console.log(dedicacionExistente);
+
     return dedicacionExistente;
 }
 
