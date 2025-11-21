@@ -126,10 +126,10 @@ export class GestionTareasServicio implements IGestionTareasServicio{
         private validarFechaLimite(fechaLimiteTarea: Date | null | undefined, proyecto: IProyecto) {
         if (!fechaLimiteTarea) return; //* Si no hay fecha límite, no se valida nada!
         if (proyecto.fechaInicioProyecto && fechaLimiteTarea < proyecto.fechaInicioProyecto) { 
-            throw new NotFoundError(`La fecha límite (${fechaLimiteTarea.toISOString().split('T')[0]}) no puede ser anterior a la fecha de inicio del proyecto (${proyecto.fechaInicioProyecto.toISOString().split('T')[0]}).`);
+            throw new ValidationError(`La fecha límite (${fechaLimiteTarea.toISOString().split('T')[0]}) no puede ser anterior a la fecha de inicio del proyecto (${proyecto.fechaInicioProyecto.toISOString().split('T')[0]}).`);
         }
         if (proyecto.fechaFinProyecto && fechaLimiteTarea > proyecto.fechaFinProyecto) { 
-            throw new NotFoundError(`La fecha límite (${fechaLimiteTarea.toISOString().split('T')[0]}) no puede ser posterior a la fecha de fin del proyecto (${proyecto.fechaFinProyecto.toISOString().split('T')[0]}).`);
+            throw new ValidationError(`La fecha límite (${fechaLimiteTarea.toISOString().split('T')[0]}) no puede ser posterior a la fecha de fin del proyecto (${proyecto.fechaFinProyecto.toISOString().split('T')[0]}).`);
         }
         }
 
