@@ -25,3 +25,9 @@ export class ValidationError extends AppError {
     super(message, HttpStatus.SOLICITUD_INCORRECTA);
     }
 }
+
+export class ConflictError extends AppError {
+    constructor(message: string = "Conflicto en la operación") {
+    super(message, HttpStatus.CONFLICTO);
+    }
+}
