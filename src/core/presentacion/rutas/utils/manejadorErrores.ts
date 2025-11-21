@@ -1,37 +1,31 @@
-import { FastifyReply } from 'fastify';
+import { FastifyRequest, FastifyReply } from 'fastify';
 import { ZodError } from 'zod';
+import { AppError } from '../../../../common/errores/AppError';
+import { HttpStatus } from '../../../../common/errores/statusCode';
 
-export const manejarError = (reply: FastifyReply, error: unknown, mensajeBase: string) => {
+export const manejarError = (error: unknown, request: FastifyRequest, reply: FastifyReply) => {
 
-    //* 1. Error de Validación de Zod (400)
+    if (error instanceof AppError) {
+    //* Errores operacionales conocidos y controlados explícitamente
+    return reply.code(error.statusCode).send({
+    mensaje: error.message,
+    });
+}
+    
     if (error instanceof ZodError) {
-        return reply.code(400).send({
-            mensaje: mensajeBase,
-            error: error.issues[0]?.message || "Error de validación",
+        return reply.code(HttpStatus.SOLICITUD_INCORRECTA).send({
+            mensaje: "Error de validación",
+            detalles: error.issues.map((issue) => ({
+            campo: issue.path.join('.'),
+            error: issue.message,
+            })),
         });
     }
 
-    //* 2. Error "No Encontrado" (404)
-    if (error instanceof Error && (
-        error.message.includes("no encontrado") || 
-        error.message.includes("no encontrada")
-    )) {
-        return reply.code(404).send({
-            mensaje: error.message,
-        });
-    }
+    //* Errores de sistema inesperados (bugs). Se registran para monitoreo interno.
+    request.log.error(error);
 
-    //* 3. Otros Errores de Negocio (400)
-    //* (Duplicado, fecha inválida, tarea ya completada, etc.)
-    if (error instanceof Error) {
-        return reply.code(400).send({
-            mensaje: error.message,
-        });
-    }
-
-    //* 4. Error genérico/desconocido (500)
-    return reply.code(500).send({
-        mensaje: "Error interno del servidor",
-        error: String(error), 
+    return reply.code(HttpStatus.ERROR_SERVIDOR).send({
+    mensaje: "Error interno del servidor",
     });
 };
