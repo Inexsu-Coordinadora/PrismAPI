@@ -1,5 +1,5 @@
 import { IAsignacionConsultorProyecto } from "../../../dominio/servicios/IAsignacionConsultorProyecto";
-import { AsignacionConsultorProyectoDTO } from "../../../presentacion/esquemas/servicios/asignacionConsultorProyectoEsquema";
+import { AsignacionConsultorProyectoDTO, ActualizarAsignacionConsultorproyectoDTO } from "../../../presentacion/esquemas/servicios/asignacionConsultorProyectoEsquema";
 
 export interface IAsignacionConsultorProyectoServicio{
 
@@ -15,7 +15,7 @@ obtenerAsignacionExistente(idConsultor:string, idProyecto: string, rolConsultor:
 
 obtenerDedicacionConsultor(idConsultor:string, fechaInicioAsignacion: Date, fechaFinAsignacion: Date | null): Promise<number>;
 
-actualizarAsignacion (idAsignacion:string, asignacion:AsignacionConsultorProyectoDTO): Promise<IAsignacionConsultorProyecto | null>; 
+actualizarAsignacion (idAsignacion:string, asignacion:ActualizarAsignacionConsultorproyectoDTO): Promise<IAsignacionConsultorProyecto | null>; 
 
 eliminarAsignacion(idAsignacion:string):Promise<void>;
 
