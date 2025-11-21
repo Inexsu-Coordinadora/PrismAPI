@@ -16,7 +16,7 @@ obtenerAsignacionExistente(idConsultor: string,idProyecto: string,rolConsultor: 
 
 obtenerDedicacionConsultor(idConsultor:string,fechaInicioAsignacion: Date,fechaFinAsignacion: Date | null):Promise<number>
 
-actualizarAsignacion(idAsignacion:string, datosAsignacion: IAsignacionConsultorProyecto):Promise<IAsignacionConsultorProyecto>
+actualizarAsignacion(idAsignacion:string, datosAsignacion: Partial<IAsignacionConsultorProyecto>):Promise<IAsignacionConsultorProyecto | null>
 
 eliminarAsignacion(idAsignacion:string):Promise<void>
 }

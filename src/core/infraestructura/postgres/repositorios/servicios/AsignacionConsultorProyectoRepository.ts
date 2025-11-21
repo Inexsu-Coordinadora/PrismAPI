@@ -1,6 +1,7 @@
 import { IAsignacionConsultorProyectoRepositorio } from "../../../../dominio/repositorio/servicios/IAsignacionConsultorProyectoRepositorio";
 import { IAsignacionConsultorProyecto } from "../../../../dominio/servicios/IAsignacionConsultorProyecto";
 import { ejecutarConsulta } from "../../ClientePostgres";
+import { NotFoundError } from "../../../../../common/errores/AppError";
 
 //Helper para el resultado de nuestra función privada
 type PartesConsulta ={
@@ -121,7 +122,7 @@ export class AsignacionConsultorProyectoRepository implements IAsignacionConsult
 
 }
     
-async actualizarAsignacion(idAsignacion: string, datosAsignacion: IAsignacionConsultorProyecto): Promise<IAsignacionConsultorProyecto> {
+async actualizarAsignacion(idAsignacion: string, datosAsignacion: Partial<IAsignacionConsultorProyecto>): Promise<IAsignacionConsultorProyecto | null> {
     const { parametros, setClauses } = this.construirPartesConsulta(datosAsignacion);
         
         if (setClauses.length === 0) {
@@ -141,7 +142,7 @@ async actualizarAsignacion(idAsignacion: string, datosAsignacion: IAsignacionCon
         const result = await ejecutarConsulta(query, parametros);
         
         if (result.rows.length === 0) {
-            throw new Error("Asignación no encontrada para actualizar");
+            throw new NotFoundError ("Asignación no encontrada para actualizar");
         }
         
         return this.mapearAsignacion(result.rows[0]);

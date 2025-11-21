@@ -1,12 +1,14 @@
 import { FastifyRequest, FastifyReply } from "fastify";
 import { IAsignacionConsultorProyectoServicio } from "../../../aplicacion/interfaces/servicios/IAsignacionConsultorProyectoServicio";
-import { CrearAsignacionConsultorProyectoEsquema, AsignacionConsultorProyectoDTO } from "../../esquemas/servicios/asignacionConsultorProyectoEsquema";
+import { CrearAsignacionConsultorProyectoEsquema, AsignacionConsultorProyectoDTO, ActualizarAsignacionConsultorproyectoDTO, ActualizarAsignacionConsultorProyectoEsquema} from "../../esquemas/servicios/asignacionConsultorProyectoEsquema";
 import { HttpStatus } from "../../../../common/errores/statusCode";
+import { NotFoundError } from "../../../../common/errores/AppError";
 
 export class AsignacionConsultorProyectoControlador{
     constructor(private readonly asignacionServicio: IAsignacionConsultorProyectoServicio) {}
 
-    asignarConsultorProyecto = async(request: FastifyRequest, reply: FastifyReply)=>{
+    asignarConsultorProyecto = async(request: FastifyRequest, reply: FastifyReply)=>{ 
+    
         
             //validar datos de entrada con zod
             const datosValidados = CrearAsignacionConsultorProyectoEsquema.parse(request.body);
@@ -19,13 +21,17 @@ export class AsignacionConsultorProyectoControlador{
             idAsignacion: resultado.asignacion
             }
         });
-
-    } 
+    
+    }
 
     obtenerAsignacionPorId = async (request: FastifyRequest, reply: FastifyReply) => {
         
             const { idAsignacion } = request.params as { idAsignacion: string };
             const asignacion = await this.asignacionServicio.obtenerAsignacionPorId(idAsignacion);
+
+            if(!asignacion){
+                throw new NotFoundError ("Asignación no encontrada")
+            }
             
             return reply.code(HttpStatus.EXITO).send({
                 mensaje: "Asignación obtenida correctamente",
@@ -98,10 +104,12 @@ export class AsignacionConsultorProyectoControlador{
             });
     } 
 
-    actualizarAsignacion = async (request: FastifyRequest, reply: FastifyReply) => {
-        
+    actualizarAsignacion = async (request: FastifyRequest<{
+                Params:{idAsignacion:string};
+                Body: ActualizarAsignacionConsultorproyectoDTO}>, reply: FastifyReply) => {
+                    
             const { idAsignacion } = request.params as { idAsignacion: string };
-            const datosValidados = CrearAsignacionConsultorProyectoEsquema.parse(request.body);
+            const datosValidados = ActualizarAsignacionConsultorProyectoEsquema.parse(request.body);
             
             const asignacionActualizada = await this.asignacionServicio.actualizarAsignacion(idAsignacion, datosValidados);
 
@@ -110,6 +118,8 @@ export class AsignacionConsultorProyectoControlador{
                 datos: asignacionActualizada
             });
     } 
+    
+
 
     eliminarAsignacion = async (request: FastifyRequest, reply: FastifyReply) => {
         
