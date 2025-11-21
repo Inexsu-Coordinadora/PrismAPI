@@ -4,6 +4,8 @@ import { AsignacionConsultorProyectoDTO } from "../../../presentacion/esquemas/s
 import { GestionAsignacionConsultor } from "../../gestion-servicio/GestionAsignacionConsultor";
 import { IAsignacionConsultorProyectoServicio } from "../../interfaces/servicios/IAsignacionConsultorProyectoServicio";
 
+import { NotFoundError } from "../../../../common/errores/AppError";
+
 
 export class  AsignacionConsultorProyectoServicio implements IAsignacionConsultorProyectoServicio{
 constructor(
@@ -57,7 +59,7 @@ async actualizarAsignacion(idAsignacion:string, datosAsignacion: AsignacionConsu
     const asignacionExistente = await this.asignacionesRepositorio.obtenerAsignacionPorId(idAsignacion);
 
     if(!asignacionExistente){
-        throw new Error("Asignación no encontrada");;
+        throw new NotFoundError("Asignación no encontrada");;
     }
 
     //usar el validador pasando el Id excluir

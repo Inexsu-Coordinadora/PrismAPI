@@ -9,6 +9,9 @@ import { IProyectoRepositorio } from "../../../dominio/repositorio/entidades/IPr
 import { IConsultorRepositorio } from "../../../dominio/repositorio/entidades/IConsultorRepositorio";
 import { IAsignacionConsultorProyectoRepositorio } from "../../../dominio/repositorio/servicios/IAsignacionConsultorProyectoRepositorio";
 
+//* Errores Personalizados
+import { NotFoundError, ValidationError, ConflictError } from "../../../../common/errores/AppError";
+
 
 //*Este es el "Cerebro" del S4. Implementa la lógica de negocio compleja que conecta Tareas, Proyectos y Consultores.
 export class GestionTareasServicio implements IGestionTareasServicio{
@@ -57,7 +60,7 @@ export class GestionTareasServicio implements IGestionTareasServicio{
         const tareaActual = await this.validarTareaEnProyecto(idTarea, idProyecto); //* 1°. Validar que la tarea/proyecto existen (reutilizamos helper S4)
         const proyecto = await this.validarProyecto(idProyecto); //* 2°. Obtener el proyecto existe (para validar fechas)
         await this.validarConsultor(datosTarea.idConsultorAsignado); //* 3° Validar consultor (si se está cambiando)
-        await this.validarConsultorEnProyecto(datosTarea.idConsultorAsignado, idProyecto);
+        await this.validarConsultorEnProyecto(datosTarea.idConsultorAsignado, idProyecto); //TODO: cambiar a validarEsxistenciaDisponibilidadConsultor
 
         
         //* 4° Validar fecha límite (si se está cambiando) (reutilizamos helper)
@@ -67,7 +70,7 @@ export class GestionTareasServicio implements IGestionTareasServicio{
 
         //* 5° Validación S4: No se puede completar una tarea ya completada
         if (datosTarea.estadoTarea === 'completada' && tareaActual.estadoTarea === 'completada') {
-            throw new Error("La tarea ya se encuentra completada.");
+            throw new ConflictError("La tarea ya se encuentra completada.");
         }
 
         //* 6° Si todo pasa, actualizamos la tarea
@@ -87,7 +90,7 @@ export class GestionTareasServicio implements IGestionTareasServicio{
     private async validarProyecto(idProyecto: string): Promise<IProyecto> {
         const proyecto = await this.proyectoRepositorio.obtenerProyectoPorId(idProyecto);
         if (!proyecto) {
-            throw new Error(`Proyecto no encontrado con ID: ${idProyecto}`);
+            throw new NotFoundError(`Proyecto no encontrado con ID: ${idProyecto}`);
         }
         return proyecto;
     }
@@ -95,11 +98,11 @@ export class GestionTareasServicio implements IGestionTareasServicio{
 
     //* HELPER 2: Valida que el consultor exista (si se proporciona uno).
     private async validarConsultor(idConsultor?: string | null): Promise<void> {
-        if (!idConsultor) {return;} //* Es opcional, si no viene, no se valida nada!
+        if (!idConsultor) return; //* Es opcional, si no viene, no se valida nada!
         
         const consultor = await this.consultorRepositorio.obtenerConsultorPorId(idConsultor);
         if (!consultor) {
-            throw new Error(`Consultor asignado no encontrado con ID: ${idConsultor}`);
+            throw new NotFoundError(`Consultor asignado no encontrado con ID: ${idConsultor}`);
         }
     }
 
@@ -115,18 +118,18 @@ export class GestionTareasServicio implements IGestionTareasServicio{
             proyecto.idProyecto! //* Sabemos que idProyecto no es null aquí
         );
         if (tareaExistente) {
-            throw new Error(`Ya existe una tarea con el título '${datosTarea.tituloTarea}' en este proyecto.`);
+            throw new ConflictError(`Ya existe una tarea con el título '${datosTarea.tituloTarea}' en este proyecto.`);
         }
     }
 
     //* HELPER 4: Validar Fecha Límite
         private validarFechaLimite(fechaLimiteTarea: Date | null | undefined, proyecto: IProyecto) {
-        if (!fechaLimiteTarea) {return; }//* Si no hay fecha límite, no se valida nada!
+        if (!fechaLimiteTarea) return; //* Si no hay fecha límite, no se valida nada!
         if (proyecto.fechaInicioProyecto && fechaLimiteTarea < proyecto.fechaInicioProyecto) { 
-            throw new Error(`La fecha límite (${fechaLimiteTarea.toISOString().split('T')[0]}) no puede ser anterior a la fecha de inicio del proyecto (${proyecto.fechaInicioProyecto.toISOString().split('T')[0]}).`);
+            throw new NotFoundError(`La fecha límite (${fechaLimiteTarea.toISOString().split('T')[0]}) no puede ser anterior a la fecha de inicio del proyecto (${proyecto.fechaInicioProyecto.toISOString().split('T')[0]}).`);
         }
         if (proyecto.fechaFinProyecto && fechaLimiteTarea > proyecto.fechaFinProyecto) { 
-            throw new Error(`La fecha límite (${fechaLimiteTarea.toISOString().split('T')[0]}) no puede ser posterior a la fecha de fin del proyecto (${proyecto.fechaFinProyecto.toISOString().split('T')[0]}).`);
+            throw new NotFoundError(`La fecha límite (${fechaLimiteTarea.toISOString().split('T')[0]}) no puede ser posterior a la fecha de fin del proyecto (${proyecto.fechaFinProyecto.toISOString().split('T')[0]}).`);
         }
         }
 
@@ -135,7 +138,7 @@ export class GestionTareasServicio implements IGestionTareasServicio{
         const tarea = await this.tareaRepositorio.obtenerTareaDeProyectoPorId(idTarea, idProyecto);
         if (!tarea) {
             //* Este error se reutiliza en GET, PUT y DELETE
-            throw new Error(`Tarea no encontrada con ID: ${idTarea} en el proyecto: ${idProyecto}`);
+            throw new NotFoundError(`Tarea no encontrada con ID: ${idTarea} en el proyecto: ${idProyecto}`);
         }
         return tarea;
     }
@@ -145,7 +148,7 @@ export class GestionTareasServicio implements IGestionTareasServicio{
         if(idConsultorAsignado){
             const asignacion = await this.asignacionRepositorio.obtenerAsignacionExistente(idConsultorAsignado, idProyecto, null);
         if (!asignacion){
-                throw new Error (`El consultor ${idConsultorAsignado} no está asignado a este proyecto.`);
+                throw new ValidationError (`El consultor ${idConsultorAsignado} no está asignado a este proyecto.`);
             } 
         }
     }
