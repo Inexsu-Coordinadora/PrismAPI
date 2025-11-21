@@ -1,49 +1,26 @@
-//usa Zod para validar y mapear a camelCase
 import { FastifyRequest, FastifyReply } from "fastify";
 import { ZodError } from "zod";
-
-// interfaz de la capa de aplicación (qué puede hacer el servicio)
 import { IRegistroHorasServicio } from "../../../aplicacion/interfaces/servicios/IRegistroHorasServicio";
-
-// esquema + DTO (validación de entrada con Zod)
-import {
-  CrearRegistroHorasEsquema,
-  RegistroHorasDTO,
-} from "../../esquemas/servicios/registroHorasEsquema";
-
-// interfaz de dominio (forma del registro en la capa de aplicación)
+import {CrearRegistroHorasEsquema,RegistroHorasDTO,} from "../../esquemas/servicios/registroHorasEsquema";
 import { IRegistroHoras } from "../../../dominio/servicios/IRegistroHoras";
 
-/**
- * Controlador para el servicio de Registro y control de horas.
- * Aquí validamos la forma de los datos de entrada (Zod) y mapeamos nombres
- * snake_case -> camelCase para la capa de aplicación.
- *
- * OjO:
- * - fecha_registro ya llega como Date gracias al esquema Zod (transform)
- * - horas_trabajadas llega como number (parseado y redondeado en el esquema)
- */
+/** Controlador para el servicio de Registro y control de horas.*/
 export class RegistroHorasControlador {
   constructor(private registroHorasServicio: IRegistroHorasServicio) {}
 
   //--------------------------------- METODO GET ---------------------------------//
-  /**
-   * Lista los registros de horas.
-   * Permite filtrar por id_consultor y/o id_proyecto vía query params:
-   * GET /registrar-horas?id_consultor=...&id_proyecto=...
-   */
   listarRegistrosHoras = async (
     request: FastifyRequest<{
-      Querystring: { id_consultor?: string; id_proyecto?: string };
+      Querystring: { idConsultor?: string; idProyecto?: string }
     }>,
     reply: FastifyReply
   ) => {
     try {
-      const { id_consultor, id_proyecto } = request.query;
+      const { idConsultor, idProyecto } = request.query;
 
       const registros = await this.registroHorasServicio.listarRegistrosHoras(
-        id_consultor,
-        id_proyecto
+        idConsultor,
+        idProyecto
       );
 
       return reply.code(200).send({
@@ -60,10 +37,6 @@ export class RegistroHorasControlador {
   };
 
   //--------------------------------- METODO GET BY ID ---------------------------------//
-  /**
-   * Obtiene un registro de horas por su identificador.
-   * GET /registrar-horas/:idRegistro
-   */
   obtenerRegistroHoraPorId = async (
     request: FastifyRequest<{ Params: { idRegistro: string } }>,
     reply: FastifyReply
@@ -94,19 +67,14 @@ export class RegistroHorasControlador {
   };
 
   //--------------------------------- METODO POST ---------------------------------//
-  /**
-   * Crea un nuevo registro de horas.
-   * POST /registrar-horas
-   */
   crearRegistroHoras = async (
     request: FastifyRequest<{ Body: RegistroHorasDTO }>,
     reply: FastifyReply
   ) => {
     try {
-      // 1) Validamos la entrada con Zod (usa snake_case tal como viene del cliente)
+      
       const datosValidados = CrearRegistroHorasEsquema.parse(request.body);
 
-      // 2) Mapeamos a camelCase para la capa de aplicación
       const datosParaServicio: IRegistroHoras = {
         idRegistroHoras: undefined, // lo genera la BD
         idConsultor: datosValidados.id_consultor,
@@ -116,7 +84,6 @@ export class RegistroHorasControlador {
         descripcionActividad: datosValidados.descripcion_actividad.trim(),
       };
 
-      // 3) Llamamos al servicio de aplicación (reglas de negocio)
       const registroCreado =
         await this.registroHorasServicio.crearRegistroHoras(datosParaServicio);
 
@@ -140,10 +107,6 @@ export class RegistroHorasControlador {
   };
 
   //--------------------------------- METODO DELETE ---------------------------------//
-  /**
-   * Elimina un registro de horas por id.
-   * DELETE /registrar-horas/:idRegistro
-   */
   eliminarRegistroHoras = async (
     request: FastifyRequest<{ Params: { idRegistro: string } }>,
     reply: FastifyReply

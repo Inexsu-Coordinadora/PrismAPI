@@ -1,10 +1,7 @@
 import { z } from "zod";
 
-/**
- * Esquema de validación para crear un nuevo registro de horas.
- */
 export const CrearRegistroHorasEsquema = z.object({
-  //------ Validamos formato UUID ------
+/**------------------------------------------------------------------------ */
   id_consultor: z
     .string()
     .uuid("Consultor no existe, el id del consultor debe tener formato UUID")
@@ -12,10 +9,10 @@ export const CrearRegistroHorasEsquema = z.object({
 
   id_proyecto: z
     .string()
-    .uuid("Proyecto no existe, el id del proyecto debe tener formato UUID")
+    .uuid("Proyecto no existe, el id del proyecto debe tener formato UUID")       /** deprecated -> obsoleta */
     .min(1, "El id del proyecto es obligatorio"),
 
-  //------ Validamos fecha (string → Date) ------
+/**------------------------------------------------------------------------ */
   fecha_registro: z
     .string()
     .min(1, "La fecha de registro es obligatoria")
@@ -24,7 +21,7 @@ export const CrearRegistroHorasEsquema = z.object({
     })
     .transform((s) => new Date(s)),
 
-  //------ Validamos horas trabajadas ------
+/**------------------------------------------------------------------------ */
   horas_trabajadas: z
     .union([
       z.string().transform((val) => Number(val)), // si llega como string
@@ -41,7 +38,7 @@ export const CrearRegistroHorasEsquema = z.object({
     })
     .transform((h) => Math.round(h * 100) / 100), // redondeamos a 2 decimales
 
-  //------ Validamos descripción ------
+/**------------------------------------------------------------------------ */
   descripcion_actividad: z
     .string()
     .transform((s) => s.trim())
