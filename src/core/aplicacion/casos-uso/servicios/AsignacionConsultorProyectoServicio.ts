@@ -1,8 +1,9 @@
 import { IAsignacionConsultorProyecto } from "../../../dominio/servicios/IAsignacionConsultorProyecto";
 import { IAsignacionConsultorProyectoRepositorio } from "../../../dominio/repositorio/servicios/IAsignacionConsultorProyectoRepositorio";
-import { AsignacionConsultorProyectoDTO } from "../../../presentacion/esquemas/servicios/asignacionConsultorProyectoEsquema";
+import { AsignacionConsultorProyectoDTO, ActualizarAsignacionConsultorProyectoEsquema, ActualizarAsignacionConsultorproyectoDTO } from "../../../presentacion/esquemas/servicios/asignacionConsultorProyectoEsquema";
 import { GestionAsignacionConsultor } from "../../gestion-servicio/GestionAsignacionConsultor";
 import { IAsignacionConsultorProyectoServicio } from "../../interfaces/servicios/IAsignacionConsultorProyectoServicio";
+import { NotFoundError } from "../../../../common/errores/AppError";
 
 
 export class  AsignacionConsultorProyectoServicio implements IAsignacionConsultorProyectoServicio{
@@ -53,16 +54,32 @@ async obtenerDedicacionConsultor(idConsultor:string, fechaInicioAsignacion:Date,
     return dedicacionExistente;
 }
 
-async actualizarAsignacion(idAsignacion:string, datosAsignacion: AsignacionConsultorProyectoDTO): Promise<IAsignacionConsultorProyecto>{
+async actualizarAsignacion(idAsignacion:string, datosActualizacion: ActualizarAsignacionConsultorproyectoDTO): Promise<IAsignacionConsultorProyecto | null>{
+
     const asignacionExistente = await this.asignacionesRepositorio.obtenerAsignacionPorId(idAsignacion);
 
     if(!asignacionExistente){
-        throw new Error("Asignación no encontrada");
+        throw new NotFoundError ("Asignación no encontrada");
     }
 
-    
-    await this.validador.validarAsignacion(datosAsignacion, idAsignacion);
-    const asignacionActualizada = await this.asignacionesRepositorio.actualizarAsignacion(idAsignacion, datosAsignacion);
+    const datosCompletosParaValidar: AsignacionConsultorProyectoDTO = {
+    idConsultor: (datosActualizacion.idConsultor ?? asignacionExistente.idConsultor) as string,
+    idProyecto: (datosActualizacion.idProyecto ?? asignacionExistente.idProyecto) as string,
+        rolConsultor: datosActualizacion.rolConsultor !== undefined 
+            ? datosActualizacion.rolConsultor 
+            : asignacionExistente.rolConsultor,
+        porcentajeDedicacion: datosActualizacion.porcentajeDedicacion !== undefined
+            ? datosActualizacion.porcentajeDedicacion 
+            : asignacionExistente.porcentajeDedicacion,
+        fechaInicioAsignacion: datosActualizacion.fechaInicioAsignacion ?? asignacionExistente.fechaInicioAsignacion,
+        fechaFinAsignacion: datosActualizacion.fechaFinAsignacion !== undefined
+            ? datosActualizacion.fechaFinAsignacion 
+            : asignacionExistente.fechaFinAsignacion,        
+    } as AsignacionConsultorProyectoDTO;
+
+    await this.validador.validarAsignacion(datosCompletosParaValidar, idAsignacion);
+
+    const asignacionActualizada = await this.asignacionesRepositorio.actualizarAsignacion(idAsignacion, datosActualizacion as Record<string, any>);
     return asignacionActualizada;
 }
 
@@ -71,3 +88,4 @@ async eliminarAsignacion(idAsignacion:string): Promise<void>{
 }
     
 }
+
