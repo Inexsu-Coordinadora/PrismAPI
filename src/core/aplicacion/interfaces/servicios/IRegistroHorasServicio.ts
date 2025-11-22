@@ -1,21 +1,18 @@
-// QUE PUEDE HACER EL SERVICIO DE REGISTRO DE HORAS 
-
 import { IRegistroHoras } from "../../../dominio/servicios/IRegistroHoras";
 
+/** Servicio encargado de aplicar reglas de negocio relacionadas con la creación, consulta y eliminación de registros de horas
+ * La capa de aplicación usa esta interfaz para asegurar que las reglas se cumplan antes de llegar al repositorio.
+ */
 export interface IRegistroHorasServicio {
 
-//---------------------------- INSERTA UN NUEVO REGISTRO DE HORAS ----------------------------//
   crearRegistroHoras(datos: IRegistroHoras): Promise<IRegistroHoras>;
 
-//---------------------------- LISTA LOS REGISTRO DE HORAS ----------------------------//
   listarRegistrosHoras(
     idConsultor?: string,
     idProyecto?: string
   ): Promise<IRegistroHoras[]>;
 
-//---------------------------- OBTENER UN REGISTRO DE HORAS ----------------------------//
   obtenerRegistroHorasPorId(idRegistro: string): Promise<IRegistroHoras | null>;
   
-//---------------------------- ELIMINA UN REGISTRO DE HORAS ----------------------------//
   eliminarRegistroHoras(idRegistro: string): Promise<void>;
 }
