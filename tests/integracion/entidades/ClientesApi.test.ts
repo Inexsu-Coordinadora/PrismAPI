@@ -1,11 +1,10 @@
 import request from "supertest";
 import { app } from "../../../src/core/presentacion/app"; 
 
-//* 1. MOCK del Servicio (IClienteCasosUso)
-// Usamos la ruta y el nombre de la clase de Casos de Uso del Cliente.
+ 
 jest.mock("../../../src/core/aplicacion/casos-uso/entidades/ClienteCasosUso", () => {
     return {
-        // Asegúrate de que el nombre de la clase mockeada sea ClienteCasosUso
+        
         ClienteCasosUso: jest.fn().mockImplementation(() => ({
         
             //* Simulamos 'crearCliente'. Retorna el objeto creado
