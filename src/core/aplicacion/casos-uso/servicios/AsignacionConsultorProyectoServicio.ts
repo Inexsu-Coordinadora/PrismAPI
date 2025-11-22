@@ -62,24 +62,37 @@ async actualizarAsignacion(idAsignacion:string, datosActualizacion: ActualizarAs
         throw new NotFoundError ("Asignación no encontrada");
     }
 
-    const datosCompletosParaValidar: AsignacionConsultorProyectoDTO = {
-    idConsultor: (datosActualizacion.idConsultor ?? asignacionExistente.idConsultor) as string,
-    idProyecto: (datosActualizacion.idProyecto ?? asignacionExistente.idProyecto) as string,
-        rolConsultor: datosActualizacion.rolConsultor !== undefined 
-            ? datosActualizacion.rolConsultor 
-            : asignacionExistente.rolConsultor,
-        porcentajeDedicacion: datosActualizacion.porcentajeDedicacion !== undefined
-            ? datosActualizacion.porcentajeDedicacion 
-            : asignacionExistente.porcentajeDedicacion,
-        fechaInicioAsignacion: datosActualizacion.fechaInicioAsignacion ?? asignacionExistente.fechaInicioAsignacion,
-        fechaFinAsignacion: datosActualizacion.fechaFinAsignacion !== undefined
-            ? datosActualizacion.fechaFinAsignacion 
-            : asignacionExistente.fechaFinAsignacion,        
-    } as AsignacionConsultorProyectoDTO;
+    // const datosCompletosParaValidar: AsignacionConsultorProyectoDTO = {
+    // idConsultor: (datosActualizacion.idConsultor ?? asignacionExistente.idConsultor) as string,
+    // idProyecto: (datosActualizacion.idProyecto ?? asignacionExistente.idProyecto) as string,
+    //     rolConsultor: datosActualizacion.rolConsultor !== undefined 
+    //         ? datosActualizacion.rolConsultor 
+    //         : asignacionExistente.rolConsultor,
+    //     porcentajeDedicacion: datosActualizacion.porcentajeDedicacion !== undefined
+    //         ? datosActualizacion.porcentajeDedicacion 
+    //         : asignacionExistente.porcentajeDedicacion,
+    //     fechaInicioAsignacion: datosActualizacion.fechaInicioAsignacion ?? asignacionExistente.fechaInicioAsignacion,
+    //     fechaFinAsignacion: datosActualizacion.fechaFinAsignacion !== undefined
+    //         ? datosActualizacion.fechaFinAsignacion 
+    //         : asignacionExistente.fechaFinAsignacion,        
+    // } as AsignacionConsultorProyectoDTO;
+    const datosCompletosParaValidar = {
+        ...asignacionExistente,
+        ...datosActualizacion
+    };
 
-    await this.validador.validarAsignacion(datosCompletosParaValidar, idAsignacion);
+//     await this.validador.validarAsignacion(datosCompletosParaValidar, idAsignacion);
 
-    const asignacionActualizada = await this.asignacionesRepositorio.actualizarAsignacion(idAsignacion, datosActualizacion as Record<string, any>);
+//     const asignacionActualizada = await this.asignacionesRepositorio.actualizarAsignacion(idAsignacion, datosActualizacion as Record<string, any>);
+//     return asignacionActualizada;
+// }
+await this.validador.validarAsignacion(datosCompletosParaValidar as AsignacionConsultorProyectoDTO, idAsignacion);
+    
+    const asignacionActualizada = await this.asignacionesRepositorio.actualizarAsignacion(
+        idAsignacion, 
+        datosActualizacion as Partial<IAsignacionConsultorProyecto>
+    );
+    
     return asignacionActualizada;
 }
 
