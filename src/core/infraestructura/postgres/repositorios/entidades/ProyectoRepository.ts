@@ -3,20 +3,17 @@ import { ejecutarConsulta } from '../../ClientePostgres';
 import { IProyecto } from "../../../../dominio/entidades/IProyecto";
 import { ProyectoQueryParams } from "../../../../dominio/tipos/proyecto/ProyectoQueryParams";
 
+
+    type PartesConsulta = {
+    columnasSQL: string[];
+    parametros: (string | number | null)[];
+    placeholders: string[]; 
+    setClauses: string[];   
+};
+
+
 export class ProyectoRepository implements IProyectoRepositorio {
 
-    //mapeador que traduce los nombres de las bases de datos (snake_case) a los nombres de nuestro proyecto (camelcase)
-    private mapearProyecto(fila:any):IProyecto{
-
-        return{
-            idProyecto: fila.id_proyecto,
-            nombreProyecto: fila.nombre_proyecto,
-            tipoProyecto: fila.tipo_proyecto ,
-            fechaInicioProyecto: fila.fecha_inicio_proyecto ? new Date(fila.fecha_inicio_proyecto) : null,
-            fechaFinProyecto: fila.fecha_fin_proyecto ? new Date(fila.fecha_fin_proyecto): null,
-            estadoProyecto:fila.estado_proyecto
-        }
-    }
     async crearProyecto(datosProyecto: IProyecto): Promise<string>{
         const {nombreProyecto, tipoProyecto, fechaInicioProyecto, fechaFinProyecto, estadoProyecto} = datosProyecto;
 
@@ -67,7 +64,7 @@ export class ProyectoRepository implements IProyectoRepositorio {
         const fechaDesde = params.fechaInicioDesde instanceof Date
         ? params.fechaInicioDesde.toISOString().split('T')[0]
         : params.fechaInicioDesde;
-        query += ` AND fecha_inicio >= $${parametroConsulta}`;
+        query += ` AND fecha_inicio_proyecto >= $${parametroConsulta}`;
         if(fechaDesde!== undefined){
         values.push(fechaDesde)};
         parametroConsulta++;
@@ -78,7 +75,7 @@ export class ProyectoRepository implements IProyectoRepositorio {
             const fechaHasta = params.fechaInicioHasta instanceof Date
             ? params.fechaInicioHasta.toISOString().split('T')[0]
             : params.fechaInicioHasta;
-            query += ` AND fecha_inicio <= $${parametroConsulta}`;
+            query += ` AND fecha_inicio_proyecto <= $${parametroConsulta}`;
             values.push(fechaHasta ?? null);
             parametroConsulta++;
         }
@@ -135,43 +132,90 @@ export class ProyectoRepository implements IProyectoRepositorio {
     }
         
         
-    async actualizarProyecto(idProyecto:string, datosProyecto:IProyecto):Promise<IProyecto | null>{
-        const mapeoColumnas: { [key in keyof IProyecto]?: string } = {
-        nombreProyecto: "nombre_proyecto",
-        tipoProyecto: "tipo_proyecto",
-        fechaInicioProyecto: "fecha_inicio_proyecto",
-        fechaFinProyecto: "fecha_fin_proyecto",
-        estadoProyecto: "estado_proyecto",
-
-        };
-
-        const columnasActualizar = Object.keys(datosProyecto)
-        .map((key) => mapeoColumnas[key as keyof IProyecto])
-        .filter(Boolean);
-
-        if(columnasActualizar.length === 0){
-        return this.obtenerProyectoPorId(idProyecto);
+    async actualizarProyecto(idProyecto:string, datosProyecto:Partial<IProyecto>):Promise<IProyecto | null>{
+        const { parametros, setClauses } = this.construirPartesConsulta(datosProyecto);
+    
+    if (setClauses.length === 0) {
+        return await this.obtenerProyectoPorId(idProyecto);
     }
 
-    const setClause = columnasActualizar.map((col, i) => `${col}=$${i + 1}`).join(", ");
-
-    const parametros = Object.values(datosProyecto).map((val) => val ?? null);
+    const setClause = setClauses.join(", ");
     parametros.push(idProyecto);
 
-        const query=
-        `UPDATE proyectos
-        SET ${setClause} 
-        WHERE id_proyecto =$${parametros.length}
-        RETURNING *`;
+    const query = `
+        UPDATE proyectos
+        SET ${setClause}
+        WHERE id_proyecto = $${parametros.length}
+        RETURNING *
+    `;
 
-        const result = await ejecutarConsulta(query, parametros);
-        if (result.rows.length === 0) {
+    const result = await ejecutarConsulta(query, parametros);
+    if (result.rows.length === 0) {
         return null;
     }
-        return this.mapearProyecto(result.rows[0]);
-    }
+    
+    return this.mapearProyecto(result.rows[0]);
+}
 
     async eliminarProyecto(idproyecto:string):Promise<void>{
         await ejecutarConsulta("DELETE FROM proyectos WHERE id_proyecto = $1", [idproyecto]);
     }
+
+
+    //Helpers
+    //mapeador que traduce los nombres de las bases de datos (snake_case) a los nombres de nuestro proyecto (camelcase)
+    private mapearProyecto(fila:any):IProyecto{
+
+        return{
+            idProyecto: fila.id_proyecto,
+            nombreProyecto: fila.nombre_proyecto,
+            tipoProyecto: fila.tipo_proyecto ,
+            fechaInicioProyecto: fila.fecha_inicio_proyecto ? new Date(fila.fecha_inicio_proyecto) : null,
+            fechaFinProyecto: fila.fecha_fin_proyecto ? new Date(fila.fecha_fin_proyecto): null,
+            estadoProyecto:fila.estado_proyecto
+        }
+    }
+
+    private readonly mapeoColumnas: { [key in keyof Partial<IProyecto>]?: string } = {
+        nombreProyecto: "nombre_proyecto",
+        tipoProyecto: "tipo_proyecto", 
+        fechaInicioProyecto: "fecha_inicio_proyecto",
+        fechaFinProyecto: "fecha_fin_proyecto",
+        estadoProyecto: "estado_proyecto"
+    };
+
+    private construirPartesConsulta(
+            datos: Partial<IProyecto>, 
+            inicioIndex = 1
+        ): PartesConsulta {
+            
+            const columnasSQL: string[] = [];
+            const parametros: (string | number | null)[] = [];
+            const placeholders: string[] = [];
+            const setClauses: string[] = [];
+            let parametroIndex = inicioIndex;
+    
+            for (const key of Object.keys(datos)) {
+                const jsKey = key as keyof IProyecto;
+                const dbColumna = this.mapeoColumnas[jsKey]; 
+                const valor = datos[jsKey];
+    
+                if (dbColumna && valor !== undefined) {
+                    columnasSQL.push(dbColumna);
+                    placeholders.push(`$${parametroIndex}`);
+                    setClauses.push(`${dbColumna} = $${parametroIndex}`);
+    
+                    if (valor instanceof Date) {
+                        parametros.push(valor.toISOString().split('T')[0]!);
+                    } else {
+                        parametros.push(valor ?? null);
+                    }
+                    parametroIndex++;
+                }
+            }
+            return { columnasSQL, parametros, placeholders, setClauses };
+        }
+    
+    
+    
 }

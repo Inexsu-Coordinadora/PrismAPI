@@ -1,13 +1,16 @@
 import { FastifyRequest, FastifyReply } from "fastify";
 import { IAsignacionConsultorProyectoServicio } from "../../../aplicacion/interfaces/servicios/IAsignacionConsultorProyectoServicio";
-import { CrearAsignacionConsultorProyectoEsquema, AsignacionConsultorProyectoDTO } from "../../esquemas/servicios/asignacionConsultorProyectoEsquema";
-import { NotFoundError } from "../../../../common/errores/AppError";
+import { CrearAsignacionConsultorProyectoEsquema, AsignacionConsultorProyectoDTO, ActualizarAsignacionConsultorproyectoDTO, ActualizarAsignacionConsultorProyectoEsquema} from "../../esquemas/servicios/asignacionConsultorProyectoEsquema";
 import { HttpStatus } from "../../../../common/errores/statusCode";
+import { NotFoundError } from "../../../../common/errores/AppError";
+
 export class AsignacionConsultorProyectoControlador{
     constructor(private readonly asignacionServicio: IAsignacionConsultorProyectoServicio) {}
 
-    asignarConsultorProyecto = async(request: FastifyRequest, reply: FastifyReply)=>{
-                   //validar datos de entrada con zod
+    asignarConsultorProyecto = async(request: FastifyRequest, reply: FastifyReply)=>{ 
+    
+        
+            //validar datos de entrada con zod
             const datosValidados = CrearAsignacionConsultorProyectoEsquema.parse(request.body);
             //ejecutar el servicio
             const resultado = await this.asignacionServicio.asignarConsultorProyecto(datosValidados);
@@ -35,6 +38,7 @@ export class AsignacionConsultorProyectoControlador{
                 datos: asignacion
             });
     }
+    
 
     obtenerAsignacionPorConsultor = async (request: FastifyRequest, reply: FastifyReply) => {
             const { idConsultor } = request.params as { idConsultor: string };
@@ -81,9 +85,10 @@ export class AsignacionConsultorProyectoControlador{
                     asignacion: asignacionExistente
                 }
             });
-    }
+    } 
 
     obtenerDedicacionConsultor = async (request: FastifyRequest, reply: FastifyReply) => {
+        
             const { idConsultor } = request.params as { idConsultor: string };
             const { fechaInicio, fechaFin } = request.query as { fechaInicio: string, fechaFin?: string };
             
@@ -93,35 +98,38 @@ export class AsignacionConsultorProyectoControlador{
                 fechaFin ? new Date(fechaFin) : null
             );
 
-            return reply.code(HttpStatus.EXITO).send({
-                exito: true,
+            return reply.code(HttpStatus.EXITO).send({        
                 mensaje: "Dedicación calculada correctamente",
                 datos: { dedicacion: `${dedicacion}%` }
             });
-    }
+    } 
 
-    actualizarAsignacion = async (request: FastifyRequest, reply: FastifyReply) => {
+    actualizarAsignacion = async (request: FastifyRequest<{
+                Params:{idAsignacion:string};
+                Body: ActualizarAsignacionConsultorproyectoDTO}>, reply: FastifyReply) => {
+                    
             const { idAsignacion } = request.params as { idAsignacion: string };
-            const datosValidados = CrearAsignacionConsultorProyectoEsquema.parse(request.body);
+            const datosValidados = ActualizarAsignacionConsultorProyectoEsquema.parse(request.body);
             
             const asignacionActualizada = await this.asignacionServicio.actualizarAsignacion(idAsignacion, datosValidados);
 
-            return reply.code(HttpStatus.EXITO).send({
-                exito: true,
+            return reply.code(HttpStatus.EXITO).send({                
                 mensaje: "Asignación actualizada correctamente",
                 datos: asignacionActualizada
             });
-    }
+    } 
+    
+
 
     eliminarAsignacion = async (request: FastifyRequest, reply: FastifyReply) => {
+        
             const { idAsignacion} = request.params as { idAsignacion: string };
             
             await this.asignacionServicio.eliminarAsignacion(idAsignacion);
 
-            return reply.code(HttpStatus.EXITO).send({
-                exito: true,
+            return reply.code(HttpStatus.EXITO).send({                
                 mensaje: "Asignación eliminada correctamente",
                 datos: null
             });
-    }
+    };
 }
