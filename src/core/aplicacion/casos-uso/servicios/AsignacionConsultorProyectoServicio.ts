@@ -5,6 +5,8 @@ import { GestionAsignacionConsultor } from "../../gestion-servicio/GestionAsigna
 import { IAsignacionConsultorProyectoServicio } from "../../interfaces/servicios/IAsignacionConsultorProyectoServicio";
 import { NotFoundError } from "../../../../common/errores/AppError";
 
+import { NotFoundError } from "../../../../common/errores/AppError";
+
 
 export class  AsignacionConsultorProyectoServicio implements IAsignacionConsultorProyectoServicio{
 constructor(
