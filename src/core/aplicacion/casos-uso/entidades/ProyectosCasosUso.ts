@@ -9,6 +9,13 @@ export class ProyectoCasosUso {
     constructor (private proyectoRepositorio: IProyectoRepositorio){}
 
     async obtenerProyectos (params:ProyectoQueryParams): Promise<ResultadoProyectos>{
+        
+        const {
+            pagina: paginaOriginal,
+            limite: limiteOriginal,
+            ...otrosFiltros
+        } = params;
+
         const pagina = params.pagina ?? 1;
         const limite = params.limite ?? 10;
 
@@ -18,7 +25,14 @@ export class ProyectoCasosUso {
         if(limite <1){
             throw new Error ('El límite debe ser >= 1');
         }
-    return  await this.proyectoRepositorio.obtenerProyectos(params);
+
+        const queryFinal: ProyectoQueryParams = {
+            pagina,
+            limite,
+            ...otrosFiltros,
+        };
+
+    return await this.proyectoRepositorio.obtenerProyectos(queryFinal);
     }
     
     async obtenerProyectoPorId (idProyecto:string):Promise<IProyecto | null>{
