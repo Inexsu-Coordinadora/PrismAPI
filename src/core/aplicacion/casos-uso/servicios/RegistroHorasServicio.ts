@@ -4,6 +4,8 @@ import { IConsultorRepositorio } from "../../../dominio/repositorio/entidades/IC
 import { IProyectoRepositorio } from "../../../dominio/repositorio/entidades/IProyectoRepositorio";
 import { IAsignacionConsultorProyectoRepositorio } from "../../../dominio/repositorio/servicios/IAsignacionConsultorProyectoRepositorio";
 import { IRegistroHorasServicio } from "../../interfaces/servicios/IRegistroHorasServicio";
+import { NotFoundError, ValidationError, ConflictError } from "../../../../common/errores/AppError";
+
 
 /** Servicio de aplicación para gestionar registros de horas 
  * Orquesta reglas de negocio que combinan consultores, proyectos y asignaciones
@@ -54,17 +56,17 @@ export class RegistroHorasServicio implements IRegistroHorasServicio {
   async crearRegistroHoras(datos: IRegistroHoras): Promise<IRegistroHoras> {
 
     const consultor = await this.consultorRepo.obtenerConsultorPorId(datos.idConsultor);    /**Consultro debe existir */
-    if (!consultor) throw new Error("El consultor indicado no existe");
+    if (!consultor) throw new NotFoundError("El consultor indicado no existe");
 
     const proyecto = await this.proyectoRepo.obtenerProyectoPorId(datos.idProyecto);        /**Proyecto debe existir */
-    if (!proyecto) {throw new Error("El proyecto indicado no existe");
+    if (!proyecto) {throw new NotFoundError("El proyecto indicado no existe");
     }
   
     if (datos.horasTrabajadas <= 0) {                                                       /**Las horas válidas son > 0 y <= 24 */
-      throw new Error("La cantidad de horas debe ser mayor que 0");
+      throw new ValidationError("La cantidad de horas debe ser mayor que 0");
     }
     if (datos.horasTrabajadas > 24) {
-      throw new Error("La cantidad de horas no puede superar 24 en un día");
+      throw new ValidationError("La cantidad de horas no puede superar 24 en un día");
     }
                                                                                               
     const asignacion = await this.asignacionRepo.obtenerAsignacionExistente(                /**Consultor asignado al proyecto -> S1 */
@@ -74,7 +76,7 @@ export class RegistroHorasServicio implements IRegistroHorasServicio {
     );
 
     if (!asignacion) {
-      throw new Error("El consultor no está asignado a este proyecto");
+      throw new ValidationError("El consultor no está asignado a este proyecto");
     }
 
     const fechaInicioAsig = this.toDateOnly(asignacion.fechaInicioAsignacion);
@@ -88,12 +90,12 @@ export class RegistroHorasServicio implements IRegistroHorasServicio {
       fechaRegistroSoloDia < fechaInicioAsig ||
       (fechaFinAsig && fechaRegistroSoloDia > fechaFinAsig)
     ) {
-      throw new Error("La fecha del registro está fuera del rango de la asignación del consultor");
+      throw new ValidationError("La fecha del registro está fuera del rango de la asignación del consultor");
     }
 
     const yaExiste = await this.existeDuplicado(datos);                                    /** No se permite un parte idéntico en el mismo día.*/
     if (yaExiste) {
-      throw new Error(
+      throw new ConflictError(
         "Ya existe un registro idéntico para este consultor, proyecto, fecha y descripción"
       );
     }
