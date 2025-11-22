@@ -2,6 +2,8 @@ import { IClienteRepositorio } from '../../../dominio/repositorio/entidades/ICli
 import { IClienteCasosUso } from '../../interfaces/entidades/IClienteCasosUso';
 import { Cliente, CrearClienteDto, ActualizarClienteDto } from '../../../dominio/entidades/Cliente';
 import { crearClienteEsquema, actualizarClienteEsquema } from '../../../presentacion/esquemas/entidades/clienteEsquema';
+import { NotFoundError, ConflictError } from '../../../../common/errores/AppError'; 
+
 
 export class ClienteCasosUso implements IClienteCasosUso {
   constructor(private clienteRepositorio: IClienteRepositorio) {}
@@ -13,12 +15,14 @@ export class ClienteCasosUso implements IClienteCasosUso {
     
     const emailExisteCliente = await this.clienteRepositorio.existeEmailCliente(datosValidados.emailCliente);
     if (emailExisteCliente) {
-      throw new Error('Ya existe un cliente con ese email');
+      // Uso de ConflictError (409) para indicar conflicto de unicidad
+      throw new ConflictError('Ya existe un cliente con ese email'); 
     }
     
     const documentoExiste = await this.clienteRepositorio.existeDocumentoCliente(datosValidados.documentoCliente);
     if (documentoExiste) {
-      throw new Error('Ya existe un cliente con ese documento de identidad');
+      // Uso de ConflictError (409) para indicar conflicto de unicidad
+      throw new ConflictError('Ya existe un cliente con ese documento de identidad');
     }
     
     return await this.clienteRepositorio.crearCliente(datosValidados);
@@ -34,7 +38,8 @@ export class ClienteCasosUso implements IClienteCasosUso {
     const cliente = await this.clienteRepositorio.obtenerClientePorId(id);
     
     if (!cliente) {
-      throw new Error('Cliente no encontrado');
+      // Uso de NotFoundError (404)
+      throw new NotFoundError('Cliente no encontrado');
     }
     
     return cliente;
@@ -47,27 +52,31 @@ export class ClienteCasosUso implements IClienteCasosUso {
     
     const clienteExiste = await this.clienteRepositorio.obtenerClientePorId(id);
     if (!clienteExiste) {
-      throw new Error('Cliente no encontrado');
+      // Uso de NotFoundError (404)
+      throw new NotFoundError('Cliente no encontrado');
     }
     
     if (datosValidados.emailCliente) {
       const emailExiste = await this.clienteRepositorio.existeEmailCliente(datosValidados.emailCliente, id);
       if (emailExiste) {
-        throw new Error('Ya existe otro cliente con ese email');
+        // Uso de ConflictError (409)
+        throw new ConflictError('Ya existe otro cliente con ese email'); 
       }
     }
     
     if (datosValidados.documentoCliente) {
       const documentoExiste = await this.clienteRepositorio.existeDocumentoCliente(datosValidados.documentoCliente, id);
       if (documentoExiste) {
-        throw new Error('Ya existe otro cliente con ese documento de identidad');
+        // Uso de ConflictError (409)
+        throw new ConflictError('Ya existe otro cliente con ese documento de identidad'); 
       }
     }
     
     const clienteActualizado = await this.clienteRepositorio.actualizarCliente(id, datosValidados);
     
     if (!clienteActualizado) {
-      throw new Error('Error al actualizar el cliente');
+      // Si el repositorio no actualiza, indicamos un error interno o del repositorio (Se mantendrá como 500 si no es AppError)
+      throw new Error('Error al actualizar el cliente en el repositorio');
     }
     
     return clienteActualizado;
@@ -78,7 +87,8 @@ export class ClienteCasosUso implements IClienteCasosUso {
     const eliminado = await this.clienteRepositorio.eliminarCliente(idCliente);
     
     if (!eliminado) {
-      throw new Error('Cliente no encontrado');
+      // Uso de NotFoundError (404)
+      throw new NotFoundError('Cliente no encontrado');
     }
   }
 }
