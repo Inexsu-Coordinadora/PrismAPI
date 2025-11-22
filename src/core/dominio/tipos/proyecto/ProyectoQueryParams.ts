@@ -1,4 +1,4 @@
-import { EstadoProyecto } from "../../../../dominio/entidades/IProyecto";
+import { EstadoProyecto } from "../../entidades/IProyecto";
 
 export interface ProyectoQueryParams {
     nombre?: string;

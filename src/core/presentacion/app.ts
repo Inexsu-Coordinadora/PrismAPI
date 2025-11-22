@@ -1,6 +1,7 @@
 import Fastify from 'fastify';
 import { FastifyError } from 'fastify';
 import { getConfig } from "../../common/configuracion";
+import { manejarError } from './rutas/utils/manejadorErrores';
 
 //* Aqui importamos los enrutadores de todas las entidades
 import { construirClienteEnrutador } from "./rutas/entidades/clienteEnrutador";
@@ -14,7 +15,9 @@ import { construirConsultaProyectoEnrutador } from './rutas/servicios/consultaPr
 import { construirGestionTareasEnrutador } from "./rutas/servicios/gestionTareasEnrutador";
 import { construirRegistroHorasEnrutador } from './rutas/servicios/registroHorasEnrutador';
 
-const app = Fastify({ logger: true });
+export const app = Fastify({ logger: true });
+
+app.setErrorHandler(manejarError);
 
 app.register(
 async (appInstance) => {

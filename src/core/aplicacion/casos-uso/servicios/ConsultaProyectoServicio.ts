@@ -1,6 +1,5 @@
 import { ProyectoConConsultoresDTO } from "../../../presentacion/esquemas/servicios/consultaProyectoEsquema";
 import {  ConsultarProyectosPorClienteRepositorio} from "../../../infraestructura/postgres/repositorios/servicios/ConsultaProyectoRepository";
-import { array, object } from "zod";
 import { IConsultaProyectosPorClienteServicio } from "../../interfaces/servicios/IConsultaProyectoServicio";
 import { FiltrosConsultaProyectos } from "../../../presentacion/esquemas/servicios/consultaProyectoEsquema";
 

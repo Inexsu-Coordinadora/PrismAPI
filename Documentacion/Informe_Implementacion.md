@@ -26,6 +26,10 @@
      - [Servicio 2: Consulta de Proyectos por Cliente](#servicio-2-consulta-de-proyectos-por-cliente)
      - [Servicio 3: Registro y Control de Horas](#servicio-3-registro-y-control-de-horas)
      - [Servicio 4: Gestión de Tareas de Proyecto](#servicio-4-gestión-de-tareas-de-proyecto)
+8. [Entrega 3: Calidad, Pruebas y Refactorización](#8-entrega-3-calidad-pruebas-y-refactorización)
+   - [Refactorización y Mejoras Técnicas](#refactorización-y-mejoras-técnicas)
+   - [Estrategia de Pruebas](#estrategia-de-pruebas)
+   - [Estructura de Proyecto Actualizada](#estructura-de-proyecto-actualizada)
 
 ---
 
@@ -77,6 +81,7 @@ Ser líderes en la transformación de la gestión de proyectos, ofreciendo a los
 * **Fastify:** Elegimos este framework por su alta velocidad, bajo *overhead* (coste computacional) y una arquitectura moderna orientada al máximo rendimiento.
 * **PostgreSQL:** Optamos por "Postgres" debido a la naturaleza relacional compleja de nuestro dominio. Un proyecto tiene tareas, que se ligan a clientes, que a su vez tienen usuarios, etc.
 * **Zod:** Usamos Zod para el parseo y validación de esquemas. Asegura que los datos que entran y salen de nuestra API sean exactamente lo esperado, con el beneficio de una integración perfecta con TypeScript para generar tipos estáticos.
+* **Jest & Supertest:** Elegimos **Jest** como *test runner* por su velocidad, configuración "cero" y gran soporte para TypeScript. Lo complementamos con **Supertest** para realizar pruebas de integración HTTP (caja negra) sobre la API, asegurando que nuestros endpoints cumplan con los contratos definidos sin necesidad de levantar un servidor externo.
 
 ### Arquitectura
 
@@ -267,6 +272,8 @@ Similar al S1, este servicio introduce una nueva entidad de registro transaccion
     * Validar horas (ej. > 0 y <= 24).
 * **Presentación:** Se crearon `RegistroHorasControlador.ts` y `registroHorasEnrutador.ts` para los endpoints de registro de horas (ej. `POST /api/registros-horas`).
 
+> **⚠️ Decisión de Diseño (Inmutabilidad):** > El equipo determinó como regla de negocio que un registro de horas, una vez generado, constituye un documento histórico inalterable. Por esta razón, **este servicio no implementa métodos de actualización (UPDATE)** en ninguna de sus capas (Controlador, Servicio, Repositorio), garantizando la integridad de la información reportada.
+
 ---
 
 #### Servicio 4: Gestión de Tareas de Proyecto
@@ -286,3 +293,52 @@ Este servicio fue una **expansión** de una entidad existente (Tareas), integran
     * Validación de "no completar dos veces" (S4).
 
 * **Presentación:** Se crearon `GestionTareasControlador.ts` y `gestionTareasEnrutador.ts`, que definen los nuevos endpoints (`/proyectos/:idProyecto/tareas`) y conectan todo el flujo.
+
+---
+
+## 8. Entrega 3: Calidad, Pruebas y Refactorización
+
+En esta fase, el equipo se enfocó en pagar la deuda técnica y asegurar la estabilidad del sistema mediante pruebas automatizadas.
+
+### Refactorización y Mejoras Técnicas
+Siguiendo las recomendaciones de la revisión anterior, se implementaron mejoras arquitectónicas significativas:
+
+1.  **Manejo de Errores Centralizado:**
+    * Se eliminaron los bloques `try/catch` repetitivos de todos los controladores.
+    * Se creó una jerarquía de errores personalizados (`AppError`, `NotFoundError`, `ValidationError`, `ConflictError`) que extienden de la clase nativa `Error`.
+    * Se implementó un **Global Error Handler** en Fastify que intercepta cualquier fallo (de negocio o de validación Zod) y estandariza la respuesta HTTP (400, 404, 409, 500).
+
+2.  **Semántica HTTP:**
+    * Se reemplazaron los "números mágicos" (200, 404) por un Enum `HttpStatus` para mejorar la legibilidad del código.
+
+### Estrategia de Pruebas
+Se implementó una estrategia de testing en dos niveles utilizando **Jest**:
+
+* **Pruebas Unitarias (`tests/unit/`):**
+    * **Objetivo:** Validar la lógica de negocio pura de los Servicios (`CasosUso`) y Entidades.
+    * **Técnica:** Se utilizaron **Mocks** para aislar el servicio de la base de datos (Repositorios), permitiendo probar reglas de negocio complejas (como fechas inválidas o cálculos de dedicación) sin dependencias externas.
+
+* **Pruebas de Integración (`tests/integracion/`):**
+    * **Objetivo:** Validar el contrato de la API (Endpoints) y la interacción entre capas (Ruta -> Controlador -> Servicio).
+    * **Técnica:** Se utilizó **Supertest** para simular peticiones HTTP reales. Se verificó que la API responda con los códigos de estado correctos y que el manejo de errores global intercepte fallos correctamente.
+
+### Estructura de Proyecto Actualizada
+El árbol de directorios evolucionó para incluir la infraestructura de pruebas y configuraciones de calidad:
+
+```text
+PrismAPI/
+├── src/
+│   ├── common/
+│   │   ├── errores/        <-- NUEVO: Clases de error (AppError.ts)
+│   │   └── statusCode.ts   <-- NUEVO: Enum de códigos HTTP
+│   ├── core/
+│   └── presentacion/
+│       └── utils/
+│           └── manejadorErrores.ts <-- NUEVO: Handler global
+├── tests/                  <-- NUEVO: Raíz de pruebas
+│   ├── unit/               <-- Espejo de la lógica de negocio
+│   └── integracion/        <-- Espejo de los endpoints de la API
+├── coverage/               <-- NUEVO: Reportes automáticos de Jest
+├── jest.config.ts          <-- NUEVO: Configuración de Testing
+├── package.json
+└── ...

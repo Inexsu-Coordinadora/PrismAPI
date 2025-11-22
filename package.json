@@ -6,7 +6,11 @@
   "scripts": {
     "build": "tsc",
     "start": "node ./dist/index.js",
-    "dev": "tsnd --respawn --clear src/index.ts"
+    "dev": "tsnd --respawn --clear src/index.ts",
+    "test": "jest",
+    "unit-test": "jest --testPathPatterns unit",
+    "integration-test": "jest --testPathPatterns integracion",
+    "test:coverage": "jest --coverage"
   },
   "repository": {
     "type": "git",
@@ -30,8 +34,13 @@
     "zod": "^4.1.12"
   },
   "devDependencies": {
+    "@types/jest": "^30.0.0",
     "@types/node": "^24.9.2",
     "@types/pg": "^8.15.6",
+    "@types/supertest": "^6.0.3",
+    "jest": "^30.2.0",
+    "supertest": "^7.1.4",
+    "ts-jest": "^29.4.5",
     "typescript": "^5.9.3"
   }
 }
