@@ -3,6 +3,8 @@ import { IClienteCasosUso } from "../../../aplicacion/interfaces/entidades/IClie
 import { CrearClienteDto, ActualizarClienteDto } from "../../../dominio/entidades/Cliente";
 import { crearClienteEsquema, actualizarClienteEsquema } from "../../esquemas/entidades/clienteEsquema";
 import { ZodError } from "zod";
+import { HttpStatus } from "../../../../common/errores/statusCode"; 
+import { NotFoundError } from "../../../../common/errores/AppError";
 
 export class ClienteControlador {
 
@@ -12,16 +14,14 @@ export class ClienteControlador {
     request: FastifyRequest<{ Body: CrearClienteDto }>,
     reply: FastifyReply
   ) => {
-    try {
-      const nuevoCliente = crearClienteEsquema.parse(request.body);
-      const clienteCreado = await this.clientesCasosUso.crearCliente(nuevoCliente);
-      return reply.code(201).send({
-        mensaje: "Cliente creado correctamente",
-        cliente: clienteCreado,
-      });
-    } catch (error) {
-      return this.manejarError(reply, error, "Error al crear el cliente");
-    }
+
+   const nuevoCliente = crearClienteEsquema.parse(request.body);
+    const clienteCreado = await this.clientesCasosUso.crearCliente(nuevoCliente);
+
+    return reply.code(HttpStatus.CREADO).send({ 
+      mensaje: "Cliente creado correctamente",
+      cliente: clienteCreado,
+    });
   };
 
 
@@ -29,16 +29,12 @@ export class ClienteControlador {
     request: FastifyRequest,
     reply: FastifyReply
   ) => {
-    try {
-      const clientes = await this.clientesCasosUso.obtenerClientes();
-      return reply.code(200).send({
-        mensaje: "Clientes encontrados correctamente",
-        clientes: clientes,
-        total: clientes.length,
-      });
-    } catch (error) {
-      return this.manejarError(reply, error, "Error al obtener los clientes");
-    }
+    const clientes = await this.clientesCasosUso.obtenerClientes();
+    return reply.code(HttpStatus.EXITO).send({ 
+      mensaje: "Clientes encontrados correctamente",
+      clientes: clientes,
+      total: clientes.length,
+    });
   };
 
 
@@ -46,21 +42,18 @@ export class ClienteControlador {
     request: FastifyRequest<{ Params: { idCliente: string } }>,
     reply: FastifyReply
   ) => {
-    try {
-      const { idCliente } = request.params;
-      const cliente = await this.clientesCasosUso.obtenerClientePorId(idCliente);
+    const { idCliente } = request.params;
+    const cliente = await this.clientesCasosUso.obtenerClientePorId(idCliente);
 
-      return reply.code(200).send({
-        mensaje: "Cliente encontrado correctamente",
-        cliente: cliente,
-      });
-    } catch (error) {
-    
-      if (error instanceof Error && error.message === "Cliente no encontrado") {
-        return reply.code(404).send({ mensaje: error.message });
-      }
-      return this.manejarError(reply, error, "Error al obtener el cliente");
+
+    if (!cliente) {
+        throw new NotFoundError("Cliente no encontrado");
     }
+
+    return reply.code(HttpStatus.EXITO).send({ 
+      mensaje: "Cliente encontrado correctamente",
+      cliente: cliente,
+    });
   };
 
 
@@ -68,24 +61,23 @@ export class ClienteControlador {
     request: FastifyRequest<{ Params: { idCliente: string }; Body: ActualizarClienteDto }>,
     reply: FastifyReply
   ) => {
-    try {
-      const { idCliente } = request.params;
-      const datosActualizarCliente = actualizarClienteEsquema.parse(request.body);
-      const clienteActualizado = await this.clientesCasosUso.actualizarCliente(
-        idCliente,
-        datosActualizarCliente
-      );
+    const { idCliente } = request.params;
+    const datosActualizarCliente = actualizarClienteEsquema.parse(request.body);
 
-      return reply.code(200).send({
-        mensaje: "Cliente actualizado correctamente",
-        cliente: clienteActualizado,
-      });
-    } catch (error) {
-      if (error instanceof Error && error.message === "Cliente no encontrado") {
-        return reply.code(404).send({ mensaje: error.message });
-      }
-      return this.manejarError(reply, error, "Error al actualizar el cliente");
+    const clienteActualizado = await this.clientesCasosUso.actualizarCliente(
+      idCliente,
+      datosActualizarCliente
+    );
+
+
+    if (!clienteActualizado) {
+        throw new NotFoundError("Cliente no encontrado para actualizar");
     }
+
+    return reply.code(HttpStatus.EXITO).send({ 
+      mensaje: "Cliente actualizado correctamente",
+      cliente: clienteActualizado,
+    });
   };
 
 
@@ -93,36 +85,23 @@ export class ClienteControlador {
     request: FastifyRequest<{ Params: { idCliente: string } }>,
     reply: FastifyReply
   ) => {
-    try {
-      const { idCliente } = request.params;
-      await this.clientesCasosUso.eliminarCliente(idCliente);
-
-      return reply.code(200).send({
-        mensaje: "Cliente eliminado correctamente",
-        idClienteEliminado: idCliente,
-      });
-    } catch (error) {
-      if (error instanceof Error && error.message === "Cliente no encontrado") {
-        return reply.code(404).send({ mensaje: error.message });
-      }
-      return this.manejarError(reply, error, "Error al eliminar el cliente");
+    const { idCliente } = request.params;
+    
+    const fueEliminado = await this.clientesCasosUso.eliminarCliente(idCliente);
+    
+    
+    const cliente = await this.clientesCasosUso.obtenerClientePorId(idCliente);
+    if (!cliente) {
+        throw new NotFoundError("Cliente no encontrado para eliminar");
     }
+    await this.clientesCasosUso.eliminarCliente(idCliente);
+
+    return reply.code(HttpStatus.EXITO).send({ 
+      mensaje: "Cliente eliminado correctamente",
+      idClienteEliminado: idCliente,
+    });
   };
 
 
-  private manejarError(reply: FastifyReply, err: unknown, mensajeBase: string) {
-    if (err instanceof ZodError) {
-
-        return reply.code(400).send({
-        mensaje: mensajeBase,
-
-        error: err.issues[0]?.message || "Error de validación",
-      });
-    }
-
-    return reply.code(500).send({
-      mensaje: mensajeBase,
-      error: err instanceof Error ? err.message : String(err),
-    });
-  }
 }
+
