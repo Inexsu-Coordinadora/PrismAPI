@@ -1,109 +1,174 @@
 import request from "supertest";
 import { app } from "../../../src/core/presentacion/app";
-import { NotFoundError, ConflictError, ValidationError } from "../../../src/common/errores/AppError";
 
-//* 1. MOCK: Simulamos el Servicio de Asignación
-jest.mock("../../../src/core/aplicacion/casos-uso/servicios/AsignacionConsultorProyectoServicio", () => {
-    return {
-    AsignacionConsultorProyectoServicio: jest.fn().mockImplementation(() => ({
-    
-      //* Simulamos 'asignarConsultorProyecto'
-    asignarConsultorProyecto: jest.fn().mockImplementation((datos) => {
+
+jest.mock("../../../src/core/aplicacion/casos-uso/entidades/ProyectosCasosUso", () => {
+
+    const mockImplementations = {
         
-        //* CASO: Error 404 (Proyecto no existe)
-        if (datos.idProyecto === "proyecto-inexistente") {
-        throw new NotFoundError("El proyecto no existe");
-        }
+        crearProyecto: jest.fn().mockImplementation(() => {
+            return "nuevo-id-proyecto-456";
+        }),
+        
+        obtenerProyectos: jest.fn().mockResolvedValue({
+            total: 2,
+            pagina: 1,
+            limite: 10,
+            data: [
+                { idProyecto: "p-1", nombreProyecto: "Proyecto Alfa", estadoProyecto: "activo", fechaInicioProyecto: "2023-01-01" },
+                { idProyecto: "p-2", nombreProyecto: "Proyecto Beta", estadoProyecto: "pendiente", fechaInicioProyecto: "2023-02-15" }
+            ]
+        }),
 
-        //* CASO: Error 409 (Conflicto/Duplicado)
-        if (datos.idConsultor === "consultor-duplicado") {
-        throw new ConflictError("Ya existe una asignación");
-        }
+        
+        obtenerProyectoPorId: jest.fn().mockImplementation((id: string) => {
+            if (id === "id-inexistente") {
+                return null;
+            }
+            return { idProyecto: id, nombreProyecto: "Proyecto de Prueba", estadoProyecto: "activo", fechaInicioProyecto: "2024-01-20" };
+        }),
 
-        //* CASO: Éxito (201)
-        return { 
-            mensaje: "Asignación exitosa", 
-            asignacion: "nueva-id-asignacion" 
-        };
-    }),
+        
+        actualizarProyecto: jest.fn().mockImplementation((id: string, proyectoActualizado: any) => {
+            if (id === "id-inexistente") {
+                return null;
+            }
+            return { idProyecto: id, ...proyectoActualizado };
+        }),
 
-      //* Simulamos 'obtenerAsignacionPorId'
-    obtenerAsignacionPorId: jest.fn().mockImplementation((id) => {
-        if (id === "id-invalido") return null; // Para que el controlador lance 404
-        return { idAsignacion: id, rol: "Dev" };
-    })
 
-    })),
-};
+        eliminarProyecto: jest.fn().mockResolvedValue(undefined)
+    };
+
+    
+    const MockProyectoCasosUso = jest.fn(() => mockImplementations);
+
+    return {
+        ProyectoCasosUso: MockProyectoCasosUso,        
+        default: MockProyectoCasosUso,
+    };
 });
 
-describe("Pruebas de Integración - Asignación Consultores", () => {
-
-beforeAll(async () => {
-    await app.ready();
-});
-
-afterAll(async () => {
-    await app.close();
-});
-
-  //* --- TEST 1: Crear Asignación (Éxito) ---//
-test("POST /api/asignaciones - Debe crear asignación correctamente (201)", async () => {
-    const response = await request(app.server)
-    .post("/api/asignaciones") // VERIFICA ESTA RUTA EN TUS ENRUTADORES
-    .send({
-        idConsultor: "consultor-ok",
-        idProyecto: "proyecto-ok",
-        fechaInicioAsignacion: new Date().toISOString(),
-        porcentajeDedicacion: 100,
-        rolConsultor: "Arquitecto"
+describe("Pruebas de Integración - API Proyectos (Entidad)", () => {
+    
+    beforeAll(async () => {
+        await app.ready();
+    });
+    
+    afterAll(async () => {
+        await app.close();
     });
 
-    expect(response.status).toBe(201);
-    // CORRECCIÓN: Ajustamos la expectativa para el cuerpo de la respuesta real
-    expect(response.body).toHaveProperty("mensaje", "Asignación exitosa");
-    expect(response.body.datos).toHaveProperty("idAsignacion", "nueva-id-asignacion");
+    //* ---------------------------- TESTS CREAR PROYECTO (POST) ----------------------------//
+
+    //* ------------------ TEST 1: CAMINO FELIZ (201 CREADO) --------------------------------//
+    test("POST /api/proyectos - Debe crear un proyecto correctamente (201)", async () => {
+        const response = await request(app.server)
+            .post("/api/proyectos")
+            .send({
+                nombreProyecto: "Proyecto Válido Nuevo",
+                tipoProyecto: "Descripción del proyecto",
+                estadoProyecto: "pendiente",
+                fechaInicioProyecto: "2025-05-01",
+            });
+
+        expect(response.status).toBe(201);
+        expect(response.body).toHaveProperty("mensaje", "El proyecto se creó correctamente");
+        expect(response.body).toHaveProperty("idNuevoProyecto", "nuevo-id-proyecto-456");
     });
 
-  //* --- TEST 2: Error de Validación (Zod - 400) ---//
-    test("POST /api/asignaciones - Debe devolver 400 si faltan datos", async () => {
-    const response = await request(app.server)
-    .post("/api/asignaciones")
-    .send({}); // Body vacío
+    
+    //* ------------------ TEST 2: ERROR 400 - Validación (Zod/Esquema) ------------------//
+    test("POST /api/proyectos - Debe devolver 400 si faltan datos obligatorios", async () => {
+        const response = await request(app.server)
+            .post("/api/proyectos")
+            .send({
+                // Faltan campos obligatorios como nombreProyecto, descripcionProyecto, fechas...
+                estadoProyecto: "activo"
+            });
 
-    expect(response.status).toBe(400);
-    expect(response.body.mensaje).toBe("Error de validación");
+
+        expect(response.status).toBe(400);
+        expect(response.body).toHaveProperty("mensaje", "Error de validación");
+        expect(response.body).toHaveProperty("detalles"); 
     });
 
-  //* --- TEST 3: Error de Negocio (404 - Proyecto no existe) ---//
-    test("POST /api/asignaciones - Debe devolver 404 si el servicio lanza NotFoundError", async () => {
-    const response = await request(app.server)
-    .post("/api/asignaciones")
-    .send({
-        idConsultor: "consultor-ok",
-        idProyecto: "proyecto-inexistente", 
-        fechaInicioAsignacion: new Date().toISOString(),
-        porcentajeDedicacion: 100,
-        rolConsultor: "Dev"
+
+    /* ---------------------------- TESTS OBTENER PROYECTOS (GET) ----------------------------//
+    /* ------------------ TEST 3: CAMINO FELIZ (200 OK) ------------------*/
+
+    test("GET /api/proyectos - 200 Debe retornar la lista de proyectos con paginación", async () => {
+        const response = await request(app.server).get("/api/proyectos");
+
+        expect(response.status).toBe(200);
+        expect(response.body).toHaveProperty("mensaje", "Proyectos obtenidos correctamente");
+        expect(response.body.data).toHaveLength(2);
+        expect(response.body.total).toBe(2);
     });
 
-    expect(response.status).toBe(404);
-    expect(response.body.mensaje).toBe("El proyecto no existe");
+    //* ---------------------------- TESTS OBTENER PROYECTO POR ID (GET) ----------------------------//
+    //* ------------------ TEST 4: CAMINO FELIZ (200 OK) ------------------//
+    test("GET /api/proyectos/:id - 200 Debe devolver el proyecto encontrado", async () => {
+        const response = await request(app.server).get("/api/proyectos/p-1");
+
+        expect(response.status).toBe(200);
+        expect(response.body).toHaveProperty("mensaje", "Proyecto encontrado correctamente");
+        expect(response.body.proyecto).toHaveProperty("nombreProyecto", "Proyecto de Prueba");
     });
 
-  //* --- TEST 4: Error de Conflicto (409 - Duplicado) ---//
-    test("POST /api/asignaciones - Debe devolver 409 si ya existe asignación", async () => {
-    const response = await request(app.server)
-    .post("/api/asignaciones")
-    .send({
-        idConsultor: "consultor-duplicado",
-        idProyecto: "proyecto-ok",
-        fechaInicioAsignacion: new Date().toISOString(),
-        porcentajeDedicacion: 100,
-        rolConsultor: "Dev"
+    //* ------------------ TEST 5: ERROR 404 - Proyecto no encontrado ------------------//
+    test("GET /api/proyectos/:id - Debe devolver 404 si el proyecto no existe", async () => {
+        const response = await request(app.server).get("/api/proyectos/id-inexistente");
+
+        expect(response.status).toBe(404);        
+        expect(response.body).toEqual({ mensaje: "Proyecto no encontrado" });
     });
 
-    expect(response.status).toBe(409);
-    expect(response.body.mensaje).toMatch(/Ya existe una asignación/);
+    //* ---------------------------- TESTS ACTUALIZAR PROYECTO (PUT)----------------------------//
+    //* ------------------ TEST 6: CAMINO FELIZ (200 OK) ------------------//
+    test("PUT /api/proyectos/:id - 200 Debe actualizar el proyecto correctamente", async () => {
+        const response = await request(app.server)
+            .put("/api/proyectos/p-1")
+            .send({
+                nombreProyecto: "Nombre Editado",
+                estadoProyecto: "activo" 
+            });
+
+        expect(response.status).toBe(200);
+        expect(response.body).toHaveProperty("mensaje", "Proyecto actualizado correctamente");
+        expect(response.body.proyectoActualizado).toHaveProperty("nombreProyecto", "Nombre Editado");
+        expect(response.body.proyectoActualizado).toHaveProperty("estadoProyecto", "activo");
     });
-});
+
+    //* ------------------ TEST 7: ERROR 404 - Proyecto no encontrado para actualizar ------------------//
+    test("PUT /api/proyectos/:id - 404 Debe devolver error si el proyecto a actualizar no existe", async () => {
+        const response = await request(app.server)
+            .put("/api/proyectos/id-inexistente")
+            .send({
+                nombreProyecto: "Intento Fallido"
+            });
+
+        expect(response.status).toBe(404);        
+        expect(response.body.mensaje).toBe("Proyecto no encontrado para actualizar");
+    });
+
+    //* ---------------------------- TESTS ELIMINAR PROYECTO (DELETE) ----------------------------//
+    //* ------------------ TEST 8: CAMINO FELIZ (200 OK) ------------------//
+    test("DELETE /api/proyectos/:id - 200 Debe eliminar el proyecto correctamente", async () => {
+        
+        const response = await request(app.server).delete("/api/proyectos/p-1");
+
+        expect(response.status).toBe(200);
+        expect(response.body).toHaveProperty("mensaje", "Proyecto eliminado correctamente");
+        expect(response.body).toHaveProperty("idProyecto", "p-1");
+    });
+
+     //* ------------------ TEST 9: ERROR 404 - Eliminar proyecto inexistente ------------------//
+    test("DELETE /api/proyectos/:id - 404 Debe devolver error si el proyecto a eliminar no existe", async () => {
+        
+        const response = await request(app.server).delete("/api/proyectos/id-inexistente");
+
+        expect(response.status).toBe(404);
+        expect(response.body.mensaje).toMatch(/Proyecto no encontrado para eliminar/);
+    });
+})

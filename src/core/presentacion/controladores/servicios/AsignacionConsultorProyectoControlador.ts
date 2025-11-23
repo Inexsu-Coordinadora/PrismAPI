@@ -76,7 +76,7 @@ export class AsignacionConsultorProyectoControlador{
             );
 
             return reply.code(HttpStatus.EXITO).send({
-                exito: true,
+                
                 mensaje: asignacionExistente 
                     ? "Ya existe una asignación idéntica" 
                     : "No existe asignación duplicada",
