@@ -63,3 +63,4 @@ CrearAsignacionConsultorProyectoEsquema.partial();
 export type ActualizarAsignacionConsultorproyectoDTO = z.infer<typeof ActualizarAsignacionConsultorProyectoEsquema> 
 
 
+

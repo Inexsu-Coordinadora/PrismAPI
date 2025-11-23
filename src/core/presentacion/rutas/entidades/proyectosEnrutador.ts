@@ -3,7 +3,7 @@ import { ProyectosControlador } from "../../controladores/entidades/ProyectosCon
 import { IProyectoRepositorio } from "../../../dominio/repositorio/entidades/IProyectoRepositorio";
 import { ProyectoRepository } from "../../../infraestructura/postgres/repositorios/entidades/ProyectoRepository";
 import { ProyectoCasosUso } from "../../../aplicacion/casos-uso/entidades/ProyectosCasosUso";
-import { IProyectosCasosUso } from "../../../aplicacion/interfaces/entidades/IProyectosCasosUso";
+
 
 
 function proyectosEnrutador (
@@ -19,8 +19,7 @@ function proyectosEnrutador (
 }
 
 export async function construirProyectosEnrutador(app: FastifyInstance){
-    const proyectoRepositorio:
-    IProyectoRepositorio = new ProyectoRepository();
+    const proyectoRepositorio: IProyectoRepositorio = new ProyectoRepository();
     const proyectosCasosUso = new ProyectoCasosUso(proyectoRepositorio);
     const proyectosController = new ProyectosControlador(proyectosCasosUso);
 

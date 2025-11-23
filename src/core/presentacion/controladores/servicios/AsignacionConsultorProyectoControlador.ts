@@ -16,54 +16,53 @@ export class AsignacionConsultorProyectoControlador{
             const resultado = await this.asignacionServicio.asignarConsultorProyecto(datosValidados);
 
             return reply.code(HttpStatus.CREADO).send({
+            exito: true,
             mensaje: resultado.mensaje,  // ← Usar el mensaje del servicio
             datos: {
             idAsignacion: resultado.asignacion
             }
         });
-    
-    }
+    } 
 
     obtenerAsignacionPorId = async (request: FastifyRequest, reply: FastifyReply) => {
-        
             const { idAsignacion } = request.params as { idAsignacion: string };
             const asignacion = await this.asignacionServicio.obtenerAsignacionPorId(idAsignacion);
 
-            if(!asignacion){
-                throw new NotFoundError ("Asignación no encontrada")
+            if (!asignacion) {
+                throw new NotFoundError("Asignación no encontrada");
             }
-            
+
             return reply.code(HttpStatus.EXITO).send({
+                exito: true,
                 mensaje: "Asignación obtenida correctamente",
-                datos: asignacion,
-            });           
+                datos: asignacion
+            });
     }
     
 
     obtenerAsignacionPorConsultor = async (request: FastifyRequest, reply: FastifyReply) => {
-        
             const { idConsultor } = request.params as { idConsultor: string };
             const asignaciones = await this.asignacionServicio.obtenerAsignacionPorConsultor(idConsultor);
 
-            return reply.code(HttpStatus.EXITO).send({                
+            return reply.code(HttpStatus.EXITO).send({
+                exito: true,
                 mensaje: `Se encontraron ${asignaciones.length} asignaciones`,
                 datos: asignaciones
             });
-    } 
+    }
 
     obtenerAsignacionPorProyecto = async (request: FastifyRequest, reply: FastifyReply) => {
-        
             const { idProyecto } = request.params as { idProyecto: string };
             const asignaciones = await this.asignacionServicio.obtenerAsignacionPorProyecto(idProyecto);
 
-            return reply.code(HttpStatus.EXITO).send({                
+            return reply.code(HttpStatus.EXITO).send({
+                exito: true,
                 mensaje: `Se encontraron ${asignaciones.length} asignaciones`,
                 datos: asignaciones
             });
-    } 
+    }
 
-    obtenerAsignacionExistente = async (request: FastifyRequest, reply: FastifyReply) => {
-        
+    obtenerAsignacionExistente = async (request: FastifyRequest, reply: FastifyReply) => { 
             const { idConsultor, idProyecto, rolConsultor } = request.query as { 
                 idConsultor: string, 
                 idProyecto: string, 
@@ -76,7 +75,8 @@ export class AsignacionConsultorProyectoControlador{
                 rolConsultor ?? null
             );
 
-            return reply.code(HttpStatus.EXITO).send({                
+            return reply.code(HttpStatus.EXITO).send({
+                exito: true,
                 mensaje: asignacionExistente 
                     ? "Ya existe una asignación idéntica" 
                     : "No existe asignación duplicada",

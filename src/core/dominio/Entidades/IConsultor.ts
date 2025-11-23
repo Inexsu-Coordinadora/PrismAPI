@@ -5,7 +5,6 @@ export enum DisponibilidadConsultor {
   NO_DISPONIBLE = 'no disponible'
 }
 
-
 export interface IConsultor {
     idConsultor?: string;
     nombreConsultor: string;
