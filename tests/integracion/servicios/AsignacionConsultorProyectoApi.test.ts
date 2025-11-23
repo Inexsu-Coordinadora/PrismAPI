@@ -136,7 +136,7 @@ describe("Pruebas de Integración - API Asignación Consultor Proyecto", () => {
         .send({ ...datosAsignacionValida, idConsultor: "consultor-ya-asignado" }); 
 
         expect(response.status).toBe(409);
-        expect(response.body.mensaje).toBe("El consultor ya tiene una asignación idéntica en este proyecto.");
+        expect(response.body.mensaje).toBe("El consultor ya tiene una asignación idéntica en este proyecto");
     });
 
     //* ---------------------------- TESTS OBTENER POR ID (GET /:id) ----------------------------//
