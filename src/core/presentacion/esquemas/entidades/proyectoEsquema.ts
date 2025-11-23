@@ -1,7 +1,6 @@
 import {z} from "zod";
 
-export const EstadoProyectoEsquema = z.enum (['activo', 'finalizado', 'pendiente'], { error: "El estado del proyecto debe ser: activo, finalizado o pendiente"
-});
+const EstadoProyectoEsquema = ['activo', 'finalizado', 'pendiente'] as const;
 
 export const CrearProyectoEsquema = z.object({
     nombreProyecto: z
@@ -9,6 +8,7 @@ export const CrearProyectoEsquema = z.object({
     .nonempty("El nombre del proyecto es obligatorio")
     .min(5)
     .max(50),
+    
 
     tipoProyecto: z
     .string()
@@ -20,6 +20,7 @@ export const CrearProyectoEsquema = z.object({
     fechaInicioProyecto: z.coerce.date ({
         error: 
         "Debe proporcionar una fecha de inicio válida"}),
+        
     
 
     fechaFinProyecto: z.coerce.date ({
@@ -27,7 +28,10 @@ export const CrearProyectoEsquema = z.object({
         "Debe proporcionar una fecha de fin válida"})
         .optional(),
 
-    estadoProyecto: EstadoProyectoEsquema
+    estadoProyecto: z 
+    .enum(EstadoProyectoEsquema, "Estado no válido. Debe ser 'pendiente', 'activo' o 'finalizado'")
+    .optional()
+    .default("pendiente"),
     
 })
 .refine(
@@ -56,3 +60,8 @@ export const CrearProyectoEsquema = z.object({
 );
 
 export type ProyectoDTO = z.infer<typeof CrearProyectoEsquema>;
+
+
+export const ActualizarProyectoEsquema = CrearProyectoEsquema.partial();
+
+export type ActualizarProyectoDTO = z.infer<typeof ActualizarProyectoEsquema> 
