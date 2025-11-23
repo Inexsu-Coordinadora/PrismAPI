@@ -4,7 +4,6 @@ import { ICliente } from '../../../../dominio/entidades/ICliente';
 import { ejecutarConsulta } from '../../ClientePostgres';
 import { CrearClienteDto, ActualizarClienteDto } from '../../../../dominio/entidades/Cliente';
 import { IClienteRepositorio } from '../../../../dominio/repositorio/entidades/IClienteRepositorio';
-import { any } from 'zod';
 
 export class ClienteRepository implements IClienteRepositorio {
 
@@ -47,8 +46,8 @@ export class ClienteRepository implements IClienteRepositorio {
   async obtenerClientes(): Promise<Cliente[]> {
     const query = 'SELECT * FROM clientes ORDER BY nombre_cliente ASC';
     const resultado = await ejecutarConsulta(query);
-
-    return resultado.rows.filter((fila: any): fila is any => fila !== undefined).map((fila: any) => this.mapearCliente(fila));
+    
+    return resultado.rows.map(fila => this.mapearCliente(fila));
   }
  
   async obtenerClientePorId(idCliente: string): Promise<Cliente | null> {

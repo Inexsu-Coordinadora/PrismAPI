@@ -3,8 +3,8 @@ export interface ICliente {
   idCliente: string;
   nombreCliente: string;
   apellidoCliente: string;
-  documentoCliente: string;
+  documentoCliente: number;
   emailCliente: string;
   telefonoCliente: string;
-
+  
   }
