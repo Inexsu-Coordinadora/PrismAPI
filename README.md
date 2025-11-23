@@ -22,9 +22,9 @@ Este proyecto se divide en tres documentos principales para facilitar su revisi�
 
 * **1. README.md (Este archivo):** Contiene las instrucciones de instalación, configuración y ejecución del proyecto.
 * **2. Documentación de API:** Contiene el manual de referencia completo de la API, con todos los endpoints, validaciones y ejemplos de la E2.
-    * ➡️ **[Ver Documentación de API (E2)](./documentacion/API_Endpoints_E2.md)**
+    * ➡️ **[Ver Documentación de API (E2)](./Documentacion/API_Endpoints_E2.md)**
 * **3. Informe de Implementación:** Explica las decisiones de arquitectura, el flujo de trabajo (Git) y los retos técnicos de la implementación.
-    * ➡️ **[Ver Informe de Implementación](./documentacion/Informe_Implementacion.md)**
+    * ➡️ **[Ver Informe de Implementación](./Documentacion/Informe_Implementacion.md)**
 ---
 
 ## 💻 Tecnologías
@@ -194,7 +194,7 @@ Puedes ejecutar los siguientes comandos en tu terminal:
 El objetivo de esta entrega es asegurar la calidad del código mediante métricas objetivas.
 
 **Cobertura Global Alcanzada:**
-![Informe de cobertura de los tests](./documentacion/images/informe_cobertura_tests.png)
+![Informe de cobertura de los tests](./Documentacion/images/informe_cobertura_tests.png)
 
 > Actualmente se cuenta con una cobertura de sentencias superior al **60%**, cubriendo los caminos críticos de éxito y error.
 
@@ -202,7 +202,7 @@ Para ver el reporte detallado HTML:
 1. Ejecuta `npm run test:coverage`.
 2. Busca en tu carpeta del proyecto: `coverage/lcov-report/index.html`
 3. Haz clic derecho en el archivo y selecciona "Open with Live Server" (si usas VSCode) o arrástralo a tu navegador favorito. 
-![reporte detallado HTML ](./documentacion/images/informe_cobertura_tests_HTML.png)
+![reporte detallado HTML ](./Documentacion/images/informe_cobertura_tests_HTML.png)
 
 ### 🎥 Demostración: Ejecución de Pruebas y Cobertura (Entrega 3)
 
