@@ -37,8 +37,10 @@ export const actualizarClienteEsquema = z.object({
   
   
   emailCliente: z.string()
-    .email('Debe ser un email válido')
     .max(100, 'El email no puede tener más de 100 caracteres')
+    .refine((val) => !val || /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val), {
+      message: 'Debe ser un email válido'
+    })
     .optional(),
   
   telefonoCliente: z.string()
