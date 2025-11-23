@@ -195,41 +195,57 @@ El Servicio 1 proporciona métodos que son utilizados por otros servicios:
 
 ### Servicio 2: Consulta de Proyectos por Cliente
 
-Este servicio permite consultar la información de proyectos, pero filtrada desde la perspectiva de un cliente específico.
+Este servicio permite consultar todos los proyectos asociados a un cliente específico, junto con la información de los consultores asignados a cada proyecto. Incluye capacidades de filtrado por estado del proyecto y rango de fechas. 
 
 🎥 **Demostración en Video (S2):**
 
-[Haz clic aquí para ver la demostración en YouTube](URL_PLACEHOLDER_S2)
+[Haz clic aquí para ver la demostración en YouTube](https://youtu.be/1cYOM5yOd1M)
 
 Este video muestra la operación de todos los endpoints de este servicio, incluyendo filtros opcionales, casos de éxito y validaciones de error (cliente inexistente).
 
-#### GET /api/clientes/:idCliente/proyectos
+## Endpoint
 
-Obtiene la lista de proyectos de un cliente, con filtros opcionales (estado, fechas) y un resumen del equipo.
+`GET /api/clientes/:idCliente/proyectos`
 
-**Parámetros (URL):**
+Obtiene la lista de todos los proyectos de un cliente específico, incluyendo la información de los consultores asignados a cada proyecto. Permite filtrado opcional por estado y rango de fechas.
 
-- idCliente (UUID): El ID del cliente.
+### Parámetros
 
-**Query Params (Opcionales):**
+**Parámetros de URL:**
+* `idCliente` (UUID): El ID del cliente del cual se quieren consultar los proyectos.
 
-- ?estado=en_progreso
-- ?fechaInicio=2025-01-01
+**Query Parameters (Opcionales):**
+* `estadoProyecto` (string): Filtra proyectos por estado.
+    * Valores permitidos: `"activo"`, `"finalizado"`, `"pendiente"`
+* `fechaInicioProyecto` (ISO date): Filtra proyectos que iniciaron a partir de esta fecha.
+    * Formato: `YYYY-MM-DD` o ISO 8601 completo
+* `fechaFinProyecto` (ISO date): Filtra proyectos que finalizan hasta esta fecha.
+    * Formato: `YYYY-MM-DD` o ISO 8601 completo
 
-**Validaciones (Lógica de Negocio):**
+### Validaciones (Lógica de Negocio)
+* **(S2)** Valida que el `idCliente` de la URL exista en la base de datos.
+* **(S2)** Valida que si se proporcionan `fechaInicioProyecto` y `fechaFinProyecto`, la fecha de inicio no sea mayor que la fecha de fin.
+* **(S2)** Valida que el `estadoProyecto` (si se envía) sea uno de los valores permitidos: `"activo"`, `"finalizado"`, `"pendiente"`.
+* **(S2)** Valida que las fechas (si se envían) tengan formato ISO válido.
 
-- ✅ (S2) Valida que el idCliente exista. Si no, retorna error.
-- ✅ (S2) Retorna una lista vacía [] si el cliente existe pero no tiene proyectos (respuesta válida).
+## Integración con Otros Servicios
+
+Este servicio se integra con:
+* **E1 (Clientes):** Valida que el cliente exista antes de consultar sus proyectos.
+* **E2 (Proyectos):** Obtiene información completa de los proyectos.
+* **E3 (Consultores):** Incluye información de consultores asignados.
+* **S1 (Asignación de Consultores):** Utiliza las asignaciones para mostrar el equipo de cada proyecto.
 
 ---
 
 ### Servicio 3: Registro y Control de Horas (Timesheet)
 
-Este servicio permite a los consultores registrar horas (partes) en los proyectos, validando que el registro sea coherente con su asignación (S1).
+Este aporta el soporte operativo necesario en la E2, ya que permite registrar, consultar y administrar las horas trabajadas por los consultores en cada proyecto. Se apoya en las asignaciones definidas en el Servicio 1 para garantizar que solo se registren horas válidas, en proyectos y rangos de fechas coherentes.
+Este servicio no solo guarda registros, sino que también sirve como base para reportes, control de carga, seguimiento del esfuerzo y validaciones usadas en otros servicios (por ejemplo, para indicadores o reportes consolidados).
 
 🎥 **Demostración en Video (S3):**
 
-[Haz clic aquí para ver la demostración en YouTube](URL_PLACEHOLDER_S3)
+[Haz clic aquí para ver la demostración en YouTube](https://youtu.be/8urIrosKqGA)
 
 Este video muestra la operación de todos los endpoints de este servicio, incluyendo casos de éxito y todas las validaciones de error (consultor no asignado, fecha fuera de rango, horas inválidas).
 
@@ -254,6 +270,41 @@ Registra un nuevo parte de horas de un consultor a un proyecto en una fecha espe
 - ✅ (S3) Valida que idProyecto e idConsultor existan.
 - ✅ (S1+S3) **Validación Clave:** Valida que el consultor esté asignado al proyecto (ver S1) y que la fecha del parte esté dentro del rango de su asignación.
 - ✅ (S3) Valida que la cantidadHoras sea > 0 y ≤ 24 (o un límite diario razonable).
+- ✅ (S3) Existencia de Recursos
+- Valida que el consultor exista.
+- Valida que el proyecto exista.
+- ✅ (S3) Relación con Asignaciones (S1)
+- 	Verifica que el consultor esté asignado al proyecto (usando las asignaciones del Servicio 1).
+- Si no hay asignación vigente para ese consultor–proyecto, se rechaza el registro.
+- ✅ (S3) Fechas
+- fechaRegistro debe ser una fecha válida.
+La fecha debe estar:
+- Dentro del rango de la asignación del consultor al proyecto.
+- Y, cuando aplique, dentro del rango de fechas del proyecto.
+- ✅ (S3) Horas Trabajadas
+- horasTrabajadas debe ser > 0.
+- Límite razonable por día ( < 24 horas ).
+Respuestas:
+- 201 Created / 200 OK: Registro de horas creado correctamente.
+- 400 Bad Request: Error de validación de negocio (fechas, horas, ausencia de asignación, etc.).
+- 404 Not Found: Consultor o proyecto inexistente.
+
+> **⚠️ Decisión de Diseño (Inmutabilidad):** > El equipo determinó como regla de negocio que un registro de horas, una vez generado, constituye un documento histórico inalterable. Por esta razón, **este servicio no implementa métodos de actualización (UPDATE)** en ninguna de sus capas (Controlador, Servicio, Repositorio), garantizando la integridad de la información reportada.
+
+
+
+### Métodos de Integración
+Métodos de Integración
+El Servicio de Registro de Horas expone métodos que pueden ser consumidos por otros servicios, por ejemplo:
+listarRegistrosHoras(idConsultor?, idProyecto?, fechaInicio?, fechaFin?)
+Usado para reportes y paneles de gestión.
+-	`obtenerRegistroHorasPorId(idRegistroHoras)`: Usado para detalle de un registro, auditoría o edición.
+- `calcularTotalHorasPorConsultor(idConsultor, rangoFechas)`: Usado por servicios de planificación de recursos o reportes consolidados.
+-	`calcularTotalHorasPorProyecto(idProyecto, rangoFechas)` : Usado para control de esfuerzo por proyecto.
+
+Además, este servicio reusa lógica o datos del Servicio 1 (Asignaciones) para:
+-	Verificar que exista una asignación activa entre consultor y proyecto.
+- Validar que las fechas de registro estén dentro de los rangos de asignación.
 
 ---
 
