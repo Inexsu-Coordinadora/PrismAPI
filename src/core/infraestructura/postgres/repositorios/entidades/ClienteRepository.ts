@@ -126,7 +126,7 @@ export class ClienteRepository implements IClienteRepositorio {
     return parseInt(resultado.rows[0].count) > 0;
   }
 
-  async existeDocumentoCliente(documentoCliente: string, idExcluir?: string): Promise<boolean> {
+  async existeDocumentoCliente(documentoCliente: number, idExcluir?: string): Promise<boolean> {
     let query = 'SELECT COUNT(*) FROM clientes WHERE documento_cliente = $1';
     const parametros: (string | number | null)[] = [documentoCliente];
     

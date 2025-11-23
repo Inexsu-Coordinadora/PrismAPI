@@ -18,7 +18,7 @@ export const crearClienteEsquema = z.object({
     .min(7, 'El teléfono debe tener al menos 7 caracteres')
     .max(50, 'El teléfono no puede tener más de 50 caracteres'),
   
-  documentoCliente: z.string()
+  documentoCliente: z.number()
     .min(5, 'El documento debe tener al menos 5 caracteres')
     .max(50, 'El documento no puede tener más de 50 caracteres')
 });
@@ -46,7 +46,7 @@ export const actualizarClienteEsquema = z.object({
     .max(50, 'El teléfono no puede tener más de 50 caracteres')
     .optional(),
   
-  documentoCliente: z.string()
+  documentoCliente: z.number()
     .min(5, 'El documento debe tener al menos 5 caracteres')
     .max(50, 'El documento no puede tener más de 50 caracteres')
     .optional()

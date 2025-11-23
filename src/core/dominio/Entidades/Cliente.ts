@@ -25,7 +25,7 @@ export interface CrearClienteDto {
   apellidoCliente: string;
   emailCliente: string | null;
   telefonoCliente: string;
-  documentoCliente: string;
+  documentoCliente: number | null;
 }
 
 export interface ActualizarClienteDto {
@@ -33,5 +33,6 @@ export interface ActualizarClienteDto {
   apellidoCliente?: string | undefined;
   emailCliente?: string | undefined;
   telefonoCliente?: string | undefined;
-  documentoCliente?: string | undefined;
+  documentoCliente?: number | undefined;
+
 }

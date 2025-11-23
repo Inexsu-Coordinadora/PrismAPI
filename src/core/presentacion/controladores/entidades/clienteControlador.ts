@@ -81,20 +81,14 @@ export class ClienteControlador {
   };
 
 
-  eliminarCliente = async (
+ eliminarCliente = async (
     request: FastifyRequest<{ Params: { idCliente: string } }>,
     reply: FastifyReply
   ) => {
     const { idCliente } = request.params;
     
-    const fueEliminado = await this.clientesCasosUso.eliminarCliente(idCliente);
-    
-    
-    const cliente = await this.clientesCasosUso.obtenerClientePorId(idCliente);
-    if (!cliente) {
-        throw new NotFoundError("Cliente no encontrado para eliminar");
-    }
-    await this.clientesCasosUso.eliminarCliente(idCliente);
+  
+    await this.clientesCasosUso.eliminarCliente(idCliente); 
 
     return reply.code(HttpStatus.EXITO).send({ 
       mensaje: "Cliente eliminado correctamente",
