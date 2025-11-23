@@ -6,6 +6,7 @@
  * - NO tocar base de datos, ni HTTP, ni Fastify.
  * - Mockear el repositorio(IConsultorRepositorio) para controlar las respuestas.
  */
+import { describe, test, beforeEach, expect, jest } from "@jest/globals";
 import { ConsultorCasosUso } from "../../../../src/core/aplicacion/casos-uso/entidades/ConsultorCasosUso";
 import { IConsultorRepositorio } from "../../../../src/core/dominio/repositorio/entidades/IConsultorRepositorio";
 import { IConsultor, DisponibilidadConsultor } from "../../../../src/core/dominio/entidades/IConsultor";
@@ -167,7 +168,7 @@ describe("Pruebas Unitarias ConsultorCasosUso", () => {
 
 /**------------------------------------ CASO 6 ------------------------------------ */
     test("actualizarConsultor - delega en el repositorio con los campos parciales", async () => {
-        const idConsultor = "c1",
+        const idConsultor = "c1";
         const datosActualizacion = {
             nombreConsultor: "Nombre actualizado",
             emailConsultor: "nuevo@mail.com",  
