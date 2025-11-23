@@ -15,16 +15,14 @@ export const CrearAsignacionConsultorProyectoEsquema = z.object({
     .min(2, "El rol del consultor debe tener al menos dos caracteres")
     .max(30, " El rol del consultor debe tener máximo treinta caracteres")
     .nullable()
-    .optional(),
-    // .transform((val)=> val ?? null),//* .transform() asegura que si es 'undefined' o 'null', se guarde como 'null',   
+    .optional(),    
 
     porcentajeDedicacion: z
     .number()
     .min(0, "El porcentaje no puede ser negativo")
     .max(100, "El porcentaje no puede ser mayor a 100")
     .nullable()
-    .optional(),
-    // .transform((val)=> val ?? null),
+    .optional(),    
 
     fechaInicioAsignacion: z.coerce.date ({
         error: 
@@ -35,9 +33,8 @@ export const CrearAsignacionConsultorProyectoEsquema = z.object({
         error: 
         "Debe proporcionar una fecha de fin válida"})
         .optional()
-        .nullable(),
+        .nullable(),      
         
-        // .transform((val) => val ?? null)
 
 })
 .refine(
