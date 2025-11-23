@@ -1,5 +1,4 @@
 import { Pool } from "pg";
-//import { configuration } from "../../../common/configuracion";
 import { getConfig } from "../../../common/configuracion";
 
 let pool: Pool;
@@ -29,9 +28,7 @@ export async function ejecutarConsulta(
   parametros?: Array<number | string | null>
 ) {
   const poolConexion = getPool();
-  
-  // (Este log ya no es necesario o puedes modificarlo)
-  // console.log('cons', getConfig()) 
+
 
   return await poolConexion.query(consulta, parametros);
 }
