@@ -87,13 +87,9 @@ export class ClienteControlador {
   ) => {
     const { idCliente } = request.params;
     
-    // Solo se llama al método de eliminación. 
-    // Si la eliminación es exitosa, el código continúa.
-    // Si el cliente no existe, el Caso de Uso lanza NotFoundError (404),
-    // y el manejador global lo captura, pero la intención era eliminarlo.
+  
     await this.clientesCasosUso.eliminarCliente(idCliente); 
 
-    // Solo se ejecuta si la eliminación fue exitosa y no se lanzó una excepción
     return reply.code(HttpStatus.EXITO).send({ 
       mensaje: "Cliente eliminado correctamente",
       idClienteEliminado: idCliente,

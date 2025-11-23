@@ -14,5 +14,5 @@ export interface IClienteRepositorio {
   
   existeEmailCliente(emailCliente: string, idClienteExcluir?: string): Promise<boolean>;
   
-  existeDocumentoCliente(documentoCliente: string, idClienteExcluir?: string): Promise<boolean>;
+  existeDocumentoCliente(documentoCliente: number, idClienteExcluir?: string): Promise<boolean>;
 }

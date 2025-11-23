@@ -1,254 +1,325 @@
-import { ClienteCasosUso } from "../../../../src/core/aplicacion/casos-uso/entidades/ClienteCasosUso"; 
-// Asume que necesitas este DTO para el test de creación
-//import { ClienteDTO } from "../../../../src/core/presentacion/esquemas/entidades/clienteEsquema"; 
-import { CrearClienteDto } from "../../../../src/core/dominio/entidades/Cliente";
-
-// UUID de prueba para la claridad
-const ID_CLIENTE_VALIDO = "a1b2c3d4-e5f6-7890-1234-567890abcdef";
+import { ClienteCasosUso } from "../../../../src/core/aplicacion/casos-uso/entidades/ClienteCasosUso";
+import { CrearClienteDto, ActualizarClienteDto } from "../../../../src/core/dominio/entidades/Cliente";
+import { NotFoundError, ConflictError } from "../../../../src/common/errores/AppError";
+import { ICliente } from "../../../../src/core/dominio/entidades/ICliente";
 
 describe("Pruebas Unitarias - ClienteCasosUso (Entidad)", () => {
-    let mockRepo: any;
-    let servicio: ClienteCasosUso; // Asume que la clase se llama ClienteCasosUso
+  let mockRepo: any;
+  let servicio: ClienteCasosUso;
 
-    beforeEach(() => {  
-        // 1. Configuración del Mock del Repositorio de Clientes
-        mockRepo = {
-            crearCliente: jest.fn(),
-            listarClientes: jest.fn(),
-            obtenerClientePorId: jest.fn(),
-            actualizarCliente: jest.fn(),
-            eliminarCliente: jest.fn(),
-        };
+  beforeEach(() => {
 
-        // 2. Instanciación del Caso de Uso con el mock inyectado
-        // @ts-ignore: Permite inyectar el mock sin preocuparse por la interfaz completa
-        servicio = new ClienteCasosUso(mockRepo); 
-    });
+    mockRepo = {
+      crearCliente: jest.fn(),
+      obtenerClientes: jest.fn(),
+      obtenerClientePorId: jest.fn(),
+      actualizarCliente: jest.fn(),
+      eliminarCliente: jest.fn(),
+      existeEmailCliente: jest.fn(),
+      existeDocumentoCliente: jest.fn(),
+    };
 
-    //* ------------------ TEST 1: CREAR CLIENTE ------------------//
-    test("crearCliente - Debe llamar al repositorio y devolver el ID del nuevo cliente", async () => {
-        //* A. PREPARAR DATOS (ARRANGE)
-        const datosCliente: CrearClienteDto = {
-            nombreCliente: "CAMILO",
-            apellidoCliente: "CALLE",
-            emailCliente: "test@cliente.com",
-            telefonoCliente: "555-1234",
-            documentoCliente: "1234567889"
-        };
-        mockRepo.crearCliente.mockResolvedValue(ID_CLIENTE_VALIDO);
-
-        //* B. EJECUTAR (ACT)
-        const resultado = await servicio.crearCliente(datosCliente);
-
-        //* C. VALIDAR (ASSERT)
-        expect(mockRepo.crearCliente).toHaveBeenCalledWith(datosCliente);
-        expect(resultado).toBe(ID_CLIENTE_VALIDO);  
-    });
-
-    //* ------------------ TEST 2: LISTAR CLIENTES ------------------//
-    test("listarClientes - Debe llamar al repositorio y devolver una lista de clientes", async () => {
-        //* A. PREPARAR DATOS (ARRANGE) 
-        const listaSimulada = [
-            { idCliente: "c1", nombre: "C1" }, 
-            { idCliente: "c2", nombre: "C2" }
-        ];
-        // El listarTareas de tu ejemplo recibe un límite (10), asumimos que listarClientes hace lo mismo
-        const limite = 10;
-        mockRepo.listarClientes.mockResolvedValue(listaSimulada); 
-         
-        //* B. EJECUTAR (ACT)
-        const resultado = await servicio.obtenerClientes()//limite;
-        
-        //* C. VALIDAR (ASSERT)     
-        expect(mockRepo.listarClientes).toHaveBeenCalledWith(limite);
-        expect(resultado).toEqual(listaSimulada);
-    });
+    servicio = new ClienteCasosUso(mockRepo);
+  });
 
 
-    //* ------------------ TEST 3: OBTENER CLIENTE POR ID (Encontrado)------------------//
-    test("obtenerClientePorId - Debe llamar al repositorio y devolver un cliente", async () => {
-        //* A. PREPARAR DATOS (ARRANGE) 
-        const clienteSimulado = { idCliente: ID_CLIENTE_VALIDO, nombre: "Cliente Encontrado" };
-        mockRepo.obtenerClientePorId.mockResolvedValue(clienteSimulado);
-        
-        //* B. EJECUTAR (ACT)  
-        const resultado = await servicio.obtenerClientePorId(ID_CLIENTE_VALIDO);
-        
-        //* C. VALIDAR (ASSERT)
-        expect(mockRepo.obtenerClientePorId).toHaveBeenCalledWith(ID_CLIENTE_VALIDO);
-        expect(resultado).toEqual(clienteSimulado);    
-    }); 
+  //*  TEST 1: CREAR CLIENTE - CAMINO FELIZ 
+  test("crearCliente - Debe crear un cliente y devolver los datos del cliente creado", async () => {
 
-    //* ------------------ TEST 4: OBTENER CLIENTE POR ID (No encontrado)------------------//
-    test("obtenerClientePorId - Debe devolver null si el cliente no existe", async () => {
-        //* A. PREPARAR DATOS (ARRANGE) 
-        const ID_FANTASMA = "id-fantasma-404";
-        mockRepo.obtenerClientePorId.mockResolvedValue(null); 
-        
-        //* B. EJECUTAR (ACT)
-        const resultado = await servicio.obtenerClientePorId(ID_FANTASMA);
-        
-        //* C. VALIDAR (ASSERT)
-        expect(mockRepo.obtenerClientePorId).toHaveBeenCalledWith(ID_FANTASMA);
-        expect(resultado).toBeNull();    
-    });
+    const datosCliente: CrearClienteDto = {
+      nombreCliente: "Juan",
+      apellidoCliente: "Pérez",
+      emailCliente: "juan@test.com",
+      telefonoCliente: "3001234567",
+      documentoCliente: 1234567890,
+    };
+
+    const clienteCreado: ICliente = {
+      idCliente: "nuevo-id-123",
+      ...datosCliente,
+     } as ICliente;
+
     
-    //* ------------------ TEST 5: ACTUALIZAR CLIENTE ------------------//
-    test("actualizarCliente - Debe llamar al repositorio y devolver el cliente actualizado", async () => {
-        //* A. PREPARAR DATOS (ARRANGE) 
-        const datosActualizados = { nombreCliente: "Cliente Modificado", emailCliente: "nuevo@correo.com" };
-        const clienteActualizado = { idCliente: ID_CLIENTE_VALIDO, ...datosActualizados };
-        mockRepo.actualizarCliente.mockResolvedValue(clienteActualizado);
+    mockRepo.existeEmailCliente.mockResolvedValue(false);
+    mockRepo.existeDocumentoCliente.mockResolvedValue(false);
+    mockRepo.crearCliente.mockResolvedValue(clienteCreado);
 
-        //* B. EJECUTAR (ACT)
-        const resultado = await servicio.actualizarCliente(ID_CLIENTE_VALIDO, datosActualizados);
 
-        //* C. VALIDAR (ASSERT)
-        expect(mockRepo.actualizarCliente).toHaveBeenCalledWith(ID_CLIENTE_VALIDO, datosActualizados);
-        expect(resultado).toEqual(clienteActualizado);
-    });
+    const resultado = await servicio.crearCliente(datosCliente);
 
-    //* ------------------ TEST 6: ELIMINAR CLIENTE ------------------//
-    test("eliminarCliente - Debe llamar al método eliminar del repositorio", async () => {
-        //* A. PREPARAR DATOS (ARRANGE) 
-        // El método de eliminar en esta capa usualmente retorna void o un booleano
-        mockRepo.eliminarCliente.mockResolvedValue(undefined); 
+    expect(mockRepo.existeEmailCliente).toHaveBeenCalledWith("juan@test.com");
+    expect(mockRepo.existeDocumentoCliente).toHaveBeenCalledWith("1234567890");
+    expect(mockRepo.crearCliente).toHaveBeenCalledWith(datosCliente);
+    expect(resultado).toEqual(clienteCreado);
+  });
 
-        //* B. EJECUTAR (ACT)
-        await servicio.eliminarCliente(ID_CLIENTE_VALIDO);
-        
-        //* C. VALIDAR (ASSERT)
-        expect(mockRepo.eliminarCliente).toHaveBeenCalledWith(ID_CLIENTE_VALIDO);     
-    });
+  //*  TEST 2: CREAR CLIENTE - EMAIL DUPLICADO 
+  test("crearCliente - Debe lanzar ConflictError si el email ya existe", async () => {
+
+    const datosCliente: CrearClienteDto = {
+      nombreCliente: "María",
+      apellidoCliente: "García",
+      emailCliente: "duplicado@test.com",
+      telefonoCliente: "3009876543",
+      documentoCliente: 9876543210,
+    };
+
+   
+    mockRepo.existeEmailCliente.mockResolvedValue(true);
+
+
+    await expect(servicio.crearCliente(datosCliente)).rejects.toThrow(ConflictError);
+    await expect(servicio.crearCliente(datosCliente)).rejects.toThrow(
+      "Ya existe un cliente con ese email"
+    );
+
+    
+    expect(mockRepo.crearCliente).not.toHaveBeenCalled();
+  });
+
+  //*  TEST 3: CREAR CLIENTE - DOCUMENTO DUPLICADO
+  test("crearCliente - Debe lanzar ConflictError si el documento ya existe", async () => {
+    
+    const datosCliente: CrearClienteDto = {
+      nombreCliente: "Carlos",
+      apellidoCliente: "López",
+      emailCliente: "carlos@test.com",
+      telefonoCliente: "3001112222",
+      documentoCliente: 12345678, 
+    };
+
+    mockRepo.existeEmailCliente.mockResolvedValue(false);
+    mockRepo.existeDocumentoCliente.mockResolvedValue(true);
+
+    await expect(servicio.crearCliente(datosCliente)).rejects.toThrow(ConflictError);
+    await expect(servicio.crearCliente(datosCliente)).rejects.toThrow(
+      "Ya existe un cliente con ese documento de identidad"
+    );
+
+  
+    expect(mockRepo.crearCliente).not.toHaveBeenCalled();
+  });
+
+
+  //*  TEST 4: LISTAR CLIENTES 
+  test("obtenerClientes - Debe llamar al repositorio y devolver una lista de clientes", async () => {
+   
+    const listaSimulada: ICliente[] = [
+      {
+        idCliente: "c-1",
+        nombreCliente: "Juan",
+        apellidoCliente: "Pérez",
+        emailCliente: "juan@test.com",
+        telefonoCliente: "3001234567",
+        documentoCliente: 1234567890,
+      },
+      {
+        idCliente: "c-2",
+        nombreCliente: "María",
+        apellidoCliente: "García",
+        emailCliente: "maria@test.com",
+        telefonoCliente: "3009876543",
+        documentoCliente: 9087654321,
+      },
+    ];
+
+    mockRepo.obtenerClientes.mockResolvedValue(listaSimulada);
+
+    const resultado = await servicio.obtenerClientes();
+
+    expect(mockRepo.obtenerClientes).toHaveBeenCalled();
+    expect(resultado).toEqual(listaSimulada);
+    expect(resultado).toHaveLength(2);
+  });
+
+  //*  TEST 5: OBTENER CLIENTE POR ID - CLIENTE ENCONTRADO 
+  test("obtenerClientePorId - Debe llamar al repositorio y devolver el cliente", async () => {
+    
+    const clienteSimulado: ICliente = {
+      idCliente: "c-1",
+      nombreCliente: "Juan",
+      apellidoCliente: "Pérez",
+      emailCliente: "juan@test.com",
+      telefonoCliente: "3001234567",
+      documentoCliente: 1234567890,
+    };
+
+    mockRepo.obtenerClientePorId.mockResolvedValue(clienteSimulado);
+
+    const resultado = await servicio.obtenerClientePorId("c-1");
+
+ 
+    expect(mockRepo.obtenerClientePorId).toHaveBeenCalledWith("c-1");
+    expect(resultado).toEqual(clienteSimulado);
+  });
+
+  //* TEST 6: OBTENER CLIENTE POR ID - CLIENTE NO ENCONTRADO 
+  test("obtenerClientePorId - Debe lanzar NotFoundError si el cliente no existe", async () => {
+    
+    mockRepo.obtenerClientePorId.mockResolvedValue(null);
+
+    await expect(servicio.obtenerClientePorId("id-inexistente")).rejects.toThrow(
+      NotFoundError
+    );
+    await expect(servicio.obtenerClientePorId("id-inexistente")).rejects.toThrow(
+      "Cliente no encontrado"
+    );
+
+    expect(mockRepo.obtenerClientePorId).toHaveBeenCalledWith("id-inexistente");
+  });
+
+  //* TEST 7: ACTUALIZAR CLIENTE - CAMINO FELIZ 
+  test("actualizarCliente - Debe actualizar el cliente y devolver los datos actualizados", async () => {
+
+    const datosActualizar: ActualizarClienteDto = {
+      nombreCliente: "Juan Carlos",
+      telefonoCliente: "3009998888",
+    };
+
+    const clienteExistente: ICliente = {
+      idCliente: "c-1",
+      nombreCliente: "Juan",
+      apellidoCliente: "Pérez",
+      emailCliente: "juan@test.com",
+      telefonoCliente: "3001234567",
+      documentoCliente: 1234567890,
+    };
+
+    const clienteActualizado: ICliente = {
+      ...clienteExistente,
+      nombreCliente: "Juan Carlos",
+      telefonoCliente: "3009998888",
+    };
+
+  
+    mockRepo.obtenerClientePorId.mockResolvedValue(clienteExistente);
+    mockRepo.actualizarCliente.mockResolvedValue(clienteActualizado);
+
+
+    const resultado = await servicio.actualizarCliente("c-1", datosActualizar);
+
+  
+    expect(mockRepo.obtenerClientePorId).toHaveBeenCalledWith("c-1");
+    expect(mockRepo.actualizarCliente).toHaveBeenCalledWith("c-1", datosActualizar);
+    expect(resultado).toEqual(clienteActualizado);
+  });
+
+  //*  TEST 8: ACTUALIZAR CLIENTE - CLIENTE NO ENCONTRADO 
+  test("actualizarCliente - Debe lanzar NotFoundError si el cliente no existe", async () => {
+    
+    const datosActualizar: ActualizarClienteDto = {
+      nombreCliente: "Intento Fallido",
+    };
+
+  
+    mockRepo.obtenerClientePorId.mockResolvedValue(null);
+
+    await expect(
+      servicio.actualizarCliente("id-inexistente", datosActualizar)
+    ).rejects.toThrow(NotFoundError);
+    await expect(
+      servicio.actualizarCliente("id-inexistente", datosActualizar)
+    ).rejects.toThrow("Cliente no encontrado");
+
+   
+    expect(mockRepo.actualizarCliente).not.toHaveBeenCalled();
+  });
+
+  //*  TEST 9: ACTUALIZAR CLIENTE - EMAIL DUPLICADO 
+  test("actualizarCliente - Debe lanzar ConflictError si intenta actualizar a un email existente", async () => {
+
+    const datosActualizar: ActualizarClienteDto = {
+      emailCliente: "email-duplicado@test.com",
+    };
+
+    const clienteExistente: ICliente = {
+      idCliente: "c-1",
+      nombreCliente: "Juan",
+      apellidoCliente: "Pérez",
+      emailCliente: "juan@test.com",
+      telefonoCliente: "3001234567",
+      documentoCliente: 1234567890,
+    };
+
+
+    mockRepo.obtenerClientePorId.mockResolvedValue(clienteExistente);
+
+    mockRepo.existeEmailCliente.mockResolvedValue(true);
+
+  
+    await expect(servicio.actualizarCliente("c-1", datosActualizar)).rejects.toThrow(
+      ConflictError
+    );
+    await expect(servicio.actualizarCliente("c-1", datosActualizar)).rejects.toThrow(
+      "Ya existe otro cliente con ese email"
+    );
+
+    expect(mockRepo.existeEmailCliente).toHaveBeenCalledWith(
+      "email-duplicado@test.com",
+      "c-1"
+    );
+    // Verificamos que NO se llamó a actualizarCliente
+    expect(mockRepo.actualizarCliente).not.toHaveBeenCalled();
+  });
+
+  //* TEST 10: ACTUALIZAR CLIENTE - DOCUMENTO DUPLICADO 
+  test("actualizarCliente - Debe lanzar ConflictError si intenta actualizar a un documento existente", async () => {
+
+    const datosActualizar: ActualizarClienteDto = {
+      documentoCliente: 1234567890,
+    };
+
+    const clienteExistente: ICliente = {
+      idCliente: "c-1",
+      nombreCliente: "Juan",
+      apellidoCliente: "Pérez",
+      emailCliente: "juan@test.com",
+      telefonoCliente: "3001234567",
+      documentoCliente: 1234567890,
+    };
+
+    
+    mockRepo.obtenerClientePorId.mockResolvedValue(clienteExistente);
+    
+    mockRepo.existeDocumentoCliente.mockResolvedValue(true);
+
+    await expect(servicio.actualizarCliente("c-1", datosActualizar)).rejects.toThrow(
+      ConflictError
+    );
+    await expect(servicio.actualizarCliente("c-1", datosActualizar)).rejects.toThrow(
+      "Ya existe otro cliente con ese documento de identidad"
+    );
+
+    expect(mockRepo.existeDocumentoCliente).toHaveBeenCalledWith("1234567890", "c-1");
+    
+    expect(mockRepo.actualizarCliente).not.toHaveBeenCalled();
+  });
+
+  
+  //*  TEST 11: ELIMINAR CLIENTE - CAMINO FELIZ //
+  test("eliminarCliente - Debe llamar al método eliminar del repositorio", async () => {
+    
+    mockRepo.eliminarCliente.mockResolvedValue(true);
+
+
+    await servicio.eliminarCliente("c-1");
+
+  
+    expect(mockRepo.eliminarCliente).toHaveBeenCalledWith("c-1");
+  });
+
+  //* TEST 12: ELIMINAR CLIENTE - CLIENTE NO ENCONTRADO //
+  test("eliminarCliente - Debe lanzar NotFoundError si el cliente no existe", async () => {
+   
+    mockRepo.eliminarCliente.mockResolvedValue(false);
+
+    await expect(servicio.eliminarCliente("id-inexistente")).rejects.toThrow(
+      NotFoundError
+    );
+    await expect(servicio.eliminarCliente("id-inexistente")).rejects.toThrow(
+      "Cliente no encontrado"
+    );
+
+    expect(mockRepo.eliminarCliente).toHaveBeenCalledWith("id-inexistente");
+  });
 });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// import {forEach} from './forEach';
-
-// import { IClienteCasosUso } from '../../../../src/core/aplicacion/interfaces/entidades/IClienteCasosUso';
-// import { ClienteCasosUso } from '../../../../src/core/aplicacion/casos-uso/entidades/ClienteCasosUso';
-// import { mock } from 'node:test';
-// import { IClienteRepositorio } from '../../../../src/core/dominio/repositorio/entidades/IClienteRepositorio';
-
-// const mockCallback = jest.fn(x => 42 + x);
-
-// describe('forEach mock function', () => {
-//   let mockClienteRepositorio: jest.Mocked<IClienteRepositorio>;
-//   let clienteCasosUso: ClienteCasosUso;
-
-//   beforeEach(() => {
-
-//     mockClienteRepositorio = {
-
-//       crearCliente: jest.fn(),
-
-//       obtenerClientes: jest.fn(),
-
-//       obtenerClientePorId: jest.fn(),
-
-//       actualizarCliente: jest.fn(),
-
-//       eliminarCliente: jest.fn(),
-
-//       existeEmailCliente: jest.fn(),
-
-//       existeDocumentoCliente: jest.fn(),
-//     } as jest.Mocked<IClienteRepositorio>;
-
-//     clienteCasosUso = new ClienteCasosUso(mockClienteRepositorio);
-
-//   })
-
-
-//   it("probar crearCliente", async () => {
-
-//     mockClienteRepositorio.existeEmailCliente.mockResolvedValue(false);
-//     mockClienteRepositorio.existeDocumentoCliente.mockResolvedValue(false);
-//     mockClienteRepositorio.crearCliente.mockResolvedValue({
-//       idCliente: "hola",
-//       nombreCliente: "string",
-//       apellidoCliente: "string",
-//       documentoCliente: 122345,
-//       emailCliente: "hola@gmail.com",
-//       telefonoCliente: "stri2ng",
-
-//     });
-//     const cliente = await clienteCasosUso.crearCliente({
-//       nombreCliente: "string",
-//       apellidoCliente: "string",
-//       emailCliente: "hola@gmail.com",
-//       telefonoCliente: "stri2ng",
-//       documentoCliente: "string",
-//     }
-//     )
-
-//     // Verify
-//     expect(mockClienteRepositorio.existeEmailCliente).toHaveBeenCalled()
-//         expect(mockClienteRepositorio.existeDocumentoCliente).toHaveBeenCalled()
-//             expect(mockClienteRepositorio.crearCliente).toHaveBeenCalled()
-
-
-//     expect(cliente.nombreCliente).toEqual("string");
-//   })
-
-//  it("probar crearCliente- caso ya existe email", async () => {
-
-//     mockClienteRepositorio.existeEmailCliente.mockResolvedValue(true);
-//     mockClienteRepositorio.existeDocumentoCliente.mockResolvedValue(false);
-//     mockClienteRepositorio.crearCliente.mockResolvedValue({
-//       idCliente: "sas",
-//       nombreCliente: "Prueba2",
-//       apellidoCliente: "string",
-//       documentoCliente: 122345,
-//       emailCliente: "hola@gmail.com",
-//       telefonoCliente: "stri2ng",
-
-//     });
-//     await expect(clienteCasosUso.crearCliente( {
-//       nombreCliente: "string",
-//       apellidoCliente: "string",
-//       emailCliente: "hola@gmail.com",
-//       telefonoCliente: "stri2ng",
-//       documentoCliente: "string",  }))
-    
-//       .rejects
-//       .toThrow('Ya existe un cliente con ese email');
-//     // const cliente = await clienteCasosUso.crearCliente({
-//     //   nombreCliente: "string",
-//     //   apellidoCliente: "string",
-//     //   emailCliente: "hola@gmail.com",
-//     //   telefonoCliente: "stri2ng",
-//     //   documentoCliente: "string",
-//     // }
-//     // )
-
-//     // Verify
-//     expect(mockClienteRepositorio.existeEmailCliente).toHaveBeenCalled()
-//      expect(mockClienteRepositorio.existeDocumentoCliente).toHaveBeenCalledTimes(0)
-//             expect(mockClienteRepositorio.crearCliente).toHaveBeenCalledTimes(0)
-//   })
-
-
-
-// });
