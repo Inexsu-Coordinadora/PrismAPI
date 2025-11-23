@@ -14,6 +14,7 @@ PrismAPI es una API RESTful que sirve como núcleo para una aplicación de gesti
 * [Ejecución](#ejecución)
 * [Migraciones](#migraciones)
 * [Probando la API con Bruno](#probando-la-api-con-bruno)
+* [Pruebas y Calidad de Código](#-pruebas-y-calidad-de-código)
 
 ---
 ## 📚 Documentación del Proyecto
@@ -37,6 +38,7 @@ Lista de las tecnologías, frameworks y librerías principales que usa el proyec
 * **Validación de Datos:** Zod
 * **Gestión de Entorno:** Dotenv 
 * **Generación de IDs:** UUID
+* **Pruebas y Calidad:** Jest, Supertest
 ---
 
 ## 🛠️ Herramientas de Desarrollo 
@@ -66,8 +68,9 @@ Pasos claros para instalar el proyecto.
 
 1.  Clona el repositorio:
     ```bash
-    git clone [https://github.com/Inexsu-Coordinadora/PrismAPI.git](https://github.com/Inexsu-Coordinadora/PrismAPI.git)
+    git clone git@github.com:Inexsu-Coordinadora/PrismAPI.git
     ```
+
 2.  Navega a la carpeta del proyecto:
     ```bash
     cd PrismAPI
@@ -172,4 +175,43 @@ Para evitar tener que escribir `http://localhost:3001/api` en cada petición:
 4.  Asegúrate de tener una variable `PUERTO` definida en Bruno (o simplemente pon `http://localhost:3001` si lo prefieres).
 5.  Ahora, en tus peticiones, puedes usar `{{baseUrl}}/proyectos` en lugar de la URL completa.
 
+---
 
+## 🧪 Pruebas y Calidad de Código
+Para garantizar la estabilidad y el correcto funcionamiento de la lógica de negocio, el proyecto cuenta con una suite automatizada de pruebas utilizando **Jest** y **Supertest**.
+
+### Ejecución de Pruebas
+Puedes ejecutar los siguientes comandos en tu terminal:
+
+| Comando | Descripción |
+| :--- | :--- |
+| `npm run test` | Ejecuta **todas** las pruebas (Unitarias + Integración). |
+| `npm run test:unit` | Ejecuta solo las pruebas **unitarias** (Lógica aislada de servicios). |
+| `npm run test:integration` | Ejecuta solo las pruebas de **integración** (Endpoints de API). |
+| `npm run test:coverage` | Ejecuta las pruebas y genera el **reporte de cobertura** detallado. |
+
+### 📊 Reporte de Cobertura (Entrega 3)
+El objetivo de esta entrega es asegurar la calidad del código mediante métricas objetivas.
+
+**Cobertura Global Alcanzada:**
+![Informe de cobertura de los tests](./Documentacion/images/informe_cobertura_tests.png)
+
+> Actualmente se cuenta con una cobertura de sentencias superior al **60%**, cubriendo los caminos críticos de éxito y error.
+
+Para ver el reporte detallado HTML:
+1. Ejecuta `npm run test:coverage`.
+2. Busca en tu carpeta del proyecto: `coverage/lcov-report/index.html`
+3. Haz clic derecho en el archivo y selecciona "Open with Live Server" (si usas VSCode) o arrástralo a tu navegador favorito. 
+![reporte detallado HTML ](./Documentacion/images/informe_cobertura_tests_HTML.png)
+
+### 🎥 Demostración: Ejecución de Pruebas y Cobertura (Entrega 3)
+
+En el siguiente video se evidencia el cumplimiento de los objetivos de calidad de la Entrega 3.
+
+**Contenido del video:**
+1. **Estructura de Pruebas:** Breve explicación de la organización de la carpeta `tests/`, diferenciando el alcance de las pruebas unitarias (lógica de negocio con Mocks) y las de integración (endpoints con Supertest).
+2. **Ejecución en vivo:** Se corre el comando `npm run test:coverage`, mostrando la ejecución exitosa de las suites de pruebas unitarias y de integración.
+3. **Manejo de Errores:** Se demuestra cómo el sistema intercepta errores (400, 404, 409) y responde con el formato estandarizado.
+4. **Resultados:** Se visualiza el reporte de cobertura final en la terminal, confirmando que se supera el **50%** requerido en las métricas de sentencias y líneas.
+
+➡️ **[Haz clic aquí para ver el video demostrativo](https://youtu.be/MahzUdmFmbs)**
