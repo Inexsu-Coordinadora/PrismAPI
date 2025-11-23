@@ -22,9 +22,9 @@ Este proyecto se divide en tres documentos principales para facilitar su revisi�
 
 * **1. README.md (Este archivo):** Contiene las instrucciones de instalación, configuración y ejecución del proyecto.
 * **2. Documentación de API:** Contiene el manual de referencia completo de la API, con todos los endpoints, validaciones y ejemplos de la E2.
-    * ➡️ **[Ver Documentación de API (E2)](./Documentacion/API_Endpoints_E2.md)**
+    * ➡️ **[Ver Documentación de API (E2)](./documentacion/API_Endpoints_E2.md)**
 * **3. Informe de Implementación:** Explica las decisiones de arquitectura, el flujo de trabajo (Git) y los retos técnicos de la implementación.
-    * ➡️ **[Ver Informe de Implementación](./Documentacion/Informe_Implementacion.md)**
+    * ➡️ **[Ver Informe de Implementación](./documentacion/Informe_Implementacion.md)**
 ---
 
 ## 💻 Tecnologías
@@ -194,10 +194,24 @@ Puedes ejecutar los siguientes comandos en tu terminal:
 El objetivo de esta entrega es asegurar la calidad del código mediante métricas objetivas.
 
 **Cobertura Global Alcanzada:**
-*(Pegar aqu+i la captura de pantalla de la terminal con la tabla verde/roja o escribir el resumen, por ejemplo:)*
-> Actualmente se cuenta con una cobertura de sentencias superior al **XX%**, cubriendo los caminos críticos de éxito y error.
+![Informe de cobertura de los tests](./documentacion/images/informe_cobertura_tests.png)
+
+> Actualmente se cuenta con una cobertura de sentencias superior al **60%**, cubriendo los caminos críticos de éxito y error.
 
 Para ver el reporte detallado HTML:
 1. Ejecuta `npm run test:coverage`.
 2. Busca en tu carpeta del proyecto: `coverage/lcov-report/index.html`
-3. Haz clic derecho en el archivo y selecciona "Open with Live Server" (si usas VSCode) o arrástralo a tu navegador favorito.
+3. Haz clic derecho en el archivo y selecciona "Open with Live Server" (si usas VSCode) o arrástralo a tu navegador favorito. 
+![reporte detallado HTML ](./documentacion/images/informe_cobertura_tests_HTML.png)
+
+### 🎥 Demostración: Ejecución de Pruebas y Cobertura (Entrega 3)
+
+En el siguiente video se evidencia el cumplimiento de los objetivos de calidad de la Entrega 3.
+
+**Contenido del video:**
+1. **Estructura de Pruebas:** Breve explicación de la organización de la carpeta `tests/`, diferenciando el alcance de las pruebas unitarias (lógica de negocio con Mocks) y las de integración (endpoints con Supertest).
+2. **Ejecución en vivo:** Se corre el comando `npm run test:coverage`, mostrando la ejecución exitosa de las suites de pruebas unitarias y de integración.
+3. **Manejo de Errores:** Se demuestra cómo el sistema intercepta errores (400, 404, 409) y responde con el formato estandarizado.
+4. **Resultados:** Se visualiza el reporte de cobertura final en la terminal, confirmando que se supera el **50%** requerido en las métricas de sentencias y líneas.
+
+➡️ **[Haz clic aquí para ver el video demostrativo](https://youtu.be/MahzUdmFmbs)**
