@@ -13,11 +13,200 @@ import { TareaRepository } from "../../../infraestructura/postgres/repositorios/
         controlador: TareasControlador
     ){
         
-        app.get("/tareas",controlador.listarTareas); //* // Cuando llegue un GET a /tareas, llama a controlador.listarTarea ...
-        app.get("/tareas/:idTarea", controlador.obtenerTareaPorId);
-        app.post("/tareas", controlador.crearTarea);
-        app.put("/tareas/:idTarea",controlador.actualizarTarea);
-        app.delete("/tareas/:idTarea", controlador.eliminarTarea);
+        //* GET /tareas - Listar todas las tareas
+        app.get("/tareas", {
+            schema: {
+                tags: ['Tareas'],
+                summary: "Listar todas las tareas",
+                response: {
+                    200: {
+                        type: 'object',
+                        properties: {
+                            mensaje: { type: 'string' },
+                            tareas: {
+                                type: 'array',
+                                items: { $ref: 'TareaSchema#' }
+                            },
+                            total: { type: 'number' }
+                        }
+                    }
+                }
+            }
+        }, controlador.listarTareas);
+
+        //* GET /tareas/:idTarea - Obtener tarea por ID
+        app.get("/tareas/:idTarea", {
+            schema: {
+                tags: ['Tareas'],
+                summary: "Obtener una tarea por su ID",
+                params: {
+                    type: 'object',
+                    properties: {
+                        idTarea: { 
+                            type: 'string', 
+                            format: 'uuid',
+                            description: 'ID único de la tarea'
+                        }
+                    },
+                    required: ['idTarea']
+                },
+                response: {
+                    200: {
+                        type: 'object',
+                        properties: {
+                            mensaje: { type: 'string' },
+                            tarea: { $ref: 'TareaSchema#' }
+                        }
+                    },
+                    404: {
+                        type: 'object',
+                        properties: {
+                            mensaje: { type: 'string' }
+                        }
+                    }
+                }
+            }
+        }, controlador.obtenerTareaPorId);
+
+        //* POST /tareas - Crear nueva tarea
+        app.post("/tareas", {
+            schema: {
+                tags: ['Tareas'],
+                summary: "Crear una nueva tarea",
+                description: "Crea una nueva tarea en el sistema. El título es obligatorio y debe tener entre 5 y 100 caracteres.",
+                body: {
+                    type: 'object',
+                    required: ['tituloTarea'],
+                    properties: {
+                        tituloTarea: { 
+                            type: 'string',
+                            minLength: 5,
+                            maxLength: 100,
+                            description: 'Título de la tarea (5-100 caracteres)'
+                        },
+                        descripcionTarea: { 
+                            type: 'string',
+                            maxLength: 500,
+                            nullable: true,
+                            description: 'Descripción detallada de la tarea (máx. 500 caracteres)'
+                        },
+                        estadoTarea: { 
+                            type: 'string',
+                            enum: ['pendiente', 'en-progreso', 'bloqueada', 'completada'],
+                            default: 'pendiente',
+                            description: 'Estado inicial de la tarea'
+                        }
+                    }
+                },
+                response: {
+                    201: {
+                        type: 'object',
+                        properties: {
+                            mensaje: { type: 'string' },
+                            idNuevaTarea: { 
+                                type: 'string',
+                                format: 'uuid',
+                                description: 'ID de la tarea recién creada'
+                            }
+                        }
+                    }
+                }
+            }
+        }, controlador.crearTarea);
+
+        //* PUT /tareas/:idTarea - Actualizar tarea
+        app.put("/tareas/:idTarea", {
+            schema: {
+                tags: ['Tareas'],
+                summary: "Actualizar una tarea existente",
+                params: {
+                    type: 'object',
+                    properties: {
+                        idTarea: { 
+                            type: 'string', 
+                            format: 'uuid',
+                            description: 'ID único de la tarea a actualizar'
+                        }
+                    },
+                    required: ['idTarea']
+                },
+                body: {
+                    type: 'object',
+                    properties: {
+                        tituloTarea: { 
+                            type: 'string',
+                            minLength: 5,
+                            maxLength: 100,
+                            description: 'Título de la tarea (5-100 caracteres)'
+                        },
+                        descripcionTarea: { 
+                            type: 'string',
+                            maxLength: 500,
+                            nullable: true,
+                            description: 'Descripción detallada de la tarea (máx. 500 caracteres)'
+                        },
+                        estadoTarea: { 
+                            type: 'string',
+                            enum: ['pendiente', 'en-progreso', 'bloqueada', 'completada'],
+                            description: 'Estado de la tarea'
+                        }
+                    }
+                },
+                response: {
+                    200: {
+                        type: 'object',
+                        properties: {
+                            mensaje: { type: 'string' },
+                            tareaActualizada: { $ref: 'TareaSchema#' }
+                        }
+                    },
+                    404: {
+                        type: 'object',
+                        properties: {
+                            mensaje: { type: 'string' }
+                        }
+                    }
+                }
+            }
+        }, controlador.actualizarTarea);
+
+        //* DELETE /tareas/:idTarea - Eliminar tarea
+        app.delete("/tareas/:idTarea", {
+            schema: {
+                tags: ['Tareas'],
+                summary: "Eliminar una tarea",
+                params: {
+                    type: 'object',
+                    properties: {
+                        idTarea: { 
+                            type: 'string', 
+                            format: 'uuid',
+                            description: 'ID único de la tarea a eliminar'
+                        }
+                    },
+                    required: ['idTarea']
+                },
+                response: {
+                    200: {
+                        type: 'object',
+                        properties: {
+                            mensaje: { type: 'string' },
+                            idTareaEliminada: { 
+                                type: 'string',
+                                format: 'uuid',
+                                description: 'ID de la tarea eliminada'
+                            }
+                        }
+                    },
+                    404: {
+                        type: 'object',
+                        properties: {
+                            mensaje: { type: 'string' }
+                        }
+                    }
+                }
+            }
+        }, controlador.eliminarTarea);
     }
 
     //* ----------------- 2. FUNCIÓN CONSTRUCTORA (Builder) -----------------//
