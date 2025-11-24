@@ -1,4 +1,12 @@
 import { FastifyInstance } from "fastify";
+import { 
+  CrearTareaProyectoBodySchema, 
+  TareaProyectoParamsSchema, 
+  TareaProyectoResponse201Schema,
+  ErrorResponse400NegocioConEjemplos,
+  ErrorResponse404ConEjemplos,
+  ErrorResponse409ConEjemplos
+} from "../../../../docs/schemas/servicios/gestionTareasSchema";
 //* Importamos el "Ensamblador" de cada capa
 
 //* Capa Presentación -> Controlador
@@ -28,75 +36,15 @@ function gestionTareasEnrutador(app: FastifyInstance, controlador: GestionTareas
     app.post("/proyectos/:idProyecto/tareas", {
         schema: {
             tags: ['DEMO PRESENTACIÓN', 'Gestión Tareas'],
-            summary: "Crear una tarea en un proyecto",
+            summary: "2. Crear una tarea en un proyecto",
             description: "Crea una nueva tarea asociada a un proyecto específico. Valida que el proyecto exista y que el consultor asignado esté en el proyecto.",
-            params: {
-                type: 'object',
-                properties: {
-                    idProyecto: {
-                        type: 'string',
-                        format: 'uuid',
-                        description: 'ID del proyecto donde se creará la tarea'
-                    }
-                },
-                required: ['idProyecto']
-            },
-            body: {
-                type: 'object',
-                required: ['tituloTarea'],
-                properties: {
-                    tituloTarea: {
-                        type: 'string',
-                        minLength: 5,
-                        maxLength: 100,
-                        description: 'Título de la tarea (5-100 caracteres)'
-                    },
-                    descripcionTarea: {
-                        type: 'string',
-                        maxLength: 500,
-                        nullable: true,
-                        description: 'Descripción detallada de la tarea (máx. 500 caracteres)'
-                    },
-                    estadoTarea: {
-                        type: 'string',
-                        enum: ['pendiente', 'en-progreso', 'bloqueada', 'completada'],
-                        default: 'pendiente',
-                        description: 'Estado inicial de la tarea'
-                    },
-                    idConsultorAsignado: {
-                        type: 'string',
-                        format: 'uuid',
-                        nullable: true,
-                        description: 'ID del consultor asignado a la tarea (debe estar asignado al proyecto)'
-                    },
-                    fechaLimiteTarea: {
-                        type: 'string',
-                        format: 'date',
-                        nullable: true,
-                        description: 'Fecha límite de la tarea (YYYY-MM-DD)'
-                    }
-                }
-            },
+            params: TareaProyectoParamsSchema,
+            body: CrearTareaProyectoBodySchema,
             response: {
-                201: {
-                    type: 'object',
-                    properties: {
-                        mensaje: { type: 'string' },
-                        idNuevaTarea: { type: 'string', format: 'uuid' }
-                    }
-                },
-                400: {
-                    type: 'object',
-                    properties: {
-                        mensaje: { type: 'string' }
-                    }
-                },
-                404: {
-                    type: 'object',
-                    properties: {
-                        mensaje: { type: 'string' }
-                    }
-                }
+                201: TareaProyectoResponse201Schema,
+                400: ErrorResponse400NegocioConEjemplos,
+                404: ErrorResponse404ConEjemplos,
+                409: ErrorResponse409ConEjemplos
             }
         }
     }, controlador.crearTareaEnProyecto);    

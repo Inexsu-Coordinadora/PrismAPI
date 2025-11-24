@@ -1,5 +1,12 @@
 import { FastifyInstance } from "fastify";
 import { AsignacionConsultorProyectoControlador } from "../../controladores/servicios/AsignacionConsultorProyectoControlador";
+import { 
+  AsignacionBodySchema, 
+  AsignacionResponse201Schema, 
+  ErrorResponse400NegocioConEjemplos,
+  ErrorResponse404ConEjemplos,
+  ErrorResponse409ConEjemplos
+} from "../../../../docs/schemas/servicios/asignacionConsultorProyectoSchema";
 import { IAsignacionConsultorProyectoServicio } from "../../../aplicacion/interfaces/servicios/IAsignacionConsultorProyectoServicio";
 import { AsignacionConsultorProyectoRepository } from "../../../infraestructura/postgres/repositorios/servicios/AsignacionConsultorProyectoRepository";
 import { AsignacionConsultorProyectoServicio } from "../../../aplicacion/casos-uso/servicios/AsignacionConsultorProyectoServicio";
@@ -18,69 +25,14 @@ function asignacionConsultorProyectoEnrutador(
     app.post("/asignaciones", {
         schema: {
             tags: ['DEMO PRESENTACIÓN', 'Asignaciones'],
-            summary: "Asignar un consultor a un proyecto",
+            summary: "1. Asignar un consultor a un proyecto",
             description: "Crea una nueva asignación de consultor a proyecto con validaciones de negocio (dedicación máxima 100%, fechas válidas, etc.)",
-            body: {
-                type: 'object',
-                required: ['idConsultor', 'idProyecto', 'fechaInicioAsignacion'],
-                properties: {
-                    idConsultor: {
-                        type: 'string',
-                        format: 'uuid',
-                        description: 'ID del consultor a asignar'
-                    },
-                    idProyecto: {
-                        type: 'string',
-                        format: 'uuid',
-                        description: 'ID del proyecto al que se asigna el consultor'
-                    },
-                    rolConsultor: {
-                        type: 'string',
-                        minLength: 2,
-                        maxLength: 30,
-                        nullable: true,
-                        description: 'Rol del consultor en el proyecto (opcional)'
-                    },
-                    porcentajeDedicacion: {
-                        type: 'number',
-                        minimum: 0,
-                        maximum: 100,
-                        nullable: true,
-                        description: 'Porcentaje de dedicación del consultor (0-100%, opcional)'
-                    },
-                    fechaInicioAsignacion: {
-                        type: 'string',
-                        format: 'date',
-                        description: 'Fecha de inicio de la asignación (YYYY-MM-DD)'
-                    },
-                    fechaFinAsignacion: {
-                        type: 'string',
-                        format: 'date',
-                        nullable: true,
-                        description: 'Fecha de fin de la asignación (YYYY-MM-DD, opcional)'
-                    }
-                }
-            },
+            body: AsignacionBodySchema,
             response: {
-                201: {
-                    type: 'object',
-                    properties: {
-                        exito: { type: 'boolean' },
-                        mensaje: { type: 'string' },
-                        datos: {
-                            type: 'object',
-                            properties: {
-                                idAsignacion: { type: 'string', format: 'uuid' }
-                            }
-                        }
-                    }
-                },
-                400: {
-                    type: 'object',
-                    properties: {
-                        mensaje: { type: 'string' }
-                    }
-                }
+                201: AsignacionResponse201Schema,
+                400: ErrorResponse400NegocioConEjemplos,
+                404: ErrorResponse404ConEjemplos,
+                409: ErrorResponse409ConEjemplos
             }
         }
     }, controlador.asignarConsultorProyecto);
