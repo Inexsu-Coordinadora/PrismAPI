@@ -31,12 +31,12 @@ allFastifySchemas.forEach(schema => app.addSchema(schema));
 app.register(fastifySwagger, {
   openapi: {
     info: {
-      title: 'PrismAPI Documentation',
-      description: 'Documentación del Backend para Gestión de Proyectos',
+      title: 'Documentación Enpoints 🌈⃤  PrismAPI ',
+      description: 'API RESTful para gestión integral de proyectos. Permite organizar proyectos por capas, gestionar tareas, asignar consultores, registrar horas trabajadas y mantener visibilidad total del estado de los proyectos en tiempo real.',
       version: '1.0.0',
       contact: {
-        name: 'Equipo PrismAPI',
-        email: 'dev@prismapi.com'
+        name: 'Repositorio GitHub PrismAPI',
+        url: 'https://github.com/Inexsu-Coordinadora/PrismAPI'
       }
     },
     servers: [
@@ -51,7 +51,7 @@ app.register(fastifySwagger, {
     tags: [
       {
         name: 'DEMO PRESENTACIÓN',
-        description: 'Endpoints para demostración en vivo de PrismAPI'
+        description: 'Endpoints para demostración en vivo'
       }
     ]
   }
