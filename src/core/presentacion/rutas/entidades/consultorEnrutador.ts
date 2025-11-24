@@ -6,11 +6,35 @@ import { IConsultorCasosUso } from "../../../aplicacion/interfaces/entidades/ICo
 import { ConsultorRepository } from "../../../infraestructura/postgres/repositorios/entidades/ConsultorRepository";
 
 function consultoresEnrutador(app:FastifyInstance, controlador: ConsultorControlador) {
-    app.get("/consultores", controlador.obtenerConsultores);
-    app.get("/consultores/:idConsultor",controlador.obtenerConsultorPorId);
-    app.post("/consultores", controlador.crearConsultor);
-    app.put("/consultores/:idConsultor",controlador.actualizarConsultor);
-    app.delete("/consultores/:idConsultor",controlador.eliminarConsultor);
+    app.get("/consultores", {
+      schema: {
+        tags: ['Consultores']
+      }
+    }, controlador.obtenerConsultores);
+    
+    app.get("/consultores/:idConsultor", {
+      schema: {
+        tags: ['Consultores']
+      }
+    }, controlador.obtenerConsultorPorId);
+    
+    app.post("/consultores", {
+      schema: {
+        tags: ['Consultores']
+      }
+    }, controlador.crearConsultor);
+    
+    app.put("/consultores/:idConsultor", {
+      schema: {
+        tags: ['Consultores']
+      }
+    }, controlador.actualizarConsultor);
+    
+    app.delete("/consultores/:idConsultor", {
+      schema: {
+        tags: ['Consultores']
+      }
+    }, controlador.eliminarConsultor);
 }
 
 export async function construirConsultorEnrutador(app: FastifyInstance) {

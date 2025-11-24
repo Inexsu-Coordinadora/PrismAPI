@@ -10,11 +10,35 @@ function clienteEnrutador(
   app: FastifyInstance,
   controlador: ClienteControlador
 ) {
-  app.get("/clientes", controlador.listarClientes);
-  app.get("/clientes/:idCliente", controlador.obtenerClientePorId);
-  app.post("/clientes", controlador.crearCliente);
-  app.put("/clientes/:idCliente", controlador.actualizarCliente);
-  app.delete("/clientes/:idCliente", controlador.eliminarCliente);
+  app.get("/clientes", {
+    schema: {
+      tags: ['Clientes']
+    }
+  }, controlador.listarClientes);
+  
+  app.get("/clientes/:idCliente", {
+    schema: {
+      tags: ['Clientes']
+    }
+  }, controlador.obtenerClientePorId);
+  
+  app.post("/clientes", {
+    schema: {
+      tags: ['Clientes']
+    }
+  }, controlador.crearCliente);
+  
+  app.put("/clientes/:idCliente", {
+    schema: {
+      tags: ['Clientes']
+    }
+  }, controlador.actualizarCliente);
+  
+  app.delete("/clientes/:idCliente", {
+    schema: {
+      tags: ['Clientes']
+    }
+  }, controlador.eliminarCliente);
 }
 
 

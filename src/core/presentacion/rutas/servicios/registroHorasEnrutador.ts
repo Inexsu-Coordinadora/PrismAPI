@@ -16,9 +16,17 @@ import { RegistroHorasControlador } from "../../controladores/servicios/Registro
 
 function registroHorasRutas(app: FastifyInstance, controlador: RegistroHorasControlador) {
   
-  app.get("/registrar-horas", controlador.listarRegistrosHoras);
+  app.get("/registrar-horas", {
+    schema: {
+      tags: ['Registro Horas']
+    }
+  }, controlador.listarRegistrosHoras);
 
-  app.get("/registrar-horas/:idRegistro", controlador.obtenerRegistroHoraPorId);
+  app.get("/registrar-horas/:idRegistro", {
+    schema: {
+      tags: ['Registro Horas']
+    }
+  }, controlador.obtenerRegistroHoraPorId);
 
   app.post("/registrar-horas", {
     schema: {
@@ -35,7 +43,11 @@ function registroHorasRutas(app: FastifyInstance, controlador: RegistroHorasCont
     }
   }, controlador.crearRegistroHoras);
 
-  app.delete("/registrar-horas/:idRegistro", controlador.eliminarRegistroHoras);
+  app.delete("/registrar-horas/:idRegistro", {
+    schema: {
+      tags: ['Registro Horas']
+    }
+  }, controlador.eliminarRegistroHoras);
 }
 
 export async function construirRegistroHorasEnrutador(app: FastifyInstance) {

@@ -10,12 +10,35 @@ function proyectosEnrutador (
     app: FastifyInstance,
     proyectosController: ProyectosControlador
 ){
-    app.get("/proyectos", 
-        proyectosController.obtenerProyectos);
-    app.get("/proyectos/:idProyecto", proyectosController.obtenerProyectoPorId);
-    app.post("/proyectos",proyectosController.crearProyecto);
-    app.put("/proyectos/:idProyecto", proyectosController.actualizarProyecto);
-    app.delete("/proyectos/:idProyecto", proyectosController.eliminarProyecto);
+    app.get("/proyectos", {
+      schema: {
+        tags: ['Proyectos']
+      }
+    }, proyectosController.obtenerProyectos);
+    
+    app.get("/proyectos/:idProyecto", {
+      schema: {
+        tags: ['Proyectos']
+      }
+    }, proyectosController.obtenerProyectoPorId);
+    
+    app.post("/proyectos", {
+      schema: {
+        tags: ['Proyectos']
+      }
+    }, proyectosController.crearProyecto);
+    
+    app.put("/proyectos/:idProyecto", {
+      schema: {
+        tags: ['Proyectos']
+      }
+    }, proyectosController.actualizarProyecto);
+    
+    app.delete("/proyectos/:idProyecto", {
+      schema: {
+        tags: ['Proyectos']
+      }
+    }, proyectosController.eliminarProyecto);
 }
 
 export async function construirProyectosEnrutador(app: FastifyInstance){

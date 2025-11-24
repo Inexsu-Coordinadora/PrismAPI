@@ -48,10 +48,30 @@ function gestionTareasEnrutador(app: FastifyInstance, controlador: GestionTareas
             }
         }
     }, controlador.crearTareaEnProyecto);    
-    app.get("/proyectos/:idProyecto/tareas", controlador.listarTareasProyecto);
-    app.get("/proyectos/:idProyecto/tareas/:idTarea", controlador.obtenerTareaDeProyectoPorId);    
-    app.put("/proyectos/:idProyecto/tareas/:idTarea", controlador.actualizarTareaEnProyecto);
-    app.delete("/proyectos/:idProyecto/tareas/:idTarea", controlador.eliminarTareaEnProyecto);
+    
+    app.get("/proyectos/:idProyecto/tareas", {
+      schema: {
+        tags: ['Gestión Tareas']
+      }
+    }, controlador.listarTareasProyecto);
+    
+    app.get("/proyectos/:idProyecto/tareas/:idTarea", {
+      schema: {
+        tags: ['Gestión Tareas']
+      }
+    }, controlador.obtenerTareaDeProyectoPorId);    
+    
+    app.put("/proyectos/:idProyecto/tareas/:idTarea", {
+      schema: {
+        tags: ['Gestión Tareas']
+      }
+    }, controlador.actualizarTareaEnProyecto);
+    
+    app.delete("/proyectos/:idProyecto/tareas/:idTarea", {
+      schema: {
+        tags: ['Gestión Tareas']
+      }
+    }, controlador.eliminarTareaEnProyecto);
 }
 
 //* ----------------- 2. FUNCIÓN CONSTRUCTORA (Builder) -----------------//

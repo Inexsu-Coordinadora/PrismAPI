@@ -38,25 +38,53 @@ function asignacionConsultorProyectoEnrutador(
     }, controlador.asignarConsultorProyecto);
 
     // GET - Obtener por ID
-    app.get("/asignaciones/:idAsignacion", controlador.obtenerAsignacionPorId);
+    app.get("/asignaciones/:idAsignacion", {
+      schema: {
+        tags: ['Asignaciones']
+      }
+    }, controlador.obtenerAsignacionPorId);
 
     // GET - Obtener asignaciones por consultor
-    app.get("/asignaciones/consultor/:idConsultor", controlador.obtenerAsignacionPorConsultor);
+    app.get("/asignaciones/consultor/:idConsultor", {
+      schema: {
+        tags: ['Asignaciones']
+      }
+    }, controlador.obtenerAsignacionPorConsultor);
 
     // GET - Obtener asignaciones por proyecto
-    app.get("/asignaciones/proyecto/:idProyecto", controlador.obtenerAsignacionPorProyecto);
+    app.get("/asignaciones/proyecto/:idProyecto", {
+      schema: {
+        tags: ['Asignaciones']
+      }
+    }, controlador.obtenerAsignacionPorProyecto);
 
     // GET - Verificar asignación existente
-    app.get("/asignaciones/verificar/existente", controlador.obtenerAsignacionExistente);
+    app.get("/asignaciones/verificar/existente", {
+      schema: {
+        tags: ['Asignaciones']
+      }
+    }, controlador.obtenerAsignacionExistente);
 
     // GET - Calcular dedicación del consultor
-    app.get("/asignaciones/consultor/:idConsultor/dedicacion", controlador.obtenerDedicacionConsultor);
+    app.get("/asignaciones/consultor/:idConsultor/dedicacion", {
+      schema: {
+        tags: ['Asignaciones']
+      }
+    }, controlador.obtenerDedicacionConsultor);
 
     // PUT - Actualizar asignación
-    app.put("/asignaciones/:idAsignacion", controlador.actualizarAsignacion);
+    app.put("/asignaciones/:idAsignacion", {
+      schema: {
+        tags: ['Asignaciones']
+      }
+    }, controlador.actualizarAsignacion);
 
     // DELETE - Eliminar asignación
-    app.delete("/asignaciones/:idAsignacion", controlador.eliminarAsignacion);
+    app.delete("/asignaciones/:idAsignacion", {
+      schema: {
+        tags: ['Asignaciones']
+      }
+    }, controlador.eliminarAsignacion);
 }
 
 export async function construirAsignacionConsultorProyectoEnrutador(app: FastifyInstance) {
