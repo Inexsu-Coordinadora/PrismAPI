@@ -41,7 +41,7 @@ app.register(fastifySwagger, {
     },
     servers: [
       {
-        url: `http://localhost:3001`, // Ajusta si tu puerto es diferente en prod
+        url: `http://localhost:3001`,
         description: 'Servidor Local'
       }
     ],
@@ -102,7 +102,7 @@ try {
     //* Usa la config fresca
     await app.listen({ port: config.httpPuerto });
     app.log.info(`El servidor esta corriendo en el puerto ${config.httpPuerto}`);
-    app.log.info(`Documentación disponible en http://localhost:${config.httpPuerto}/docs`); // Log útil
+    app.log.info(`Documentación disponible en http://localhost:${config.httpPuerto}/docs`); 
 } catch (err) {
     app.log.error(`Error al ejecutar el servidor\n ${err}`);
 

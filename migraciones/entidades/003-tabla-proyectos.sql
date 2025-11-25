@@ -12,7 +12,7 @@ CREATE TABLE IF NOT EXISTS proyectos (
 /*Agregar nueva columna y clave foránea*/
 
 ALTER TABLE proyectos
-ADD COLUMN id_cliente UUID NULL
+ADD COLUMN id_cliente UUID NULL,
 ADD CONSTRAINT fk_proyecto_cliente
 FOREIGN KEY (id_cliente)
 REFERENCES clientes(id_cliente);
