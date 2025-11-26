@@ -25,7 +25,7 @@ export class AsignacionConsultorProyectoControlador{
         });
 
         }catch (error){
-            return manejarError(reply, error, "Error al asignar consultor al proyecto");        
+            return this.manejarError(reply, error, "Error al asignar consultor al proyecto");        
         }
     } 
 
@@ -48,7 +48,7 @@ export class AsignacionConsultorProyectoControlador{
             });
 
         } catch (error) {
-            return manejarError(reply, error, "Error al obtener asignación");
+            return this.manejarError(reply, error, "Error al obtener asignación");
         }
     }
 
@@ -64,7 +64,7 @@ export class AsignacionConsultorProyectoControlador{
             });
 
         } catch (error) {
-            return manejarError(reply, error, "Error al obtener asignaciones del consultor");
+            return this.manejarError(reply, error, "Error al obtener asignaciones del consultor");
         }
     }
 
@@ -80,7 +80,7 @@ export class AsignacionConsultorProyectoControlador{
             });
 
         } catch (error) {
-            return manejarError(reply, error, "Error al obtener asignaciones del proyecto");
+            return this.manejarError(reply, error, "Error al obtener asignaciones del proyecto");
         }
     }
 
@@ -110,7 +110,7 @@ export class AsignacionConsultorProyectoControlador{
             });
 
         } catch (error) {
-            return manejarError(reply, error, "Error al verificar asignación existente");
+            return this.manejarError(reply, error, "Error al verificar asignación existente");
         }
     }
 
@@ -132,7 +132,7 @@ export class AsignacionConsultorProyectoControlador{
             });
 
         } catch (error) {
-            return manejarError(reply, error, "Error al calcular dedicación del consultor");
+            return this.manejarError(reply, error, "Error al calcular dedicación del consultor");
         }
     }
 
@@ -150,7 +150,7 @@ export class AsignacionConsultorProyectoControlador{
             });
 
         } catch (error) {
-            return manejarError(reply, error, "Error al actualizar asignación");
+            return this.manejarError(reply, error, "Error al actualizar asignación");
         }
     }
 
@@ -167,7 +167,22 @@ export class AsignacionConsultorProyectoControlador{
             });
 
         } catch (error) {
-            return manejarError(reply, error, "Error al eliminar asignación");
+            return this.manejarError(reply, error, "Error al eliminar asignación");
         }
     }
+
+      private manejarError(reply: FastifyReply, err: unknown, mensajeBase: string) {
+    // Si quieres distinguir ZodError u otros tipos, puedes hacerlo aquí
+    if (err instanceof ZodError) {
+      return reply.code(400).send({
+        mensaje: mensajeBase,
+        error: err.issues[0]?.message || "Error de validación",
+      });
+    }
+
+    return reply.code(500).send({
+      mensaje: mensajeBase,
+      error: err instanceof Error ? err.message : String(err),
+    });
+  }
 }

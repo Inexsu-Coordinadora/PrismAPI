@@ -1,0 +1,211 @@
+#root {
+html, body, #root {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+}
+
+/*-----------------------------------------------------------------------------------------------------------------------------------------------*/
+/* Inputs y selects */
+input[type="text"],
+input[type="number"],
+select {
+  border-radius: 6px;
+  border: 1px solid #d1d5db;
+  padding: 0.45rem 0.6rem;
+  font-size: 0.95rem;
+  width: 100%;
+}
+
+/* Botón primario genérico */
+.btn-primary-prism {
+  background-color: #2563eb;
+  border: none;
+  color: #ffffff;
+  padding: 0.45rem 0.9rem;
+  border-radius: 6px;
+  font-size: 0.95rem;
+  cursor: pointer;
+}
+
+.btn-primary-prism:hover {
+  background-color: #1d4ed8;
+}
+
+/* La tabla ya ocupa todo el ancho del contenedor */
+.table-prism {
+  width: 100%;
+}
+
+.table-prism thead {
+  background-color: #111827;
+  color: #f9fafb;
+}
+
+.table-prism th,
+.table-prism td {
+  padding: 0.55rem 0.75rem;
+  font-size: 0.9rem;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.table-prism tbody tr:nth-child(even) {
+  background-color: #f9fafb;
+}
+
+/*-----------------------------------------------------------------------------------------------------------------------------------------------------------------*/
+
+/* Root de la app ocupando todo el ancho */
+#root {
+  width: 100%;
+}
+}
+
+.logo {
+  height: 10em;
+  padding: 1.5em;
+  will-change: filter;
+  transition: filter 300ms;
+}
+.logo:hover {
+  filter: drop-shadow(0 0 2em #646cffaa);
+}
+.logo.react:hover {
+  filter: drop-shadow(0 0 2em #61dafbaa);
+}
+
+@keyframes logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  a:nth-of-type(2) .logo {
+    animation: logo-spin infinite 20s linear;
+  }
+}
+
+.card {
+  padding: 2em;
+}
+
+.read-the-docs {
+  color: #888;
+}
+
+body, html {
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+/* Antes te puse max-width: 1200px; ahora lo quitamos */
+.page-container {
+  width: 100%;       /* ocupa todo el ancho disponible */
+  margin: 0;         /* sin margen lateral auto */
+}
+
+/* Títulos de páginas */
+.page-title {
+  font-size: 1.9rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+}
+
+/* Cards reutilizables (para filtros, formularios, etc.) */
+.page-card {
+  background-color: #ffffff;
+  border-radius: 8px;
+  padding: 1rem 1.25rem;
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.15);
+  margin-bottom: 1.5rem;
+}
+
+.container {
+  margin-top: 0 !important;
+  padding-top: 0 !important;
+}
+
+.app-main {
+  padding: 1.5rem 2rem;  /* puedes bajar a 8 si quieres casi pegado */
+} /** Si lo quieres TOTALMENTE pegado a los bordes, pon padding: 0;. */
+
+/*--------------------------------------------------------------------------------------------------------------------*/
+/* ===== NAVBAR PRINCIPAL ===== */
+
+.navbar-root {
+  width: 100vw;                 /* ocupa TODO el ancho visible */
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: space-between; /* logo a la izq, menú a la der */
+  padding: 0.4rem 2rem;
+  background-color: #111827;
+  color: #f9fafb;
+  box-shadow: 0 2px 4px rgba(15, 23, 42, 0.4);
+  margin: 0;
+}
+
+/* Bloque izquierdo: logo + texto */
+.navbar-left {
+  display: flex;
+  align-items: center;
+}
+
+.navbar-logo {             /*TAMAÑO DEL LOGO*/
+  height: 64px;
+  width: auto;
+  margin-right: 10px;
+  border-radius: 4px;
+}
+
+.navbar-title {    /*TITULO PrismAPI AL LADO DEL LOGO*/
+  font-size: 1.9rem;
+  font-weight: 600;
+}
+
+/* Menú a la derecha */
+.navbar-menu {
+  display: flex;
+  align-items: center;
+  gap: 20px;              /* separación entre opciones del menú */
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.nav-link-custom {
+  font-size: 0.98rem;
+  color: #e5e7eb;
+  text-decoration: none;
+  padding-bottom: 4px;
+  border-bottom: 2px solid transparent;
+  transition: color 0.15s ease, border-color 0.15s ease;
+  cursor: pointer;
+}
+
+.nav-link-custom:hover {
+  color: #ffffff;
+  border-bottom-color: #9ca3af;
+}
+
+/* NavLink activo (React Router le agrega la clase active) */
+.nav-link-custom.active {
+  color: #ffffff;
+  border-bottom-color: #ffffff;
+  font-weight: 600;
+}
+
+/* Con esto:
+La barra se pega al borde izquierdo y llega hasta el derecho.
+El menú queda separado del título/ logo gracias a justify-content: space-between.
+No dependemos de las clases de Bootstrap que antes reducían el ancho. */
+
+button, /*Si tienes botones <button> o elementos con clase .btn */
+.btn,
+.clickable {
+  cursor: pointer;
+}

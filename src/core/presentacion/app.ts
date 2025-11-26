@@ -2,6 +2,7 @@ import Fastify from 'fastify';
 import { FastifyError } from 'fastify';
 import { getConfig } from "../../common/configuracion";
 import { manejarError } from './rutas/utils/manejadorErrores';
+import cors from "@fastify/cors";
 
 //* Aqui importamos los enrutadores de todas las entidades
 import { construirClienteEnrutador } from "./rutas/entidades/clienteEnrutador";
@@ -17,6 +18,10 @@ import { construirRegistroHorasEnrutador } from './rutas/servicios/registroHoras
 
 export const app = Fastify({ logger: true });
 
+// ⛔ Registrar CORS correctamente sin await top-level
+app.register(cors, {
+  origin: "http://localhost:5173",
+});
 app.setErrorHandler(manejarError);
 
 app.register(
