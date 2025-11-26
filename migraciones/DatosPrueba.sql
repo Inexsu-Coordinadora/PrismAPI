@@ -55,23 +55,26 @@ INSERT INTO consultores (id_consultor, nombre_consultor, especialidad_consultor,
 -- ============================================
 -- 3. PROYECTOS (Logística y Transporte)
 -- Prefijo: b000...
+-- CLIENTE VIP (TransLogistica - c000...01): 4 proyectos para pruebas de filtros
 -- ============================================
 
 INSERT INTO proyectos (id_proyecto, nombre_proyecto, tipo_proyecto, fecha_inicio_proyecto, fecha_fin_proyecto, estado_proyecto, id_cliente) VALUES
--- Proyectos FINALIZADOS (fecha fin en el pasado)
+-- CLIENTE VIP: TransLogistica (c000...01) - 4 PROYECTOS
+-- Proyecto A (Pasado): Finalizado, primer semestre 2024
 ('b0000000-0000-4000-a000-000000000001', 'Migración de Sistema de Tracking', 'Migración', '2024-01-15', '2024-06-30', 'finalizado', 'c0000000-0000-4000-a000-000000000001'),
-('b0000000-0000-4000-a000-000000000002', 'App Móvil para Conductores', 'Desarrollo Móvil', '2024-02-01', '2024-08-15', 'finalizado', 'c0000000-0000-4000-a000-000000000002'),
+-- Proyecto B (Presente): Activo - Sistema de Gestión de Inventarios
+('b0000000-0000-4000-a000-000000000008', 'Sistema de Gestión de Inventarios', 'Sistema', '2024-10-24', NULL, 'activo', 'c0000000-0000-4000-a000-000000000001'),
+-- Proyecto C (Presente): Activo - Sistema de Facturación y Cobros
+('b0000000-0000-4000-a000-000000000007', 'Sistema de Facturación y Cobros', 'Sistema', '2024-08-01', '2025-12-31', 'activo', 'c0000000-0000-4000-a000-000000000001'),
+-- Proyecto D (Futuro): Pendiente, fecha inicio en 2025
+('b0000000-0000-4000-a000-000000000009', 'Plataforma de Análisis Predictivo', 'Plataforma', '2025-03-01', NULL, 'pendiente', 'c0000000-0000-4000-a000-000000000001'),
 
--- Proyectos ACTIVOS (en progreso)
+-- Resto de clientes (1 proyecto cada uno, excepto c000...07 que no tiene proyectos)
+('b0000000-0000-4000-a000-000000000002', 'App Móvil para Conductores', 'Desarrollo Móvil', '2024-02-01', '2024-08-15', 'finalizado', 'c0000000-0000-4000-a000-000000000002'),
 ('b0000000-0000-4000-a000-000000000003', 'Dashboard de Envíos en Tiempo Real', 'Dashboard', '2024-09-01', NULL, 'activo', 'c0000000-0000-4000-a000-000000000003'),
 ('b0000000-0000-4000-a000-000000000004', 'Sistema de Optimización de Rutas', 'Optimización', '2024-10-15', NULL, 'activo', 'c0000000-0000-4000-a000-000000000004'),
 ('b0000000-0000-4000-a000-000000000005', 'API de Integración con Transportadoras', 'Integración', '2024-11-01', NULL, 'activo', 'c0000000-0000-4000-a000-000000000005'),
-
--- Proyecto PENDIENTE (planificación) - Edge Case: Sin consultores ni tareas aún
-('b0000000-0000-4000-a000-000000000006', 'Plataforma de Gestión de Flotas', 'Plataforma', '2025-02-01', NULL, 'pendiente', 'c0000000-0000-4000-a000-000000000006'),
-
--- Proyecto CRÍTICO (con muchas tareas bloqueadas/atrasadas) - Edge Case
-('b0000000-0000-4000-a000-000000000007', 'Sistema de Facturación y Cobros', 'Sistema', '2024-08-01', '2025-01-31', 'activo', 'c0000000-0000-4000-a000-000000000007');
+('b0000000-0000-4000-a000-000000000006', 'Plataforma de Gestión de Flotas', 'Plataforma', '2025-02-01', NULL, 'pendiente', 'c0000000-0000-4000-a000-000000000006');
 
 -- ============================================
 -- 4. ASIGNACIONES (Consultores a Proyectos)
@@ -79,25 +82,32 @@ INSERT INTO proyectos (id_proyecto, nombre_proyecto, tipo_proyecto, fecha_inicio
 -- ============================================
 
 INSERT INTO asignaciones_consultores_proyectos (id_asignacion, id_consultor, id_proyecto, rol_consultor, porcentaje_dedicacion, fecha_inicio_asignacion, fecha_fin_asignacion) VALUES
--- Asignaciones en Proyectos FINALIZADOS
+-- CLIENTE VIP - Proyecto A (Finalizado): Migración de Sistema de Tracking
 ('a0000000-0000-4000-a000-000000000001', 'd0000000-0000-4000-a000-000000000001', 'b0000000-0000-4000-a000-000000000001', 'Tech Lead', 100, '2024-01-15', '2024-06-30'),
 ('a0000000-0000-4000-a000-000000000002', 'd0000000-0000-4000-a000-000000000002', 'b0000000-0000-4000-a000-000000000001', 'Developer', 80, '2024-01-15', '2024-06-30'),
+
+-- CLIENTE VIP - Proyecto B (Activo): Sistema de Gestión de Inventarios
+('a0000000-0000-4000-a000-00000000000f', 'd0000000-0000-4000-a000-000000000001', 'b0000000-0000-4000-a000-000000000008', 'Backend Lead', 70, '2024-10-24', NULL),
+('a0000000-0000-4000-a000-000000000010', 'd0000000-0000-4000-a000-000000000004', 'b0000000-0000-4000-a000-000000000008', 'Frontend Lead', 60, '2024-10-24', NULL),
+('a0000000-0000-4000-a000-000000000011', 'd0000000-0000-4000-a000-000000000006', 'b0000000-0000-4000-a000-000000000008', 'QA', 30, '2024-10-24', NULL),
+
+-- CLIENTE VIP - Proyecto C (Activo): Sistema de Facturación y Cobros
+('a0000000-0000-4000-a000-000000000012', 'd0000000-0000-4000-a000-000000000001', 'b0000000-0000-4000-a000-000000000007', 'Tech Lead', 100, '2024-08-01', NULL),
+('a0000000-0000-4000-a000-000000000013', 'd0000000-0000-4000-a000-000000000002', 'b0000000-0000-4000-a000-000000000007', 'Full Stack', 80, '2024-08-01', NULL),
+('a0000000-0000-4000-a000-000000000014', 'd0000000-0000-4000-a000-000000000005', 'b0000000-0000-4000-a000-000000000007', 'Backend', 60, '2024-08-01', NULL),
+('a0000000-0000-4000-a000-000000000015', 'd0000000-0000-4000-a000-000000000006', 'b0000000-0000-4000-a000-000000000007', 'QA', 40, '2024-08-01', NULL),
+
+-- CLIENTE VIP - Proyecto D (Pendiente): Sin asignaciones aún (Edge Case)
+
+-- Resto de proyectos
 ('a0000000-0000-4000-a000-000000000003', 'd0000000-0000-4000-a000-000000000003', 'b0000000-0000-4000-a000-000000000002', 'DevOps', 50, '2024-02-01', '2024-08-15'),
 ('a0000000-0000-4000-a000-000000000004', 'd0000000-0000-4000-a000-000000000004', 'b0000000-0000-4000-a000-000000000002', 'Frontend Lead', 100, '2024-02-01', '2024-08-15'),
-
--- Asignaciones en Proyectos ACTIVOS
 ('a0000000-0000-4000-a000-000000000005', 'd0000000-0000-4000-a000-000000000001', 'b0000000-0000-4000-a000-000000000003', 'Backend Lead', 60, '2024-09-01', NULL),
 ('a0000000-0000-4000-a000-000000000006', 'd0000000-0000-4000-a000-000000000002', 'b0000000-0000-4000-a000-000000000003', 'Full Stack', 100, '2024-09-01', NULL),
 ('a0000000-0000-4000-a000-000000000007', 'd0000000-0000-4000-a000-000000000003', 'b0000000-0000-4000-a000-000000000004', 'DevOps', 40, '2024-10-15', NULL),
 ('a0000000-0000-4000-a000-000000000008', 'd0000000-0000-4000-a000-000000000005', 'b0000000-0000-4000-a000-000000000004', 'Backend', 80, '2024-10-15', NULL),
 ('a0000000-0000-4000-a000-000000000009', 'd0000000-0000-4000-a000-000000000006', 'b0000000-0000-4000-a000-000000000005', 'QA Lead', 50, '2024-11-01', NULL),
-('a0000000-0000-4000-a000-00000000000a', 'd0000000-0000-4000-a000-000000000001', 'b0000000-0000-4000-a000-000000000005', 'Backend', 50, '2024-11-01', NULL),
-
--- Asignaciones en Proyecto CRÍTICO (múltiples consultores)
-('a0000000-0000-4000-a000-00000000000b', 'd0000000-0000-4000-a000-000000000001', 'b0000000-0000-4000-a000-000000000007', 'Tech Lead', 100, '2024-08-01', NULL),
-('a0000000-0000-4000-a000-00000000000c', 'd0000000-0000-4000-a000-000000000002', 'b0000000-0000-4000-a000-000000000007', 'Full Stack', 80, '2024-08-01', NULL),
-('a0000000-0000-4000-a000-00000000000d', 'd0000000-0000-4000-a000-000000000005', 'b0000000-0000-4000-a000-000000000007', 'Backend', 60, '2024-08-01', NULL),
-('a0000000-0000-4000-a000-00000000000e', 'd0000000-0000-4000-a000-000000000006', 'b0000000-0000-4000-a000-000000000007', 'QA', 40, '2024-08-01', NULL);
+('a0000000-0000-4000-a000-00000000000a', 'd0000000-0000-4000-a000-000000000001', 'b0000000-0000-4000-a000-000000000005', 'Backend', 50, '2024-11-01', NULL);
 
 -- ============================================
 -- 5. TAREAS (Asociadas a Proyectos y Consultores)
@@ -105,30 +115,32 @@ INSERT INTO asignaciones_consultores_proyectos (id_asignacion, id_consultor, id_
 -- ============================================
 
 INSERT INTO tareas (id_tarea, titulo_tarea, descripcion_tarea, estado_tarea, fecha_limite_tarea, id_proyecto, id_consultor_asignado) VALUES
--- Tareas en Proyecto FINALIZADO (todas completadas)
+-- CLIENTE VIP - Proyecto A (Finalizado): Migración de Sistema de Tracking
 ('e0000000-0000-4000-a000-000000000001', 'Análisis de Requerimientos', 'Revisar sistema legacy y documentar funcionalidades', 'completada', '2024-02-15', 'b0000000-0000-4000-a000-000000000001', 'd0000000-0000-4000-a000-000000000001'),
 ('e0000000-0000-4000-a000-000000000002', 'Diseño de Arquitectura', 'Diseñar nueva arquitectura del sistema de tracking', 'completada', '2024-03-01', 'b0000000-0000-4000-a000-000000000001', 'd0000000-0000-4000-a000-000000000001'),
 ('e0000000-0000-4000-a000-000000000003', 'Implementación Backend', 'Desarrollar APIs REST para tracking', 'completada', '2024-04-30', 'b0000000-0000-4000-a000-000000000001', 'd0000000-0000-4000-a000-000000000002'),
 
--- Tareas en Proyecto ACTIVO (Dashboard de Envíos)
+-- CLIENTE VIP - Proyecto B (Activo): Sistema de Gestión de Inventarios
+('e0000000-0000-4000-a000-000000000010', 'Diseño de Esquema de Base de Datos', 'Crear modelo de datos para inventarios', 'en-progreso', '2024-11-30', 'b0000000-0000-4000-a000-000000000008', 'd0000000-0000-4000-a000-000000000001'),
+('e0000000-0000-4000-a000-000000000011', 'Desarrollo de API REST', 'Implementar endpoints para gestión de inventarios', 'en-progreso', '2024-12-15', 'b0000000-0000-4000-a000-000000000008', 'd0000000-0000-4000-a000-000000000001'),
+('e0000000-0000-4000-a000-000000000012', 'Interfaz de Usuario', 'Desarrollar componentes React para visualización', 'pendiente', '2024-12-20', 'b0000000-0000-4000-a000-000000000008', 'd0000000-0000-4000-a000-000000000004'),
+('e0000000-0000-4000-a000-000000000013', 'Pruebas de Integración', 'Validar flujo completo de gestión de inventarios', 'pendiente', '2025-01-05', 'b0000000-0000-4000-a000-000000000008', 'd0000000-0000-4000-a000-000000000006'),
+
+-- CLIENTE VIP - Proyecto C (Activo): Sistema de Facturación y Cobros
+('e0000000-0000-4000-a000-000000000014', 'Integración con Pasarela de Pagos', 'BLOQUEADA: Esperando aprobación de seguridad de la pasarela', 'bloqueada', '2025-11-23', 'b0000000-0000-4000-a000-000000000007', 'd0000000-0000-4000-a000-000000000001'),
+('e0000000-0000-4000-a000-000000000015', 'Módulo de Facturación', 'BLOQUEADA: Depende de la integración con pasarela de pagos', 'bloqueada', '2025-12-05', 'b0000000-0000-4000-a000-000000000007', 'd0000000-0000-4000-a000-000000000002'),
+('e0000000-0000-4000-a000-000000000016', 'Generación de Reportes', 'BLOQUEADA: Requiere datos de facturación completos', 'bloqueada', '2025-12-15', 'b0000000-0000-4000-a000-000000000007', 'd0000000-0000-4000-a000-000000000005'),
+('e0000000-0000-4000-a000-000000000017', 'Configuración de Base de Datos', 'ATRASADA: Configurar esquema de facturación', 'completada', '2024-10-15', 'b0000000-0000-4000-a000-000000000007', 'd0000000-0000-4000-a000-000000000001'),
+('e0000000-0000-4000-a000-000000000018', 'API de Consulta de Facturas', 'ATRASADA: Endpoints para consultar facturas', 'completada', '2024-10-25', 'b0000000-0000-4000-a000-000000000007', 'd0000000-0000-4000-a000-000000000002'),
+
+-- CLIENTE VIP - Proyecto D (Pendiente): Sin tareas aún (Edge Case)
+
+-- Resto de proyectos
 ('e0000000-0000-4000-a000-000000000004', 'Configurar WebSockets', 'Implementar conexión en tiempo real para actualizaciones', 'en-progreso', '2024-12-15', 'b0000000-0000-4000-a000-000000000003', 'd0000000-0000-4000-a000-000000000001'),
 ('e0000000-0000-4000-a000-000000000005', 'Desarrollar Componentes de Mapa', 'Crear visualización de rutas en mapa interactivo', 'en-progreso', '2024-12-20', 'b0000000-0000-4000-a000-000000000003', 'd0000000-0000-4000-a000-000000000002'),
 ('e0000000-0000-4000-a000-000000000006', 'Integración con API de Tracking', 'Conectar con servicios externos de tracking', 'pendiente', '2025-01-10', 'b0000000-0000-4000-a000-000000000003', 'd0000000-0000-4000-a000-000000000001'),
-
--- Tareas en Proyecto ACTIVO (Optimización de Rutas)
 ('e0000000-0000-4000-a000-000000000007', 'Algoritmo de Optimización', 'Implementar algoritmo genético para optimización', 'en-progreso', '2024-12-31', 'b0000000-0000-4000-a000-000000000004', 'd0000000-0000-4000-a000-000000000005'),
 ('e0000000-0000-4000-a000-000000000008', 'Pruebas de Carga', 'Realizar pruebas de rendimiento del algoritmo', 'pendiente', '2025-01-15', 'b0000000-0000-4000-a000-000000000004', 'd0000000-0000-4000-a000-000000000006'),
-
--- Tareas BLOQUEADAS en Proyecto CRÍTICO (Edge Case)
-('e0000000-0000-4000-a000-000000000009', 'Integración con Pasarela de Pagos', 'BLOQUEADA: Esperando aprobación de seguridad de la pasarela', 'bloqueada', '2024-12-01', 'b0000000-0000-4000-a000-000000000007', 'd0000000-0000-4000-a000-000000000001'),
-('e0000000-0000-4000-a000-00000000000a', 'Módulo de Facturación', 'BLOQUEADA: Depende de la integración con pasarela de pagos', 'bloqueada', '2024-12-10', 'b0000000-0000-4000-a000-000000000007', 'd0000000-0000-4000-a000-000000000002'),
-('e0000000-0000-4000-a000-00000000000b', 'Generación de Reportes', 'BLOQUEADA: Requiere datos de facturación completos', 'bloqueada', '2024-12-20', 'b0000000-0000-4000-a000-000000000007', 'd0000000-0000-4000-a000-000000000005'),
-
--- Tareas ATRASADAS en Proyecto CRÍTICO (fecha límite en el pasado)
-('e0000000-0000-4000-a000-00000000000c', 'Configuración de Base de Datos', 'ATRASADA: Configurar esquema de facturación', 'en-progreso', '2024-11-15', 'b0000000-0000-4000-a000-000000000007', 'd0000000-0000-4000-a000-000000000001'),
-('e0000000-0000-4000-a000-00000000000d', 'API de Consulta de Facturas', 'ATRASADA: Endpoints para consultar facturas', 'en-progreso', '2024-11-20', 'b0000000-0000-4000-a000-000000000007', 'd0000000-0000-4000-a000-000000000002'),
-
--- Tareas en Proyecto ACTIVO (API de Integración)
 ('e0000000-0000-4000-a000-00000000000e', 'Documentación de API', 'Crear documentación Swagger completa', 'pendiente', '2025-01-05', 'b0000000-0000-4000-a000-000000000005', 'd0000000-0000-4000-a000-000000000001'),
 ('e0000000-0000-4000-a000-00000000000f', 'Pruebas de Integración', 'Validar integración con transportadoras', 'pendiente', '2025-01-10', 'b0000000-0000-4000-a000-000000000005', 'd0000000-0000-4000-a000-000000000006');
 
@@ -137,25 +149,25 @@ INSERT INTO tareas (id_tarea, titulo_tarea, descripcion_tarea, estado_tarea, fec
 -- ============================================
 
 INSERT INTO registrar_horas (id_registro_horas, id_proyecto, id_consultor, fecha_registro, horas_trabajadas, descripcion_actividad) VALUES
--- Registros en Proyecto ACTIVO (Dashboard - fechas dentro del rango)
+-- CLIENTE VIP - Proyecto B (Activo): Sistema de Gestión de Inventarios
+('f0000000-0000-4000-a000-000000000010', 'b0000000-0000-4000-a000-000000000008', 'd0000000-0000-4000-a000-000000000001', '2024-10-25', 8.00, 'Diseño del esquema de base de datos para inventarios'),
+('f0000000-0000-4000-a000-000000000011', 'b0000000-0000-4000-a000-000000000008', 'd0000000-0000-4000-a000-000000000001', '2024-10-28', 7.50, 'Desarrollo de endpoints para gestión de inventarios'),
+('f0000000-0000-4000-a000-000000000012', 'b0000000-0000-4000-a000-000000000008', 'd0000000-0000-4000-a000-000000000004', '2024-11-01', 6.00, 'Implementación de componentes React para interfaz de usuario'),
+('f0000000-0000-4000-a000-000000000013', 'b0000000-0000-4000-a000-000000000008', 'd0000000-0000-4000-a000-000000000006', '2024-11-05', 5.00, 'Pruebas unitarias de módulos de inventario'),
+
+-- Resto de proyectos
 ('f0000000-0000-4000-a000-000000000001', 'b0000000-0000-4000-a000-000000000003', 'd0000000-0000-4000-a000-000000000001', '2024-09-05', 8.00, 'Configuración inicial del proyecto y setup del entorno de desarrollo'),
 ('f0000000-0000-4000-a000-000000000002', 'b0000000-0000-4000-a000-000000000003', 'd0000000-0000-4000-a000-000000000001', '2024-09-10', 6.50, 'Desarrollo de endpoints para consulta de envíos'),
 ('f0000000-0000-4000-a000-000000000003', 'b0000000-0000-4000-a000-000000000003', 'd0000000-0000-4000-a000-000000000002', '2024-09-12', 7.00, 'Implementación de componentes React para visualización'),
 ('f0000000-0000-4000-a000-000000000004', 'b0000000-0000-4000-a000-000000000003', 'd0000000-0000-4000-a000-000000000002', '2024-09-15', 8.00, 'Integración de WebSockets para actualizaciones en tiempo real'),
-
--- Registros en Proyecto ACTIVO (Optimización de Rutas)
 ('f0000000-0000-4000-a000-000000000005', 'b0000000-0000-4000-a000-000000000004', 'd0000000-0000-4000-a000-000000000005', '2024-10-20', 7.50, 'Investigación de algoritmos de optimización de rutas'),
 ('f0000000-0000-4000-a000-000000000006', 'b0000000-0000-4000-a000-000000000004', 'd0000000-0000-4000-a000-000000000005', '2024-10-25', 8.00, 'Implementación de algoritmo genético para optimización'),
 ('f0000000-0000-4000-a000-000000000007', 'b0000000-0000-4000-a000-000000000004', 'd0000000-0000-4000-a000-000000000003', '2024-10-28', 4.00, 'Configuración de CI/CD para despliegue automático'),
-
--- Registros en Proyecto CRÍTICO (Sistema de Facturación)
 ('f0000000-0000-4000-a000-000000000008', 'b0000000-0000-4000-a000-000000000007', 'd0000000-0000-4000-a000-000000000001', '2024-11-05', 8.00, 'Diseño del esquema de base de datos para facturación'),
 ('f0000000-0000-4000-a000-000000000009', 'b0000000-0000-4000-a000-000000000007', 'd0000000-0000-4000-a000-000000000001', '2024-11-10', 6.00, 'Desarrollo de módulo de generación de facturas'),
 ('f0000000-0000-4000-a000-00000000000a', 'b0000000-0000-4000-a000-000000000007', 'd0000000-0000-4000-a000-000000000002', '2024-11-12', 7.50, 'Implementación de API REST para consulta de facturas'),
 ('f0000000-0000-4000-a000-00000000000b', 'b0000000-0000-4000-a000-000000000007', 'd0000000-0000-4000-a000-000000000002', '2024-11-15', 5.50, 'Corrección de bugs en módulo de facturación'),
 ('f0000000-0000-4000-a000-00000000000c', 'b0000000-0000-4000-a000-000000000007', 'd0000000-0000-4000-a000-000000000006', '2024-11-18', 6.00, 'Pruebas unitarias del módulo de facturación'),
-
--- Registros en Proyecto ACTIVO (API de Integración)
 ('f0000000-0000-4000-a000-00000000000d', 'b0000000-0000-4000-a000-000000000005', 'd0000000-0000-4000-a000-000000000001', '2024-11-20', 8.00, 'Desarrollo de endpoints para integración con transportadoras'),
 ('f0000000-0000-4000-a000-00000000000e', 'b0000000-0000-4000-a000-000000000005', 'd0000000-0000-4000-a000-000000000001', '2024-11-22', 7.00, 'Implementación de autenticación OAuth2'),
 ('f0000000-0000-4000-a000-00000000000f', 'b0000000-0000-4000-a000-000000000005', 'd0000000-0000-4000-a000-000000000006', '2024-11-25', 5.00, 'Pruebas de integración con API de prueba de transportadoras');
@@ -164,9 +176,24 @@ INSERT INTO registrar_horas (id_registro_horas, id_proyecto, id_consultor, fecha
 -- RESUMEN DE DATOS INSERTADOS
 -- ============================================
 -- Clientes: 7 (c000...)
+--   - Cliente VIP (TransLogistica - c000...01): 4 proyectos para pruebas de filtros
+--   - Cliente sin proyectos (c000...07 - Fernando Ramírez): Para probar casos de error 404
 -- Consultores: 9 (d000...)
--- Proyectos: 7 (b000...)
--- Asignaciones: 14 (a000...)
--- Tareas: 16 (e000...)
--- Registros de Horas: 15 (f000...)
+-- Proyectos: 9 (b000...)
+--   - Cliente VIP: 4 proyectos (1 finalizado, 2 activos, 1 pendiente)
+--   - Resto de clientes: 1 proyecto cada uno (excepto c000...07 que no tiene)
+-- Asignaciones: 18 (a000...)
+--   - Cliente VIP Proyecto A: 2 asignaciones
+--   - Cliente VIP Proyecto B: 3 asignaciones
+--   - Cliente VIP Proyecto C: 4 asignaciones
+--   - Cliente VIP Proyecto D: 0 asignaciones (pendiente)
+-- Tareas: 20 (e000...)
+--   - Cliente VIP Proyecto A: 3 tareas (completadas)
+--   - Cliente VIP Proyecto B: 4 tareas (varios estados)
+--   - Cliente VIP Proyecto C: 5 tareas (bloqueadas y atrasadas)
+--   - Cliente VIP Proyecto D: 0 tareas (pendiente)
+-- Registros de Horas: 18 (f000...)
+--   - Cliente VIP Proyecto B: 4 registros
+--   - Cliente VIP Proyecto C: 5 registros
+--   - Resto de proyectos: 9 registros
 -- ============================================

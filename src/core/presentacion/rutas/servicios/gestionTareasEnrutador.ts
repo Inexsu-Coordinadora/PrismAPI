@@ -1,8 +1,12 @@
 import { FastifyInstance } from "fastify";
 import { 
   CrearTareaProyectoBodySchema, 
-  TareaProyectoParamsSchema, 
+  TareaProyectoParamsSchema,
+  TareaProyectoParamsConTareaSchema,
+  ActualizarTareaProyectoBodySchema,
   TareaProyectoResponse201Schema,
+  ListarTareasProyectoResponse200Schema,
+  ActualizarTareaProyectoResponse200Schema,
   ErrorResponse400NegocioConEjemplos,
   ErrorResponse404ConEjemplos,
   ErrorResponse409ConEjemplos
@@ -35,8 +39,8 @@ function gestionTareasEnrutador(app: FastifyInstance, controlador: GestionTareas
 
     app.post("/proyectos/:idProyecto/tareas", {
         schema: {
-            tags: ['DEMO PRESENTACIÓN', 'Gestión Tareas'],
-            summary: "2. Crear una tarea en un proyecto",
+            tags: ['Gestión Tareas'],
+            summary: "Crear una tarea en un proyecto",
             description: "Crea una nueva tarea asociada a un proyecto específico. Valida que el proyecto exista y que el consultor asignado esté en el proyecto.",
             params: TareaProyectoParamsSchema,
             body: CrearTareaProyectoBodySchema,
@@ -51,7 +55,20 @@ function gestionTareasEnrutador(app: FastifyInstance, controlador: GestionTareas
     
     app.get("/proyectos/:idProyecto/tareas", {
       schema: {
-        tags: ['Gestión Tareas']
+        tags: ['DEMO PRESENTACIÓN', 'Gestión Tareas'],
+        summary: "2. Listar tareas de un proyecto",
+        description: "Obtiene la lista de todas las tareas que pertenecen a un proyecto específico. Valida que el proyecto exista.",
+        params: TareaProyectoParamsSchema,
+        response: {
+          200: {
+            description: "Listado de tareas obtenido correctamente (incluye contador y detalle por tarea).",
+            ...ListarTareasProyectoResponse200Schema
+          },
+          404: {
+            description: "El proyecto indicado no existe o no es accesible.",
+            ...ErrorResponse404ConEjemplos
+          }
+        }
       }
     }, controlador.listarTareasProyecto);
     
@@ -63,7 +80,29 @@ function gestionTareasEnrutador(app: FastifyInstance, controlador: GestionTareas
     
     app.put("/proyectos/:idProyecto/tareas/:idTarea", {
       schema: {
-        tags: ['Gestión Tareas']
+        tags: ['DEMO PRESENTACIÓN', 'Gestión Tareas'],
+        summary: "3. Actualizar una tarea de un proyecto",
+        description: "Actualiza parcialmente una tarea (título, estado, consultor, etc.). Valida que la tarea exista y pertenezca al proyecto, y que el consultor asignado esté en el proyecto.",
+        params: TareaProyectoParamsConTareaSchema,
+        body: ActualizarTareaProyectoBodySchema,
+        response: {
+          200: {
+            description: "Tarea actualizada correctamente.",
+            ...ActualizarTareaProyectoResponse200Schema
+          },
+          400: {
+            description: "Errores de negocio: fecha límite fuera del rango del proyecto o consultor no asignado al proyecto.",
+            ...ErrorResponse400NegocioConEjemplos
+          },
+          404: {
+            description: "No se encontró el proyecto, el consultor o la tarea asociada al proyecto.",
+            ...ErrorResponse404ConEjemplos
+          },
+          409: {
+            description: "Conflictos de negocio: la tarea ya se encuentra completada o el título está duplicado en el proyecto.",
+            ...ErrorResponse409ConEjemplos
+          }
+        }
       }
     }, controlador.actualizarTareaEnProyecto);
     

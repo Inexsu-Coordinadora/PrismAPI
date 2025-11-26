@@ -25,14 +25,26 @@ function asignacionConsultorProyectoEnrutador(
     app.post("/asignaciones", {
         schema: {
             tags: ['DEMO PRESENTACIÓN', 'Asignaciones'],
-            summary: "1. Asignar un consultor a un proyecto",
+            summary: "4. Asignar un consultor a un proyecto",
             description: "Crea una nueva asignación de consultor a proyecto con validaciones de negocio (dedicación máxima 100%, fechas válidas, etc.)",
             body: AsignacionBodySchema,
             response: {
-                201: AsignacionResponse201Schema,
-                400: ErrorResponse400NegocioConEjemplos,
-                404: ErrorResponse404ConEjemplos,
-                409: ErrorResponse409ConEjemplos
+                201: {
+                    description: "Asignación creada exitosamente con el identificador generado.",
+                    ...AsignacionResponse201Schema
+                },
+                400: {
+                    description: "Errores de negocio: validaciones de dedicación, coherencia de fechas o rangos fuera del proyecto.",
+                    ...ErrorResponse400NegocioConEjemplos
+                },
+                404: {
+                    description: "No se encontró el consultor o el proyecto especificado.",
+                    ...ErrorResponse404ConEjemplos
+                },
+                409: {
+                    description: "Conflictos de negocio: asignación duplicada, consultor no disponible o proyecto finalizado.",
+                    ...ErrorResponse409ConEjemplos
+                }
             }
         }
     }, controlador.asignarConsultorProyecto);

@@ -56,6 +56,78 @@ export const TareaProyectoResponse201Schema = {
   }
 };
 
+export const TareaProyectoParamsConTareaSchema = {
+  type: 'object' as const,
+  properties: {
+    idProyecto: {
+      type: 'string' as const,
+      format: 'uuid' as const,
+      description: 'ID del proyecto'
+    },
+    idTarea: {
+      type: 'string' as const,
+      format: 'uuid' as const,
+      description: 'ID de la tarea'
+    }
+  },
+  required: ['idProyecto', 'idTarea']
+};
+
+export const ActualizarTareaProyectoBodySchema = {
+  type: 'object' as const,
+  properties: {
+    tituloTarea: {
+      type: 'string' as const,
+      minLength: 5,
+      maxLength: 100,
+      description: 'Título de la tarea (5-100 caracteres)'
+    },
+    descripcionTarea: {
+      type: 'string' as const,
+      maxLength: 500,
+      nullable: true,
+      description: 'Descripción detallada de la tarea (máx. 500 caracteres)'
+    },
+    estadoTarea: {
+      type: 'string' as const,
+      enum: ['pendiente', 'en-progreso', 'bloqueada', 'completada'] as const,
+      description: 'Estado de la tarea'
+    },
+    idConsultorAsignado: {
+      type: 'string' as const,
+      format: 'uuid' as const,
+      nullable: true,
+      description: 'ID del consultor asignado a la tarea (debe estar asignado al proyecto)'
+    },
+    fechaLimiteTarea: {
+      type: 'string' as const,
+      format: 'date' as const,
+      nullable: true,
+      description: 'Fecha límite de la tarea (YYYY-MM-DD)'
+    }
+  }
+};
+
+export const ListarTareasProyectoResponse200Schema = {
+  type: 'object' as const,
+  properties: {
+    mensaje: { type: 'string' as const },
+    tareas: {
+      type: 'array' as const,
+      items: { $ref: 'TareaSchema#' }
+    },
+    total: { type: 'number' as const }
+  }
+};
+
+export const ActualizarTareaProyectoResponse200Schema = {
+  type: 'object' as const,
+  properties: {
+    mensaje: { type: 'string' as const },
+    tareaActualizada: { $ref: 'TareaSchema#' }
+  }
+};
+
 //* Schema para errores 400 - Validación Zod
 export const ErrorResponse400ZodSchema = {
   type: 'object' as const,
@@ -150,6 +222,12 @@ export const ErrorResponse404ConEjemplos = {
       value: {
         mensaje: "Consultor asignado no encontrado con ID: abc-123"
       }
+    },
+    {
+      summary: "Tarea no encontrada",
+      value: {
+        mensaje: "Tarea no encontrada"
+      }
     }
   ]
 };
@@ -161,6 +239,12 @@ export const ErrorResponse409ConEjemplos = {
       summary: "Tarea duplicada",
       value: {
         mensaje: "Ya existe una tarea con el título 'Revisión Legal' en este proyecto."
+      }
+    },
+    {
+      summary: "Validación S4: La tarea ya está completada",
+      value: {
+        mensaje: "La tarea ya se encuentra completada."
       }
     }
   ]

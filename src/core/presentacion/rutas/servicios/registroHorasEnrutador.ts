@@ -31,14 +31,26 @@ function registroHorasRutas(app: FastifyInstance, controlador: RegistroHorasCont
   app.post("/registrar-horas", {
     schema: {
       tags: ['DEMO PRESENTACIÓN', 'Registro Horas'],
-      summary: "3. Registrar horas trabajadas",
+      summary: "5. Registrar horas trabajadas",
       description: "Crea un nuevo registro de horas trabajadas por un consultor en un proyecto. Valida que el consultor esté asignado al proyecto y que la fecha esté dentro del rango de asignación.",
       body: RegistroHorasBodySchema,
       response: {
-        201: RegistroHorasResponse201Schema,
-        400: ErrorResponse400NegocioConEjemplos,
-        404: ErrorResponse404ConEjemplos,
-        409: ErrorResponse409ConEjemplos
+        201: {
+          description: "Registro creado correctamente. Devuelve el detalle del nuevo registro de horas.",
+          ...RegistroHorasResponse201Schema
+        },
+        400: {
+          description: "Errores de negocio: validaciones de horas, rangos diarios, asignación activa o fecha fuera de rango.",
+          ...ErrorResponse400NegocioConEjemplos
+        },
+        404: {
+          description: "Consultor o proyecto inexistente.",
+          ...ErrorResponse404ConEjemplos
+        },
+        409: {
+          description: "Conflictos: ya existe un registro idéntico para este consultor, proyecto, fecha y descripción.",
+          ...ErrorResponse409ConEjemplos
+        }
       }
     }
   }, controlador.crearRegistroHoras);
